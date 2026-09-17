@@ -4,9 +4,11 @@ export type BrandLogoVariant =
   | 'full-white'
   | 'full-burgundy'
   | 'full-orange'
+  | 'full-champagne'
   | 'monogram-white'
   | 'monogram-burgundy'
   | 'monogram-orange'
+  | 'monogram-champagne'
   | 'house-burgundy'
   | 'house-white'
   | 'icon';
@@ -48,10 +50,15 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
   color,
   style = {}
 }) => {
+  const isChampagne = variant === 'full-champagne' || variant === 'monogram-champagne';
+  const gradientId = 'brandChampagneGradient';
+
   // Determine fill color based on variant
   let fillColor = '#FFFFFF';
   if (color) {
     fillColor = color;
+  } else if (isChampagne) {
+    fillColor = `url(#${gradientId})`;
   } else if (variant === 'full-burgundy' || variant === 'monogram-burgundy' || variant === 'house-burgundy') {
     fillColor = '#660E1A';
   } else if (variant === 'full-orange' || variant === 'monogram-orange') {
@@ -59,7 +66,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
   }
 
   // Monogram / Favicon mark (Aspect ratio: 520.74 x 371.96)
-  if (variant === 'monogram-white' || variant === 'monogram-burgundy' || variant === 'monogram-orange' || variant === 'icon') {
+  if (variant === 'monogram-white' || variant === 'monogram-burgundy' || variant === 'monogram-orange' || variant === 'monogram-champagne' || variant === 'icon') {
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -76,6 +83,16 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
         preserveAspectRatio="xMidYMid meet"
         aria-label="New Era Monogram"
       >
+        {isChampagne && (
+          <defs>
+            <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#EFE1CE" />
+              <stop offset="35%" stopColor="#DEC0A1" />
+              <stop offset="70%" stopColor="#C8A580" />
+              <stop offset="100%" stopColor="#E2CFB8" />
+            </linearGradient>
+          </defs>
+        )}
         <path fill={fillColor} fillRule="nonzero" d={MONOGRAM_PATH} />
       </svg>
     );
@@ -122,6 +139,16 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
       preserveAspectRatio="xMidYMid meet"
       aria-label="New Era Real Estate"
     >
+      <defs>
+        {isChampagne && (
+          <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#EFE1CE" />
+            <stop offset="35%" stopColor="#DEC0A1" />
+            <stop offset="70%" stopColor="#C8A580" />
+            <stop offset="100%" stopColor="#E2CFB8" />
+          </linearGradient>
+        )}
+      </defs>
       <g>
         <path fill={fillColor} fillRule="evenodd" d={LOGO_FRAME_HOUSE_PATH} />
         <path fill={fillColor} fillRule="nonzero" d={LOGO_NEW_ERA_PATH} />
