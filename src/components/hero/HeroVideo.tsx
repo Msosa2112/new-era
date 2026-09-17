@@ -86,7 +86,7 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({ onVideoEnd, className = ''
         width: '100%',
         height: '100%',
         overflow: 'hidden',
-        backgroundColor: '#100406', // Exact rich dark burgundy of video background
+        backgroundColor: 'transparent',
         zIndex: 0
       }}
       className={`hero-video-container ${className}`}

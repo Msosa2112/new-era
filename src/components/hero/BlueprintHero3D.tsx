@@ -27,7 +27,6 @@ export const BlueprintHero3D: React.FC<BlueprintHero3DProps> = ({
   }, []);
 
   const handleVideoEnd = () => {
-    // Transition seamlessly into Vector Hero live state
     setVideoFinished(true);
   };
 
@@ -35,17 +34,22 @@ export const BlueprintHero3D: React.FC<BlueprintHero3DProps> = ({
     <section
       style={{
         position: 'relative',
-        minHeight: '100vh',
+        height: '100vh',
+        minHeight: '680px',
         width: '100%',
         overflow: 'hidden',
-        backgroundColor: '#0f0305'
+        backgroundColor: '#0e0305'
       }}
       aria-label="New Era Real Estate Brand Hero"
     >
-      {/* BASE LAYER: REAL VECTOR HERO (Deep Burgundy, Full-Frame Pattern, Centered Champagne-Gold Logo & Live Illumination) */}
-      <VectorHero onExploreProperties={onExploreProperties} lang={lang} />
+      {/* BASE LAYER: REAL VECTOR HERO */}
+      <VectorHero
+        onExploreProperties={onExploreProperties}
+        lang={lang}
+        showVectorLogo={videoFinished || prefersReducedMotion}
+      />
 
-      {/* OVERLAY LAYER: CINEMATIC BRAND VIDEO (Plays on entry, then smoothly hands over to Vector Hero) */}
+      {/* OVERLAY LAYER: CINEMATIC BRAND VIDEO (Smoothly plays on entry, then hands over to Vector Hero) */}
       {!prefersReducedMotion && (
         <div
           style={{
@@ -53,10 +57,10 @@ export const BlueprintHero3D: React.FC<BlueprintHero3DProps> = ({
             inset: 0,
             width: '100%',
             height: '100%',
-            zIndex: 4, // Sits over the vector background, under the interactive UI layer
+            zIndex: 4, // Sits over vector pattern, below top/bottom UI interactive elements
             opacity: videoFinished ? 0 : 1,
             pointerEvents: 'none',
-            transition: 'opacity 0.6s ease-out'
+            transition: 'opacity 0.5s ease-out'
           }}
           aria-hidden="true"
         >
