@@ -15,7 +15,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
     case 'full-burgundy':
       return (
         <img
-          src="/assets/logo-black.png"
+          src="/assets/logo-burgundy.png"
           alt="New Era Real Estate"
           style={{ height: `${height}px`, width: 'auto' }}
           className={`brand-logo ${className}`}
@@ -57,6 +57,15 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
           className={`brand-house ${className}`}
         />
       );
+    case 'icon':
+      return (
+        <img
+          src="/assets/favicon.png"
+          alt="NE Emblem"
+          style={{ height: `${height}px`, width: 'auto' }}
+          className={`brand-icon ${className}`}
+        />
+      );
     case 'house-white':
       return (
         <svg
@@ -69,7 +78,6 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
           strokeLinecap="round"
           strokeLinejoin="round"
         >
-          {/* Official New Era Twin Gables / Roofline Geometry */}
           <path d="M 12 38 L 48 14 L 88 40" />
           <path d="M 48 14 L 48 5" />
           <path d="M 48 5 L 68 18" />
@@ -77,15 +85,6 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
           <path d="M 54 35 L 54 75 L 78 75 L 78 35" />
           <line x1="5" y1="75" x2="95" y2="75" />
         </svg>
-      );
-    case 'icon':
-      return (
-        <img
-          src="/assets/logo-icon.png"
-          alt="New Era Emblem"
-          style={{ height: `${height}px`, width: 'auto', borderRadius: '4px' }}
-          className={`brand-icon ${className}`}
-        />
       );
     case 'full-white':
     default:
