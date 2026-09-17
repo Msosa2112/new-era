@@ -1,17 +1,17 @@
 :root {
-  /* Brand Color Palette */
-  --color-burgundy-900: #3D0A11;
-  --color-burgundy-800: #570F1A;
-  --color-burgundy-700: #721623;
-  --color-burgundy-600: #8C1C2C;
-  --color-burgundy-500: #A62537;
-  --color-burgundy-primary: #721623;
+  /* Brand Color Palette from Official Identity Manual (1.jpg) */
+  --color-burgundy-900: #3E070E;
+  --color-burgundy-800: #540B14;
+  --color-burgundy-700: #660E1A;
+  --color-burgundy-600: #7D1222;
+  --color-burgundy-500: #961729;
+  --color-burgundy-primary: #660E1A;
   
-  --color-orange-900: #8C2210;
-  --color-orange-700: #C2381E;
-  --color-orange-500: #E64A2A;
-  --color-orange-400: #F06143;
-  --color-orange-accent: #E64A2A;
+  --color-orange-900: #991804;
+  --color-orange-700: #D12408;
+  --color-orange-500: #FA2F0E;
+  --color-orange-400: #FF4D2E;
+  --color-orange-accent: #FA2F0E;
   
   --color-charcoal-950: #0C0D10;
   --color-charcoal-900: #121418;
@@ -33,19 +33,19 @@
   --bg-secondary: #F3EFE8;
   --bg-dark: #121418;
   --bg-dark-surface: #1B1E24;
-  --bg-burgundy: #721623;
+  --bg-burgundy: #660E1A;
   
   --text-primary: #121418;
   --text-secondary: #5A606D;
   --text-muted: #847C74;
   --text-inverse: #FAF8F5;
-  --text-burgundy: #721623;
-  --text-accent: #E64A2A;
+  --text-burgundy: #660E1A;
+  --text-accent: #FA2F0E;
   
   --border-subtle: #E8E2D8;
   --border-strong: #121418;
   --border-dark: rgba(255, 255, 255, 0.12);
-  --border-burgundy: rgba(114, 22, 35, 0.2);
+  --border-burgundy: rgba(102, 14, 26, 0.2);
 
   /* Typography */
   --font-serif: 'Cormorant Garamond', 'Cinzel', Georgia, serif;
@@ -56,7 +56,7 @@
   --shadow-sm: 0 2px 8px rgba(18, 20, 24, 0.04);
   --shadow-md: 0 8px 24px rgba(18, 20, 24, 0.08);
   --shadow-lg: 0 20px 48px rgba(18, 20, 24, 0.12);
-  --shadow-luxury: 0 30px 60px -15px rgba(114, 22, 35, 0.18);
+  --shadow-luxury: 0 30px 60px -15px rgba(102, 14, 26, 0.22);
   --shadow-dark: 0 24px 48px rgba(0, 0, 0, 0.4);
 
   /* Radius */
