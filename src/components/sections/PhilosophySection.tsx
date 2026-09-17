@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Compass, Layers, Home, Database, Users, CheckCircle, Sparkles, ArrowRight } from 'lucide-react';
+import { HexPattern } from '../common/HexPattern';
 
 interface PhilosophySectionProps {
   lang: 'en' | 'es';
@@ -92,8 +93,9 @@ export const PhilosophySection: React.FC<PhilosophySectionProps> = ({ lang, onEx
         overflow: 'hidden'
       }}
     >
-      {/* Background CAD grid */}
+      {/* Background CAD grid & Brand Pattern */}
       <div className="arch-grid-dark" />
+      <HexPattern variant="gradient-glow" opacity={0.20} size={300} />
 
       <div className="container" style={{ position: 'relative', zIndex: 10 }}>
         {/* Section Header */}

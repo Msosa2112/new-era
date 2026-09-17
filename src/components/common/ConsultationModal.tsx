@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, CheckCircle2, Phone, Calendar, ArrowRight, ShieldCheck } from 'lucide-react';
 import { BrandLogo } from './BrandLogo';
+import { HexPattern } from './HexPattern';
 import { BROKERAGE_DATA } from '../../data/agentsData';
 
 interface ConsultationModalProps {
@@ -60,6 +61,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
           overflowY: 'auto'
         }}
       >
+        <HexPattern variant="gradient-vibrant" opacity={0.18} size={240} />
         <button
           onClick={onClose}
           style={{

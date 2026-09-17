@@ -39,7 +39,7 @@ export const AgentsPage: React.FC<AgentsPageProps> = ({ onSelectProperty, lang }
           position: 'relative'
         }}
       >
-        <HexPattern opacity={0.06} variant="dark" />
+        <HexPattern variant="gradient-burgundy" opacity={0.26} size={280} />
         <div className="container" style={{ position: 'relative', zIndex: 1, maxWidth: '880px' }}>
           <span className="display-subtitle" style={{ color: 'var(--color-orange-accent)' }}>
             {lang === 'es' ? 'DIRECTORIO DE ASESORES' : 'ADVISORY ROSTER'}

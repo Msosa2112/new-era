@@ -23,6 +23,7 @@ import {
 import { Property, TourBookingRequest } from '../../types/property';
 import { propertyService } from '../../services/propertyService';
 import { BROKERAGE_DATA } from '../../data/agentsData';
+import { HexPattern } from '../common/HexPattern';
 
 interface PropertyDetailViewProps {
   property: Property;
@@ -549,15 +550,19 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                   backgroundColor: 'var(--color-charcoal-950)',
                   color: '#FFFFFF',
                   borderRadius: 'var(--radius-xs)',
-                  boxShadow: 'var(--shadow-lg)'
+                  boxShadow: 'var(--shadow-lg)',
+                  position: 'relative',
+                  overflow: 'hidden'
                 }}
               >
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                  <Calendar size={16} color="var(--color-orange-accent)" />
-                  <span className="display-subtitle" style={{ color: 'var(--color-orange-accent)', margin: 0 }}>
-                    {lang === 'es' ? 'RECORRIDO PRIVADO' : 'SCHEDULE PRIVATE TOUR'}
-                  </span>
-                </div>
+                <HexPattern variant="gradient-vibrant" opacity={0.20} size={240} />
+                <div style={{ position: 'relative', zIndex: 1 }}>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                    <Calendar size={16} color="var(--color-orange-accent)" />
+                    <span className="display-subtitle" style={{ color: 'var(--color-orange-accent)', margin: 0 }}>
+                      {lang === 'es' ? 'RECORRIDO PRIVADO' : 'SCHEDULE PRIVATE TOUR'}
+                    </span>
+                  </div>
 
                 <p style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '1.5rem' }}>
                   {lang === 'es'
@@ -699,6 +704,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                     </button>
                   </form>
                 )}
+                </div>
               </div>
             </div>
           </div>

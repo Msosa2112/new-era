@@ -1,5 +1,6 @@
 import React from 'react';
 import { Cpu, Network, ShieldCheck, LineChart, Binary, Smartphone, Sparkles } from 'lucide-react';
+import { HexPattern } from '../common/HexPattern';
 
 interface TechnologySectionProps {
   lang: 'en' | 'es';
@@ -44,10 +45,12 @@ export const TechnologySection: React.FC<TechnologySectionProps> = ({ lang }) =>
         backgroundColor: 'var(--bg-secondary)',
         borderTop: '1px solid var(--border-subtle)',
         borderBottom: '1px solid var(--border-subtle)',
-        position: 'relative'
+        position: 'relative',
+        overflow: 'hidden'
       }}
     >
-      <div className="container">
+      <HexPattern variant="gradient-orange" opacity={0.14} size={280} />
+      <div className="container" style={{ position: 'relative', zIndex: 1 }}>
         {/* Header */}
         <div style={{ maxWidth: '840px', marginBottom: '3.5rem' }}>
           <span className="display-subtitle">

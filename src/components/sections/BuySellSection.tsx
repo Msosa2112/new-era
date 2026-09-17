@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowRight, ShieldCheck, TrendingUp, Sparkles, Home, CheckCircle2, DollarSign } from 'lucide-react';
 import { ValuationRequest } from '../../types/property';
+import { HexPattern } from '../common/HexPattern';
 
 interface BuySellSectionProps {
   lang: 'en' | 'es';
@@ -43,10 +44,13 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
               boxShadow: 'var(--shadow-sm)',
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'space-between'
+              justifyContent: 'space-between',
+              position: 'relative',
+              overflow: 'hidden'
             }}
           >
-            <div>
+            <HexPattern variant="subtle" opacity={0.18} size={240} />
+            <div style={{ position: 'relative', zIndex: 1 }}>
               <span className="display-subtitle">{lang === 'es' ? 'COMPRAR RESIDENCIA' : 'ACQUISITION & BUYING'}</span>
               <h3
                 style={{
@@ -103,7 +107,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
             <button
               onClick={() => onNavigate('buy')}
               className="btn-primary"
-              style={{ width: '100%', justifyContent: 'center' }}
+              style={{ width: '100%', justifyContent: 'center', position: 'relative', zIndex: 1 }}
             >
               <span>{lang === 'es' ? 'GUÍA DEL COMPRADOR' : 'EXPLORE BUYER GUIDE'}</span>
               <ArrowRight size={16} />
@@ -121,10 +125,13 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
               boxShadow: 'var(--shadow-luxury)',
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'space-between'
+              justifyContent: 'space-between',
+              position: 'relative',
+              overflow: 'hidden'
             }}
           >
-            <div>
+            <HexPattern variant="brand-card" opacity={0.35} size={260} />
+            <div style={{ position: 'relative', zIndex: 1 }}>
               <span className="display-subtitle" style={{ color: 'var(--color-orange-accent)' }}>
                 {lang === 'es' ? 'VENTA ESTRATÉGICA' : 'MAXIMIZING VALUE & SELLING'}
               </span>

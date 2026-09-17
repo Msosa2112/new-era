@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowUpRight, Phone, Mail, MapPin, Globe } from 'lucide-react';
 import { BrandLogo } from '../common/BrandLogo';
+import { HexPattern } from '../common/HexPattern';
 import { BROKERAGE_DATA } from '../../data/agentsData';
 
 interface FooterProps {
@@ -21,6 +22,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, lang }) => {
         overflow: 'hidden'
       }}
     >
+      <HexPattern variant="dark" opacity={0.16} size={280} />
+
       {/* Huge Background Architectural Monogram Return */}
       <div
         style={{

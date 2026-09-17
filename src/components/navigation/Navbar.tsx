@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Phone, Menu, X, Globe, ArrowUpRight } from 'lucide-react';
 import { BrandLogo } from '../common/BrandLogo';
+import { HexPattern } from '../common/HexPattern';
 import { BROKERAGE_DATA } from '../../data/agentsData';
 
 interface NavbarProps {
@@ -266,10 +267,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             flexDirection: 'column',
             justifyContent: 'space-between',
             padding: '7rem 2rem 3rem 2rem',
-            animation: 'fadeIn 0.3s ease-out'
+            animation: 'fadeIn 0.3s ease-out',
+            overflow: 'hidden'
           }}
         >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+          <HexPattern variant="gradient-vibrant" opacity={0.16} size={280} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem', position: 'relative', zIndex: 1 }}>
             <span className="display-subtitle">
               {lang === 'es' ? 'Menú Principal' : 'Navigation'}
             </span>
@@ -305,7 +308,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             ))}
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', position: 'relative', zIndex: 1 }}>
             <a
               href="tel:5025000409"
               style={{

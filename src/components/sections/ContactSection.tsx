@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Phone, Mail, MapPin, Clock, ArrowRight, CheckCircle2, ShieldCheck, Sparkles } from 'lucide-react';
 import { BROKERAGE_DATA } from '../../data/agentsData';
+import { HexPattern } from '../common/HexPattern';
 
 interface ContactSectionProps {
   lang: 'en' | 'es';
@@ -26,10 +27,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ lang }) => {
       style={{
         backgroundColor: 'var(--color-charcoal-950)',
         color: '#FFFFFF',
-        position: 'relative'
+        position: 'relative',
+        overflow: 'hidden'
       }}
     >
-      <div className="container">
+      <HexPattern variant="gradient-vibrant" opacity={0.20} size={280} />
+      <div className="container" style={{ position: 'relative', zIndex: 1 }}>
         <div
           style={{
             display: 'grid',

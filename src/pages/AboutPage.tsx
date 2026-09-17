@@ -20,7 +20,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenConsultation, lang }
           position: 'relative'
         }}
       >
-        <HexPattern opacity={0.06} variant="dark" />
+        <HexPattern variant="gradient-orange" opacity={0.28} size={280} />
         <div className="container" style={{ position: 'relative', zIndex: 1, maxWidth: '880px' }}>
           <span className="display-subtitle" style={{ color: 'var(--color-orange-accent)' }}>
             {lang === 'es' ? 'NUESTRA HISTORIA' : 'OUR HERITAGE & VISION'}
@@ -120,8 +120,9 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenConsultation, lang }
       </section>
 
       {/* Team Culture & Office Photo Showcase */}
-      <section className="section-padding-sm" style={{ backgroundColor: 'var(--bg-surface)', borderTop: '1px solid var(--border-subtle)' }}>
-        <div className="container">
+      <section className="section-padding-sm" style={{ backgroundColor: 'var(--bg-surface)', borderTop: '1px solid var(--border-subtle)', position: 'relative', overflow: 'hidden' }}>
+        <HexPattern variant="subtle" opacity={0.14} size={280} />
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 3.5rem auto' }}>
             <span className="display-subtitle">
               {lang === 'es' ? 'NUESTRO EQUIPO Y ESPACIO' : 'OUR CULTURE & SPACE'}

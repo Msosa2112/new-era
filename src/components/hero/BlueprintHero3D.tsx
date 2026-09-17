@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { ArrowDown, Compass, Layers, Eye, Sparkles } from 'lucide-react';
 import { BrandLogo } from '../common/BrandLogo';
+import { HexPattern } from '../common/HexPattern';
 
 interface BlueprintHero3DProps {
   onExploreProperties: () => void;
@@ -337,6 +338,9 @@ export const BlueprintHero3D: React.FC<BlueprintHero3DProps> = ({
       }}
       onMouseMove={handleMouseMove}
     >
+      {/* Background Architectural Vector Pattern */}
+      <HexPattern variant="gradient-glow" opacity={0.16} size={320} />
+
       {/* 3D WebGL Canvas Layer */}
       <div
         ref={mountRef}
