@@ -42,7 +42,7 @@ export const PropertiesPage: React.FC<PropertiesPageProps> = ({
           position: 'relative'
         }}
       >
-        <HexPattern variant="gradient-orange" opacity={0.25} size={280} />
+        <HexPattern variant="gradient-orange" opacity={0.16} size={580} maskFade="radial-top-right" />
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <span className="display-subtitle" style={{ color: 'var(--color-orange-accent)' }}>
             {lang === 'es' ? 'PORTAFOLIO DE PROPIEDADES' : 'EXCLUSIVE INVENTORY'}

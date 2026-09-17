@@ -49,7 +49,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
               overflow: 'hidden'
             }}
           >
-            <HexPattern variant="subtle" opacity={0.18} size={240} />
+            <HexPattern variant="subtle" opacity={0.08} size={540} maskFade="radial-top-right" />
             <div style={{ position: 'relative', zIndex: 1 }}>
               <span className="display-subtitle">{lang === 'es' ? 'COMPRAR RESIDENCIA' : 'ACQUISITION & BUYING'}</span>
               <h3
@@ -130,7 +130,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
               overflow: 'hidden'
             }}
           >
-            <HexPattern variant="brand-card" opacity={0.35} size={260} />
+            <HexPattern variant="brand-card" opacity={0.28} size={580} maskFade="radial-center" />
             <div style={{ position: 'relative', zIndex: 1 }}>
               <span className="display-subtitle" style={{ color: 'var(--color-orange-accent)' }}>
                 {lang === 'es' ? 'VENTA ESTRATÉGICA' : 'MAXIMIZING VALUE & SELLING'}

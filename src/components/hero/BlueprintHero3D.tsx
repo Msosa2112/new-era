@@ -339,7 +339,7 @@ export const BlueprintHero3D: React.FC<BlueprintHero3DProps> = ({
       onMouseMove={handleMouseMove}
     >
       {/* Background Architectural Vector Pattern */}
-      <HexPattern variant="gradient-glow" opacity={0.16} size={320} />
+      <HexPattern variant="gradient-glow" opacity={0.09} size={640} maskFade="radial" />
 
       {/* 3D WebGL Canvas Layer */}
       <div

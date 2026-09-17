@@ -70,7 +70,6 @@ export const HomePage: React.FC<HomePageProps> = ({
 
       {/* CHAPTER 04: FEATURED PROPERTIES SHOWCASE */}
       <section className="section-padding" style={{ position: 'relative', backgroundColor: 'var(--bg-primary)' }}>
-        <HexPattern variant="gradient-burgundy" opacity={0.16} size={280} />
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           {/* Header */}
           <div
@@ -136,9 +135,8 @@ export const HomePage: React.FC<HomePageProps> = ({
       />
 
       {/* CHAPTER 08: THE PEOPLE (AGENTS BEHIND THE PROPERTY) */}
-      <section className="section-padding" style={{ backgroundColor: 'var(--bg-surface)', position: 'relative', overflow: 'hidden' }}>
-        <HexPattern variant="gradient-orange" opacity={0.14} size={280} />
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+      <section className="section-padding" style={{ backgroundColor: 'var(--bg-surface)', position: 'relative' }}>
+        <div className="container">
           <div
             style={{
               display: 'flex',

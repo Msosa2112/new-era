@@ -67,7 +67,7 @@ export const SellPage: React.FC<SellPageProps> = ({ onOpenConsultation, lang }) 
           position: 'relative'
         }}
       >
-        <HexPattern variant="gradient-vibrant" opacity={0.32} size={280} />
+        <HexPattern variant="gradient-vibrant" opacity={0.18} size={580} maskFade="radial-top-right" />
         <div className="container" style={{ position: 'relative', zIndex: 1, maxWidth: '880px' }}>
           <span className="display-subtitle" style={{ color: 'var(--color-orange-accent)' }}>
             {lang === 'es' ? 'ESTRATEGIA PARA VENDEDORES' : 'SELLER EXPERIENCE'}

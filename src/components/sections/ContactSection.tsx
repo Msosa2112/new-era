@@ -31,7 +31,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ lang }) => {
         overflow: 'hidden'
       }}
     >
-      <HexPattern variant="gradient-vibrant" opacity={0.20} size={280} />
+      <HexPattern variant="gradient-vibrant" opacity={0.12} size={640} maskFade="radial-top-right" />
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
         <div
           style={{

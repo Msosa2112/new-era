@@ -22,7 +22,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, lang }) => {
         overflow: 'hidden'
       }}
     >
-      <HexPattern variant="dark" opacity={0.16} size={280} />
+      <HexPattern variant="dark" opacity={0.09} size={640} maskFade="top-to-bottom" />
 
       {/* Huge Background Architectural Monogram Return */}
       <div

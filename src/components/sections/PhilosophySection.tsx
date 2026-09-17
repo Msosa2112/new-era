@@ -93,9 +93,9 @@ export const PhilosophySection: React.FC<PhilosophySectionProps> = ({ lang, onEx
         overflow: 'hidden'
       }}
     >
-      {/* Background CAD grid & Brand Pattern */}
+      {/* Background CAD grid & Subtle Corner Brand Pattern */}
       <div className="arch-grid-dark" />
-      <HexPattern variant="gradient-glow" opacity={0.20} size={300} />
+      <HexPattern variant="gradient-glow" opacity={0.08} size={640} maskFade="radial-corner" />
 
       <div className="container" style={{ position: 'relative', zIndex: 10 }}>
         {/* Section Header */}
@@ -230,10 +230,13 @@ export const PhilosophySection: React.FC<PhilosophySectionProps> = ({ lang, onEx
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
             gap: '2.5rem',
-            alignItems: 'center'
+            alignItems: 'center',
+            position: 'relative',
+            overflow: 'hidden'
           }}
         >
-          <div>
+          <HexPattern variant="gradient-orange" opacity={0.14} size={540} maskFade="radial-center" />
+          <div style={{ position: 'relative', zIndex: 1 }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
               <span className="tag-badge tag-badge-accent">
                 STAGE {steps[activeStep].num} // {lang === 'es' ? 'TRANSFORMACIÓN' : 'TRANSFORMATION'}
