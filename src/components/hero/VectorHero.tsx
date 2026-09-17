@@ -1,12 +1,12 @@
 import React from 'react';
-import { ArrowDown, Compass, Sparkles, Building2, ShieldCheck, Award } from 'lucide-react';
+import { ArrowDown, Compass, Sparkles } from 'lucide-react';
 import { BrandLogo } from '../common/BrandLogo';
+import { HexPattern } from '../common/HexPattern';
 import { LivePatternOverlay } from './LivePatternOverlay';
 
 interface VectorHeroProps {
   onExploreProperties: () => void;
   lang: 'en' | 'es';
-  showVectorLogo?: boolean;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -14,7 +14,6 @@ interface VectorHeroProps {
 export const VectorHero: React.FC<VectorHeroProps> = ({
   onExploreProperties,
   lang,
-  showVectorLogo = true,
   className = '',
   style = {}
 }) => {
@@ -60,40 +59,31 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
         flexDirection: 'column',
         justifyContent: 'space-between',
         overflow: 'hidden',
-        // LAYER 1: Deep luxurious burgundy / wine background matching Reference 1 & 2
-        background: 'radial-gradient(ellipse at 50% 50%, #2a0d15 0%, #1c070c 55%, #0e0305 100%)',
+        // LAYER 1: Deep luxurious burgundy / wine background
+        background: 'radial-gradient(ellipse at 50% 48%, #280c14 0%, #1a060b 55%, #0d0204 100%)',
         color: '#FFFFFF',
         ...style
       }}
       className={`vector-hero-root ${className}`}
-      aria-label="New Era Real Estate Vector Hero"
+      aria-label="New Era Real Estate Brand Hero"
     >
-      {/* LAYER 2: FULL-FRAME OFFICIAL GEOMETRIC PATTERN (Edge to Edge, Infinite Field) */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-          backgroundImage: 'url(/assets/pattern-hero.svg)',
-          backgroundRepeat: 'repeat',
-          backgroundPosition: 'center center',
-          backgroundSize: '240px 240px',
-          opacity: 0.88,
-          pointerEvents: 'none',
-          zIndex: 1
-        }}
-        aria-hidden="true"
+      {/* LAYER 2: FULL-FRAME OFFICIAL GEOMETRIC PATTERN (Scaled large at 620px to match other sections) */}
+      <HexPattern
+        variant="gradient-gold"
+        opacity={0.20}
+        size={620}
+        maskFade="none"
+        style={{ zIndex: 1 }}
       />
 
-      {/* LAYER 4: SUBTLE LIVE PATTERN ILLUMINATION (Random isolated lines briefly catching light) */}
+      {/* LAYER 4: SUBTLE LIVE PATTERN ILLUMINATION (Ambient isolated lines catching champagne-gold light) */}
       <LivePatternOverlay style={{ zIndex: 2 }} />
 
-      {/* LAYER 3: OFFICIAL NEW ERA REAL ESTATE LOGO (Centered, Satin Matte Champagne-Gold Finish) */}
+      {/* LAYER 3: ONLY ONE OFFICIAL NEW ERA REAL ESTATE LOGO (Centered, Satin Matte Champagne-Gold Finish) */}
       <div
         style={{
           position: 'absolute',
-          top: '48%',
+          top: '47%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
           zIndex: 3,
@@ -104,22 +94,21 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
           justifyContent: 'center',
           width: '100%',
           padding: '0 1.5rem',
-          opacity: showVectorLogo ? 1 : 0,
-          transition: 'opacity 0.6s ease-out'
+          maxWidth: '820px'
         }}
-        className="hero-logo-anchor"
+        className="hero-logo-center-anchor"
       >
         <div
           style={{
-            filter: 'drop-shadow(0 6px 32px rgba(0, 0, 0, 0.85))'
+            filter: 'drop-shadow(0 8px 36px rgba(0, 0, 0, 0.85))'
           }}
         >
-          {/* Responsive vector logo scaling matching Reference 1 (Desktop) and Reference 2 (Mobile) */}
+          {/* Responsive vector sizing: Large prominent brand presence */}
           <div className="hidden sm:block">
-            <BrandLogo variant="full-champagne" height={180} />
+            <BrandLogo variant="full-champagne" height={185} />
           </div>
           <div className="block sm:hidden">
-            <BrandLogo variant="full-champagne" height={120} />
+            <BrandLogo variant="full-champagne" height={125} />
           </div>
         </div>
       </div>
@@ -211,7 +200,7 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
         </div>
       </div>
 
-      {/* Central Spatial Buffer - Keeps the central logo 100% open and visible */}
+      {/* Central Spatial Buffer - 100% open so the central logo and pattern shine */}
       <div
         style={{
           position: 'relative',
@@ -227,7 +216,7 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
         style={{
           position: 'relative',
           zIndex: 10,
-          background: 'linear-gradient(to top, rgba(12, 3, 5, 0.94) 0%, rgba(12, 3, 5, 0.75) 65%, transparent 100%)',
+          background: 'linear-gradient(to top, rgba(12, 3, 5, 0.94) 0%, rgba(12, 3, 5, 0.72) 65%, transparent 100%)',
           paddingTop: '2rem',
           paddingBottom: '0.5rem'
         }}

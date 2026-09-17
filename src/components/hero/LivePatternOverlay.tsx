@@ -11,7 +11,7 @@ interface ActiveLightSegment {
   x2: number;
   y2: number;
   startTime: number;
-  duration: number; // total lifecycle duration in ms (e.g. 2400ms)
+  duration: number;
   peakOpacity: number;
 }
 
@@ -37,9 +37,9 @@ export const LivePatternOverlay: React.FC<LivePatternOverlayProps> = ({
     let isVisible = true;
     let activeSegments: ActiveLightSegment[] = [];
     let lastSpawnTime = 0;
-    let nextSpawnDelay = 1200 + Math.random() * 1600; // 1.2s - 2.8s organic interval
+    let nextSpawnDelay = 1400 + Math.random() * 1800; // 1.4s - 3.2s organic breath
 
-    // Resize canvas with pixel ratio
+    // Resize canvas with device pixel ratio
     const updateDimensions = () => {
       const rect = canvas.getBoundingClientRect();
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -51,7 +51,7 @@ export const LivePatternOverlay: React.FC<LivePatternOverlayProps> = ({
     updateDimensions();
     window.addEventListener('resize', updateDimensions);
 
-    // Pause when tab is inactive or scrolled away
+    // Pause when offscreen
     const observer = new IntersectionObserver(
       ([entry]) => {
         isVisible = entry.isIntersecting;
@@ -66,28 +66,28 @@ export const LivePatternOverlay: React.FC<LivePatternOverlayProps> = ({
     };
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
-    // Grid geometry matching New Era isometric cube pattern
-    const unitSize = 64; // Grid step in logical pixels
-    const hStep = unitSize * Math.sqrt(3); // ~110.85px
-    const vStep = unitSize * 1.5; // 96px
+    // Large-scale grid geometry matching the 620px website pattern
+    const unitSize = 155; // Large scale matching 620px tile
+    const hStep = unitSize * Math.sqrt(3); // ~268.4px
+    const vStep = unitSize * 1.5; // ~232.5px
 
     const generateRandomSegment = (width: number, height: number, now: number): ActiveLightSegment | null => {
       const centerX = width / 2;
       const centerY = height / 2;
 
-      // Central exclusion zone (where the official brand logo sits undisturbed)
-      const logoExclusionWidth = Math.min(width * 0.45, 500);
-      const logoExclusionHeight = Math.min(height * 0.38, 280);
+      // Central exclusion zone around the single central logo
+      const logoExclusionWidth = Math.min(width * 0.48, 560);
+      const logoExclusionHeight = Math.min(height * 0.42, 320);
 
-      // Attempt picking a segment outside the logo area
-      for (let attempt = 0; attempt < 12; attempt++) {
-        const col = Math.floor(Math.random() * (width / hStep + 2)) - 1;
-        const row = Math.floor(Math.random() * (height / vStep + 2)) - 1;
+      // Attempt picking an eligible line segment
+      for (let attempt = 0; attempt < 16; attempt++) {
+        const col = Math.floor(Math.random() * (width / hStep + 3)) - 1;
+        const row = Math.floor(Math.random() * (height / vStep + 3)) - 1;
 
         const x = col * hStep + ((row % 2) * hStep) / 2;
         const y = row * vStep;
 
-        // Pick one of 3 isometric directions: 0° horizontal, 60° diagonal, 120° diagonal
+        // 3 isometric directions: 0° horizontal, 60° diagonal, 120° diagonal
         const dir = Math.floor(Math.random() * 3);
         let x2 = x;
         let y2 = y;
@@ -106,12 +106,12 @@ export const LivePatternOverlay: React.FC<LivePatternOverlayProps> = ({
         const midX = (x + x2) / 2;
         const midY = (y + y2) / 2;
 
-        // Check bounds
-        if (midX < 10 || midX > width - 10 || midY < 10 || midY > height - 10) {
+        // Bounds check
+        if (midX < 20 || midX > width - 20 || midY < 20 || midY > height - 20) {
           continue;
         }
 
-        // Check exclusion zone around centered logo
+        // Exclusion check: never illuminate lines over the central logo
         const inLogoZone =
           Math.abs(midX - centerX) < logoExclusionWidth / 2 &&
           Math.abs(midY - centerY) < logoExclusionHeight / 2;
@@ -123,8 +123,8 @@ export const LivePatternOverlay: React.FC<LivePatternOverlayProps> = ({
             x2: x2,
             y2: y2,
             startTime: now,
-            duration: 2200 + Math.random() * 800, // 2.2s - 3.0s smooth breath
-            peakOpacity: 0.55 + Math.random() * 0.25 // Subtle, warm satin glow
+            duration: 2400 + Math.random() * 800, // 2.4s - 3.2s smooth rise & fall
+            peakOpacity: 0.55 + Math.random() * 0.25 // Soft champagne-gold reflection
           };
         }
       }
@@ -140,27 +140,27 @@ export const LivePatternOverlay: React.FC<LivePatternOverlayProps> = ({
       const width = rect.width;
       const height = rect.height;
 
-      // Spawn new subtle light line at randomized gentle intervals
-      if (time - lastSpawnTime > nextSpawnDelay && activeSegments.length < 3) {
+      // Spawn at gentle randomized intervals (max 2 active lines for subtle elegance)
+      if (time - lastSpawnTime > nextSpawnDelay && activeSegments.length < 2) {
         const newSeg = generateRandomSegment(width, height, time);
         if (newSeg) {
           activeSegments.push(newSeg);
           lastSpawnTime = time;
-          nextSpawnDelay = 1400 + Math.random() * 2200; // Next line after 1.4s - 3.6s
+          nextSpawnDelay = 1600 + Math.random() * 2400; // 1.6s - 4.0s
         }
       }
 
       ctx.clearRect(0, 0, width, height);
 
-      // Filter and draw active light segments
+      // Draw active light segments
       activeSegments = activeSegments.filter((seg) => {
         const elapsed = time - seg.startTime;
         if (elapsed >= seg.duration) return false;
 
-        const progress = elapsed / seg.duration; // 0 to 1
+        const progress = elapsed / seg.duration;
         let alpha = 0;
 
-        // Organic curve: 35% fade-in, 20% hold, 45% smooth fade-out
+        // Smooth organic curve: 35% in, 20% hold, 45% out
         if (progress < 0.35) {
           alpha = (progress / 0.35) * seg.peakOpacity;
         } else if (progress < 0.55) {
@@ -176,12 +176,12 @@ export const LivePatternOverlay: React.FC<LivePatternOverlayProps> = ({
         ctx.moveTo(seg.x1, seg.y1);
         ctx.lineTo(seg.x2, seg.y2);
 
-        // Warm champagne-gold satin light stroke
+        // Warm champagne gold light line with subtle soft halo
         ctx.strokeStyle = `rgba(235, 218, 196, ${alpha.toFixed(3)})`;
-        ctx.lineWidth = 1.6;
+        ctx.lineWidth = 2.0;
         ctx.lineCap = 'round';
-        ctx.shadowColor = 'rgba(235, 218, 196, 0.45)';
-        ctx.shadowBlur = 4;
+        ctx.shadowColor = 'rgba(235, 218, 196, 0.5)';
+        ctx.shadowBlur = 6;
         ctx.stroke();
         ctx.restore();
 
