@@ -51,8 +51,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, lang }) => {
           }}
         >
           {/* Brand Col */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            <BrandLogo variant="full-white" height={44} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', alignItems: 'flex-start' }}>
+            <BrandLogo variant="full-white" height={52} />
             <p
               style={{
                 fontSize: '0.9rem',
