@@ -300,8 +300,8 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
           className="agent-hero-watermark"
           style={{
             position: 'absolute',
-            top: '55%',
-            right: '-4%',
+            top: '52%',
+            right: '18%',
             transform: 'translateY(-50%)',
             pointerEvents: 'none',
             userSelect: 'none',
@@ -317,7 +317,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
             variant="monogram-white"
             height="auto"
             style={{
-              width: 'clamp(360px, 48vw, 680px)',
+              width: 'clamp(380px, 48vw, 700px)',
               height: 'auto',
               color: '#FFFFFF'
             }}
@@ -1441,10 +1441,13 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
             display: inline !important;
           }
           .agent-hero-watermark {
-            right: 50% !important;
-            transform: translate(50%, -50%) !important;
-            opacity: 0.032 !important;
-            max-width: 90vw !important;
+            top: 265px !important;
+            left: 50% !important;
+            right: auto !important;
+            transform: translate(-50%, -50%) !important;
+            opacity: 0.035 !important;
+            width: 82vw !important;
+            max-width: 380px !important;
           }
         }
 
