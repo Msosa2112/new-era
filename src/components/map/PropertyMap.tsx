@@ -10,6 +10,7 @@ interface PropertyMapProps {
   selectedProperty: Property | null;
   hoveredPropertyId?: string | null;
   onSelectProperty: (property: Property) => void;
+  onOpenDetail?: (property: Property) => void;
   onHoverProperty?: (propertyId: string | null) => void;
   lang: 'en' | 'es';
 }
@@ -35,6 +36,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
   selectedProperty,
   hoveredPropertyId,
   onSelectProperty,
+  onOpenDetail,
   onHoverProperty,
   lang
 }) => {
@@ -186,13 +188,21 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
         if (btn) {
           btn.onclick = (e) => {
             e.stopPropagation();
-            onSelectProperty(prop);
+            if (onOpenDetail) {
+              onOpenDetail(prop);
+            } else {
+              onSelectProperty(prop);
+            }
           };
         }
         const card = document.getElementById(`popup-card-${prop.id}`);
         if (card) {
           card.onclick = () => {
-            onSelectProperty(prop);
+            if (onOpenDetail) {
+              onOpenDetail(prop);
+            } else {
+              onSelectProperty(prop);
+            }
           };
         }
       });
@@ -211,7 +221,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
 
       marker.on('click', () => {
         onSelectProperty(prop);
-        map.panTo([lat, lng], { animate: true, duration: 0.4 });
+        map.panTo([lat, lng], { animate: true, duration: 0.5 });
       });
 
       marker.addTo(map);
@@ -244,13 +254,15 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
       }
     });
 
-    // If selectedProperty changes, optionally open its popup
+    // If selectedProperty changes, smoothly open its popup and center map
     if (selectedProperty) {
       const marker = markersRef.current.get(selectedProperty.id);
       if (marker && mapInstanceRef.current) {
         if (!marker.isPopupOpen()) {
           marker.openPopup();
         }
+        const latLng = marker.getLatLng();
+        mapInstanceRef.current.panTo(latLng, { animate: true, duration: 0.5 });
       }
     }
   }, [selectedProperty, hoveredPropertyId, properties]);

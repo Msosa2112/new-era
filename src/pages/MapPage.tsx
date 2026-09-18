@@ -248,27 +248,59 @@ export const MapPage: React.FC<MapPageProps> = ({
           display: 'flex',
           position: 'relative',
           overflow: 'hidden',
-          height: 'calc(100vh - 140px)'
+          minHeight: 0
         }}
       >
         {/* Left Side: Scrollable Listing Panel (Desktop & Tablet) */}
         <aside
           className={`map-list-sidebar ${mobileViewMode === 'list' ? 'mobile-visible' : 'mobile-hidden'}`}
           style={{
-            width: '450px',
-            minWidth: '360px',
-            maxWidth: '520px',
+            width: '460px',
+            minWidth: '400px',
+            maxWidth: '500px',
+            flex: '0 0 460px',
             height: '100%',
             overflowY: 'auto',
-            padding: '1.25rem 1rem',
+            overflowX: 'hidden',
+            padding: '1.25rem 1.25rem 2.5rem 1.25rem',
             backgroundColor: '#FAF8F5',
             borderRight: '1px solid rgba(0, 0, 0, 0.08)',
             display: 'flex',
             flexDirection: 'column',
-            gap: '1rem',
-            zIndex: 10
+            gap: '1.25rem',
+            zIndex: 10,
+            boxSizing: 'border-box'
           }}
         >
+          {/* Sidebar Top Status */}
+          <div
+            style={{
+              paddingBottom: '0.75rem',
+              borderBottom: '1px solid rgba(0, 0, 0, 0.08)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexShrink: 0
+            }}
+          >
+            <div>
+              <span
+                style={{
+                  fontSize: '0.72rem',
+                  fontWeight: 800,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  color: 'var(--color-burgundy-primary, #660E1A)'
+                }}
+              >
+                {lang === 'es' ? 'EXPLORACIÓN GEOGRÁFICA' : 'MLS MAP EXPLORER'}
+              </span>
+              <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#121418', margin: '2px 0 0 0' }}>
+                {properties.length} {lang === 'es' ? 'Residencias en Louisville' : 'Homes in Louisville Area'}
+              </h2>
+            </div>
+          </div>
+
           {loading ? (
             <div style={{ textAlign: 'center', padding: '3rem 1rem', color: '#847C74' }}>
               <div style={{ marginBottom: '1rem' }}>{lang === 'es' ? 'Cargando residencias...' : 'Loading architectural residences...'}</div>
@@ -280,7 +312,8 @@ export const MapPage: React.FC<MapPageProps> = ({
                 padding: '3rem 1.5rem',
                 backgroundColor: '#FFFFFF',
                 borderRadius: '8px',
-                border: '1px solid rgba(0, 0, 0, 0.06)'
+                border: '1px solid rgba(0, 0, 0, 0.06)',
+                flexShrink: 0
               }}
             >
               <Building2 size={36} color="#847C74" style={{ margin: '0 auto 1rem auto' }} />
@@ -308,7 +341,14 @@ export const MapPage: React.FC<MapPageProps> = ({
                 property={prop}
                 isSelected={selectedProperty?.id === prop.id}
                 isHovered={hoveredPropertyId === prop.id}
-                onSelect={onSelectProperty}
+                onSelect={(p) => {
+                  setSelectedProperty(p);
+                  const cardEl = document.getElementById(`map-card-${p.id}`);
+                  if (cardEl) {
+                    cardEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                  }
+                }}
+                onOpenDetail={onSelectProperty}
                 onHover={setHoveredPropertyId}
                 lang={lang}
               />
@@ -321,6 +361,7 @@ export const MapPage: React.FC<MapPageProps> = ({
           className={`map-viewport-container ${mobileViewMode === 'map' ? 'mobile-visible' : 'mobile-hidden'}`}
           style={{
             flex: 1,
+            minWidth: 0,
             height: '100%',
             position: 'relative'
           }}
@@ -330,6 +371,7 @@ export const MapPage: React.FC<MapPageProps> = ({
             selectedProperty={selectedProperty}
             hoveredPropertyId={hoveredPropertyId}
             onSelectProperty={handleSelectFromMap}
+            onOpenDetail={onSelectProperty}
             onHoverProperty={setHoveredPropertyId}
             lang={lang}
           />
@@ -349,7 +391,10 @@ export const MapPage: React.FC<MapPageProps> = ({
               <MapPropertyCard
                 property={selectedProperty}
                 isSelected={true}
-                onSelect={onSelectProperty}
+                onSelect={(p) => {
+                  setSelectedProperty(p);
+                }}
+                onOpenDetail={onSelectProperty}
                 lang={lang}
                 compact={true}
               />
@@ -402,8 +447,22 @@ export const MapPage: React.FC<MapPageProps> = ({
         </button>
       </div>
 
-      {/* Responsive Media Styles */}
+      {/* Responsive Media Styles & Custom Luxury Scrollbar */}
       <style>{`
+        .map-list-sidebar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .map-list-sidebar::-webkit-scrollbar-track {
+          background: #F3EFE8;
+        }
+        .map-list-sidebar::-webkit-scrollbar-thumb {
+          background: #D1C9BE;
+          border-radius: 9999px;
+        }
+        .map-list-sidebar::-webkit-scrollbar-thumb:hover {
+          background: var(--color-burgundy-primary, #660E1A);
+        }
+
         @media (max-width: 900px) {
           .mobile-map-toggle-bar {
             display: flex !important;
@@ -417,6 +476,7 @@ export const MapPage: React.FC<MapPageProps> = ({
           .map-list-sidebar.mobile-visible {
             width: 100% !important;
             max-width: 100% !important;
+            flex: 1 1 100% !important;
             border-right: none !important;
           }
           .hidden-mobile {
