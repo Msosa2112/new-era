@@ -170,8 +170,8 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
       {/* 1. BREADCRUMB & ROSTER NAVIGATION BAR */}
       <div
         style={{
-          backgroundColor: '#FFFFFF',
-          borderBottom: '1px solid #E5E7EB',
+          backgroundColor: '#0C0D10',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
           padding: '0.85rem 0',
           position: 'sticky',
           top: 'var(--header-height)',
@@ -187,7 +187,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
               gap: '0.5rem',
               fontSize: '0.82rem',
               fontWeight: 600,
-              color: '#660E1A',
+              color: '#E64A2A',
               backgroundColor: 'transparent',
               border: 'none',
               cursor: 'pointer',
@@ -196,13 +196,15 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
             onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateX(-3px)')}
             onMouseLeave={(e) => (e.currentTarget.style.transform = 'none')}
           >
-            <ArrowLeft size={16} />
-            <span>{lang === 'es' ? 'Volver a Todos los Asesores' : 'Back to All Advisors'}</span>
+            <ArrowLeft size={16} color="#E64A2A" />
+            <span style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
+              {lang === 'es' ? 'Volver a Todos los Asesores' : 'Back to All Advisors'}
+            </span>
           </button>
 
           {/* Quick Roster Switcher */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '0.78rem', color: '#6B7280', display: 'none' }} className="roster-counter-text">
+            <span style={{ fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.5)', display: 'none' }} className="roster-counter-text">
               {currentIndex + 1} / {allAgents.length}
             </span>
             <button
@@ -212,13 +214,22 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                 width: '32px',
                 height: '32px',
                 borderRadius: '50%',
-                border: '1px solid #E5E7EB',
-                backgroundColor: '#F9FAFB',
+                border: '1px solid rgba(255, 255, 255, 0.18)',
+                backgroundColor: 'rgba(255, 255, 255, 0.08)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
-                color: '#374151'
+                color: '#FFFFFF',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.16)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.35)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.18)';
               }}
             >
               <ChevronLeft size={16} />
@@ -230,13 +241,22 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                 width: '32px',
                 height: '32px',
                 borderRadius: '50%',
-                border: '1px solid #E5E7EB',
-                backgroundColor: '#F9FAFB',
+                border: '1px solid rgba(255, 255, 255, 0.18)',
+                backgroundColor: 'rgba(255, 255, 255, 0.08)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
-                color: '#374151'
+                color: '#FFFFFF',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.16)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.35)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.18)';
               }}
             >
               <ChevronRight size={16} />

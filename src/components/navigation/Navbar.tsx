@@ -56,17 +56,17 @@ export const Navbar: React.FC<NavbarProps> = ({
           left: 0,
           width: '100%',
           zIndex: 1000,
-          transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+          transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
           backgroundColor: scrolled
-            ? 'rgba(18, 20, 24, 0.94)'
-            : 'transparent',
-          backdropFilter: scrolled ? 'blur(16px)' : 'none',
-          WebkitBackdropFilter: scrolled ? 'blur(16px)' : 'none',
-          borderBottom: scrolled
-            ? '1px solid rgba(255, 255, 255, 0.08)'
-            : 'none',
-          boxShadow: scrolled ? '0 10px 30px rgba(0, 0, 0, 0.3)' : 'none',
-          padding: scrolled ? '0.75rem 0' : '1.15rem 0'
+            ? 'rgba(10, 11, 14, 0.98)'
+            : 'rgba(10, 11, 14, 0.94)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          boxShadow: scrolled
+            ? '0 12px 32px rgba(0, 0, 0, 0.5)'
+            : '0 4px 20px rgba(0, 0, 0, 0.35)',
+          padding: scrolled ? '0.7rem 0' : '0.95rem 0'
         }}
       >
         <div className="container flex items-center justify-between">
@@ -80,11 +80,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               textAlign: 'left',
               background: 'none',
               border: 'none',
-              padding: 0
+              padding: 0,
+              cursor: 'pointer'
             }}
             aria-label="New Era Real Estate Home"
           >
-            <BrandLogo variant="full-white" height={scrolled ? 34 : 40} />
+            <BrandLogo variant="full-white" height={scrolled ? 34 : 38} />
           </button>
 
           {/* Desktop Navigation Links */}
@@ -103,20 +104,23 @@ export const Navbar: React.FC<NavbarProps> = ({
                   key={link.id}
                   onClick={() => handleLinkClick(link.id)}
                   style={{
-                    fontSize: '0.8rem',
+                    fontSize: '0.82rem',
                     fontWeight: 600,
-                    letterSpacing: '0.14em',
+                    letterSpacing: '0.12em',
                     textTransform: 'uppercase',
-                    color: isActive ? 'var(--color-orange-accent)' : 'rgba(255, 255, 255, 0.85)',
+                    color: isActive ? 'var(--color-orange-accent)' : 'rgba(255, 255, 255, 0.9)',
                     position: 'relative',
                     padding: '0.4rem 0',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
                     transition: 'color var(--transition-fast)'
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = '#FFFFFF')}
                   onMouseLeave={(e) =>
                     (e.currentTarget.style.color = isActive
                       ? 'var(--color-orange-accent)'
-                      : 'rgba(255, 255, 255, 0.85)')
+                      : 'rgba(255, 255, 255, 0.9)')
                   }
                 >
                   {lang === 'es' ? link.labelEs : link.labelEn}
@@ -127,7 +131,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         bottom: 0,
                         left: '50%',
                         transform: 'translateX(-50%)',
-                        width: '18px',
+                        width: '20px',
                         height: '2px',
                         backgroundColor: 'var(--color-orange-accent)',
                         borderRadius: '2px'
@@ -158,23 +162,25 @@ export const Navbar: React.FC<NavbarProps> = ({
                 fontSize: '0.75rem',
                 fontWeight: 700,
                 letterSpacing: '0.1em',
-                color: 'rgba(255, 255, 255, 0.75)',
-                border: '1px solid rgba(255, 255, 255, 0.18)',
+                color: '#FFFFFF',
+                backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                border: '1px solid rgba(255, 255, 255, 0.22)',
                 padding: '0.4rem 0.75rem',
-                borderRadius: 'var(--radius-xs)',
+                borderRadius: '6px',
+                cursor: 'pointer',
                 transition: 'all var(--transition-fast)'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.color = '#FFFFFF';
+                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.16)';
                 e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.4)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.color = 'rgba(255, 255, 255, 0.75)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.18)';
+                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.22)';
               }}
               aria-label="Toggle language"
             >
-              <Globe size={13} />
+              <Globe size={13} color="var(--color-orange-accent)" />
               <span>{lang === 'en' ? 'ES' : 'EN'}</span>
             </button>
 
@@ -185,11 +191,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.45rem',
-                fontSize: '0.8rem',
+                fontSize: '0.82rem',
                 fontWeight: 600,
                 color: '#FFFFFF',
-                letterSpacing: '0.04em'
+                letterSpacing: '0.04em',
+                textDecoration: 'none',
+                transition: 'opacity 0.2s'
               }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.85')}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
             >
               <Phone size={14} color="var(--color-orange-accent)" />
               <span>(502) 500-0409</span>
@@ -200,9 +210,13 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={onOpenConsultation}
               className="btn-primary"
               style={{
-                padding: '0.7rem 1.35rem',
+                padding: '0.65rem 1.35rem',
                 fontSize: '0.75rem',
-                letterSpacing: '0.12em'
+                letterSpacing: '0.1em',
+                backgroundColor: '#660E1A',
+                color: '#FFFFFF',
+                borderRadius: '6px',
+                border: '1px solid rgba(255, 255, 255, 0.15)'
               }}
             >
               <span>{lang === 'es' ? 'Agendar Cita' : 'Book Advisory'}</span>
@@ -215,7 +229,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '0.75rem'
+              gap: '0.65rem'
             }}
             className="mobile-actions"
           >
@@ -225,12 +239,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.25rem',
-                fontSize: '0.7rem',
+                fontSize: '0.72rem',
                 fontWeight: 700,
                 color: '#FFFFFF',
-                border: '1px solid rgba(255, 255, 255, 0.25)',
-                padding: '0.35rem 0.6rem',
-                borderRadius: 'var(--radius-xs)'
+                backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                border: '1px solid rgba(255, 255, 255, 0.22)',
+                padding: '0.35rem 0.65rem',
+                borderRadius: '6px',
+                cursor: 'pointer'
               }}
             >
               {lang === 'en' ? 'ES' : 'EN'}
@@ -242,15 +258,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: '42px',
-                height: '42px',
+                width: '40px',
+                height: '40px',
                 color: '#FFFFFF',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: 'var(--radius-xs)'
+                backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                border: '1px solid rgba(255, 255, 255, 0.22)',
+                borderRadius: '6px',
+                cursor: 'pointer'
               }}
               aria-label="Toggle navigation menu"
             >
-              {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
