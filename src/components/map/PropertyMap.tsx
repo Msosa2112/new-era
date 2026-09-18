@@ -4,9 +4,8 @@ import 'leaflet/dist/leaflet.css';
 import './PropertyMap.css';
 import { Property } from '../../types/property';
 import { Layers, Crosshair, ZoomIn, ZoomOut, Globe, Map as MapIcon } from 'lucide-react';
-import { GOOGLE_MAP_TILES } from '../../lib/googleMaps';
 
-type MapLayerStyle = 'google-hybrid' | 'google-roadmap' | 'architectural';
+type MapLayerStyle = 'satellite-hybrid' | 'streets' | 'architectural';
 
 interface PropertyMapProps {
   properties: Property[];
@@ -46,28 +45,62 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersRef = useRef<Map<string, L.Marker>>(new Map());
-  const tileLayerRef = useRef<L.TileLayer | null>(null);
-  const [mapStyle, setMapStyle] = useState<MapLayerStyle>('google-hybrid');
+  const tileLayersRef = useRef<L.Layer[]>([]);
+  const [mapStyle, setMapStyle] = useState<MapLayerStyle>('satellite-hybrid');
 
-  // Tile layer sources: Official Google Maps & Architectural
-  const tileSources: Record<MapLayerStyle, { url: string; attribution: string; maxZoom: number; subdomains?: string[] | string }> = {
-    'google-hybrid': {
-      url: GOOGLE_MAP_TILES.hybrid.url,
-      attribution: GOOGLE_MAP_TILES.hybrid.attribution,
-      maxZoom: 20,
-      subdomains: GOOGLE_MAP_TILES.hybrid.subdomains
-    },
-    'google-roadmap': {
-      url: GOOGLE_MAP_TILES.roadmap.url,
-      attribution: GOOGLE_MAP_TILES.roadmap.attribution,
-      maxZoom: 20,
-      subdomains: GOOGLE_MAP_TILES.roadmap.subdomains
-    },
-    'architectural': {
-      url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
-      maxZoom: 19,
-      subdomains: 'abcd'
+  // Helper to mount active tile layers cleanly
+  const applyTileLayers = (map: L.Map, style: MapLayerStyle) => {
+    tileLayersRef.current.forEach((layer) => {
+      try {
+        if (map.hasLayer(layer)) {
+          map.removeLayer(layer);
+        }
+      } catch {
+        // Ignore unmount error if already detached
+      }
+    });
+    tileLayersRef.current = [];
+
+    if (style === 'satellite-hybrid') {
+      const satLayer = L.tileLayer(
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        {
+          attribution: 'Esri, Maxar, Earthstar Geographics',
+          maxZoom: 19
+        }
+      );
+      const labelsLayer = L.tileLayer(
+        'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+        {
+          attribution: 'Esri',
+          maxZoom: 19
+        }
+      );
+      satLayer.addTo(map);
+      labelsLayer.addTo(map);
+      tileLayersRef.current = [satLayer, labelsLayer];
+    } else if (style === 'streets') {
+      const streetsLayer = L.tileLayer(
+        'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+        {
+          attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+          subdomains: 'abcd',
+          maxZoom: 19
+        }
+      );
+      streetsLayer.addTo(map);
+      tileLayersRef.current = [streetsLayer];
+    } else if (style === 'architectural') {
+      const lightLayer = L.tileLayer(
+        'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+        {
+          attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+          subdomains: 'abcd',
+          maxZoom: 19
+        }
+      );
+      lightLayer.addTo(map);
+      tileLayersRef.current = [lightLayer];
     }
   };
 
@@ -83,15 +116,8 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
       attributionControl: false
     });
 
-    const initialSource = tileSources[mapStyle];
-    const tiles = L.tileLayer(initialSource.url, {
-      attribution: initialSource.attribution,
-      maxZoom: initialSource.maxZoom,
-      subdomains: 'abcd'
-    }).addTo(map);
-
-    tileLayerRef.current = tiles;
     mapInstanceRef.current = map;
+    applyTileLayers(map, mapStyle);
 
     // Invalidate size on resize or transition
     const resizeObserver = new ResizeObserver(() => {
@@ -108,18 +134,8 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
 
   // Handle Tile Style Switching
   useEffect(() => {
-    if (!mapInstanceRef.current || !tileLayerRef.current) return;
-    const current = mapInstanceRef.current;
-    const source = tileSources[mapStyle];
-
-    current.removeLayer(tileLayerRef.current);
-    const newTiles = L.tileLayer(source.url, {
-      attribution: source.attribution,
-      maxZoom: source.maxZoom,
-      subdomains: 'abcd'
-    }).addTo(current);
-
-    tileLayerRef.current = newTiles;
+    if (!mapInstanceRef.current) return;
+    applyTileLayers(mapInstanceRef.current, mapStyle);
   }, [mapStyle]);
 
   // Update Markers when properties list changes
@@ -326,7 +342,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
         >
           <button
             type="button"
-            onClick={() => setMapStyle('google-hybrid')}
+            onClick={() => setMapStyle('satellite-hybrid')}
             style={{
               padding: '6px 10px',
               borderRadius: '6px',
@@ -334,22 +350,22 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
               cursor: 'pointer',
               fontSize: '11px',
               fontWeight: 700,
-              backgroundColor: mapStyle === 'google-hybrid' ? 'var(--color-burgundy-primary, #660E1A)' : 'transparent',
-              color: mapStyle === 'google-hybrid' ? '#FFFFFF' : '#272C35',
+              backgroundColor: mapStyle === 'satellite-hybrid' ? 'var(--color-burgundy-primary, #660E1A)' : 'transparent',
+              color: mapStyle === 'satellite-hybrid' ? '#FFFFFF' : '#272C35',
               transition: 'all 160ms ease',
               display: 'flex',
               alignItems: 'center',
               gap: '4px'
             }}
-            title="Google Maps Hybrid Satellite View"
+            title={lang === 'es' ? 'Vista Satelital de Alta Definición' : 'High-Definition Satellite Imagery'}
           >
             <Globe size={13} />
-            <span>{lang === 'es' ? 'Google Satélite' : 'Google Satellite'}</span>
+            <span>{lang === 'es' ? 'Satélite HD' : 'Satellite HD'}</span>
           </button>
 
           <button
             type="button"
-            onClick={() => setMapStyle('google-roadmap')}
+            onClick={() => setMapStyle('streets')}
             style={{
               padding: '6px 10px',
               borderRadius: '6px',
@@ -357,17 +373,17 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
               cursor: 'pointer',
               fontSize: '11px',
               fontWeight: 700,
-              backgroundColor: mapStyle === 'google-roadmap' ? 'var(--color-burgundy-primary, #660E1A)' : 'transparent',
-              color: mapStyle === 'google-roadmap' ? '#FFFFFF' : '#272C35',
+              backgroundColor: mapStyle === 'streets' ? 'var(--color-burgundy-primary, #660E1A)' : 'transparent',
+              color: mapStyle === 'streets' ? '#FFFFFF' : '#272C35',
               transition: 'all 160ms ease',
               display: 'flex',
               alignItems: 'center',
               gap: '4px'
             }}
-            title="Google Maps Standard Vector Roadmap"
+            title={lang === 'es' ? 'Mapa Detallado de Calles' : 'Detailed Streets Map'}
           >
             <MapIcon size={13} />
-            <span>Google Maps</span>
+            <span>{lang === 'es' ? 'Calles' : 'Streets'}</span>
           </button>
 
           <button
@@ -387,7 +403,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
               alignItems: 'center',
               gap: '4px'
             }}
-            title="Architectural Minimal Light View"
+            title={lang === 'es' ? 'Vista Arquitectónica Clara' : 'Architectural Minimal Light View'}
           >
             <Layers size={13} />
             <span>{lang === 'es' ? 'Claro' : 'Light'}</span>
