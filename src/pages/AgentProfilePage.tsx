@@ -35,7 +35,6 @@ import {
   loadSavedProfileMobileFraming,
   saveProfileMobileFramingToStorage
 } from '../data/agentFramingConfig';
-import { ProfilePhotoFramingCalibrator } from '../components/team/ProfilePhotoFramingCalibrator';
 
 interface AgentProfilePageProps {
   agent: Agent;
@@ -163,8 +162,8 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
       style={{
         paddingTop: 'var(--header-height)',
         minHeight: '100vh',
-        backgroundColor: '#FBFBFC',
-        color: '#111827'
+        backgroundColor: '#0C0D10',
+        color: '#FFFFFF'
       }}
     >
       {/* 1. BREADCRUMB & ROSTER NAVIGATION BAR */}
@@ -172,10 +171,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
         style={{
           backgroundColor: '#0C0D10',
           borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          padding: '0.85rem 0',
-          position: 'sticky',
-          top: 'var(--header-height)',
-          zIndex: 40
+          padding: '0.85rem 0'
         }}
       >
         <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -594,7 +590,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
       </section>
 
       {/* 3. PROFILE TABS & SECTION CONTENT */}
-      <section className="section-padding" style={{ paddingBottom: '3rem' }}>
+      <section className="section-padding" style={{ backgroundColor: '#FBFBFC', color: '#111827', paddingBottom: '3rem' }}>
         <div className="container">
           {/* NAVIGATION TABS */}
           <div
@@ -1433,18 +1429,6 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
           }
         }
       `}</style>
-
-      {/* 6. PROFILE PHOTO & GRADIENT CALIBRATOR (FLOATING) */}
-      <ProfilePhotoFramingCalibrator
-        agents={allAgents}
-        currentAgent={agent}
-        onSelectAgent={onSelectAgent}
-        desktopFramingMap={desktopProfileMap}
-        mobileFramingMap={mobileProfileMap}
-        onUpdateFraming={handleUpdateFraming}
-        onResetAgent={handleResetAgent}
-        onResetAll={handleResetAll}
-      />
     </main>
   );
 };
