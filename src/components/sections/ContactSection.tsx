@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Phone, Mail, MapPin, Clock, ArrowRight, CheckCircle2, ShieldCheck, Sparkles } from 'lucide-react';
 import { BROKERAGE_DATA } from '../../data/agentsData';
 import { HexPattern } from '../common/HexPattern';
+import { submitLead } from '../../lib/supabase';
 
 interface ContactSectionProps {
   lang: 'en' | 'es';
@@ -14,9 +15,20 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ lang }) => {
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    await submitLead({
+      name,
+      email,
+      phone,
+      message,
+      type: 'general',
+      metadata: { inquiryType }
+    });
+    setIsSubmitting(false);
     setSubmitted(true);
   };
 
@@ -31,7 +43,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ lang }) => {
         overflow: 'hidden'
       }}
     >
-      <HexPattern variant="gradient-vibrant" opacity={0.12} size={640} maskFade="radial-top-right" />
+      <HexPattern variant="gradient-vibrant" opacity={0.12} maskFade="radial-top-right" />
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
         <div
           style={{

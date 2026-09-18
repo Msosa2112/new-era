@@ -8,21 +8,35 @@ import { Phone, Mail, Award, Globe, Building2, X, ArrowRight, CheckCircle2 } fro
 
 interface AgentsPageProps {
   onSelectProperty: (property: Property) => void;
+  onSelectAgent?: (agent: Agent) => void;
   lang: 'en' | 'es';
 }
 
-export const AgentsPage: React.FC<AgentsPageProps> = ({ onSelectProperty, lang }) => {
+export const AgentsPage: React.FC<AgentsPageProps> = ({ onSelectProperty, onSelectAgent, lang }) => {
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
   const [agentProperties, setAgentProperties] = useState<Property[]>([]);
   const [filterLang, setFilterLang] = useState<string>('All');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const allAgents = propertyService.getAgents();
 
-  const filteredAgents = filterLang === 'All'
-    ? allAgents
-    : allAgents.filter(a => a.languages.includes(filterLang));
+  const filteredAgents = allAgents.filter((a) => {
+    const matchesLang = filterLang === 'All' || a.languages.includes(filterLang);
+    const q = searchQuery.toLowerCase().trim();
+    const matchesQuery =
+      !q ||
+      a.name.toLowerCase().includes(q) ||
+      a.email.toLowerCase().includes(q) ||
+      a.phone.toLowerCase().includes(q) ||
+      a.specialties.some((s) => s.toLowerCase().includes(q));
+    return matchesLang && matchesQuery;
+  });
 
   const handleSelectAgent = async (agent: Agent) => {
+    if (onSelectAgent) {
+      onSelectAgent(agent);
+      return;
+    }
     setSelectedAgent(agent);
     const props = await propertyService.getPropertiesByAgentId(agent.id);
     setAgentProperties(props);
@@ -39,7 +53,7 @@ export const AgentsPage: React.FC<AgentsPageProps> = ({ onSelectProperty, lang }
           position: 'relative'
         }}
       >
-        <HexPattern variant="gradient-burgundy" opacity={0.16} size={580} maskFade="radial-top-right" />
+        <HexPattern variant="gradient-burgundy" opacity={0.16} maskFade="radial-top-right" />
         <div className="container" style={{ position: 'relative', zIndex: 1, maxWidth: '880px' }}>
           <span className="display-subtitle" style={{ color: 'var(--color-orange-accent)' }}>
             {lang === 'es' ? 'DIRECTORIO DE ASESORES' : 'ADVISORY ROSTER'}
@@ -53,28 +67,47 @@ export const AgentsPage: React.FC<AgentsPageProps> = ({ onSelectProperty, lang }
               : 'A dedicated team of licensed real estate professionals delivering precision, local mastery, and unwavering advocacy.'}
           </p>
 
-          {/* Language filter pills */}
-          <div style={{ display: 'flex', gap: '0.5rem', marginTop: '2rem', flexWrap: 'wrap' }}>
-            {['All', 'Spanish', 'English', 'Italian'].map((l) => (
-              <button
-                key={l}
-                onClick={() => setFilterLang(l)}
-                style={{
-                  padding: '0.45rem 1rem',
-                  fontSize: '0.75rem',
-                  fontWeight: 700,
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                  borderRadius: 'var(--radius-xs)',
-                  border: filterLang === l ? '1px solid var(--color-orange-accent)' : '1px solid rgba(255, 255, 255, 0.2)',
-                  backgroundColor: filterLang === l ? 'var(--color-orange-accent)' : 'transparent',
-                  color: '#FFFFFF',
-                  transition: 'all var(--transition-fast)'
-                }}
-              >
-                {l === 'All' ? (lang === 'es' ? 'Todos los Asesores' : 'All Advisors') : l}
-              </button>
-            ))}
+          {/* Search and Language Filter Controls */}
+          <div style={{ display: 'flex', gap: '1rem', marginTop: '2.25rem', flexWrap: 'wrap', alignItems: 'center' }}>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={lang === 'es' ? 'Buscar asesor por nombre, correo o especialidad...' : 'Search agent by name, email or specialty...'}
+              style={{
+                flex: '1 1 280px',
+                padding: '0.65rem 1rem',
+                borderRadius: 'var(--radius-xs)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                color: '#FFFFFF',
+                fontSize: '0.85rem'
+              }}
+            />
+
+            <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+              {['All', 'Spanish', 'English'].map((l) => (
+                <button
+                  key={l}
+                  onClick={() => setFilterLang(l)}
+                  style={{
+                    padding: '0.55rem 0.95rem',
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                    letterSpacing: '0.1em',
+                    textTransform: 'uppercase',
+                    borderRadius: 'var(--radius-xs)',
+                    border: filterLang === l ? '1px solid var(--color-orange-accent)' : '1px solid rgba(255, 255, 255, 0.2)',
+                    backgroundColor: filterLang === l ? 'var(--color-orange-accent)' : 'transparent',
+                    color: '#FFFFFF',
+                    transition: 'all var(--transition-fast)',
+                    cursor: 'pointer'
+                  }}
+                >
+                  {l === 'All' ? (lang === 'es' ? 'Todos' : 'All') : l}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -82,11 +115,17 @@ export const AgentsPage: React.FC<AgentsPageProps> = ({ onSelectProperty, lang }
       {/* Agents Editorial Grid */}
       <section className="section-padding">
         <div className="container">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+            <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
+              {filteredAgents.length} {lang === 'es' ? 'Asesores Disponibles' : 'Advisors Available'}
+            </span>
+          </div>
+
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-              gap: '2.5rem'
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: '2rem'
             }}
           >
             {filteredAgents.map((agent, idx) => (
@@ -157,17 +196,34 @@ export const AgentsPage: React.FC<AgentsPageProps> = ({ onSelectProperty, lang }
                 alignItems: 'start'
               }}
             >
-              <img
-                src={selectedAgent.photoUrl}
-                alt={selectedAgent.name}
+              <div
                 style={{
+                  position: 'relative',
                   width: '100%',
-                  aspectRatio: '1/1.2',
-                  objectFit: 'cover',
+                  aspectRatio: '1 / 1.2',
+                  overflow: 'hidden',
+                  background:
+                    'radial-gradient(circle at 50% 32%, rgba(139, 29, 65, 0.3) 0%, rgba(18, 20, 24, 0.98) 75%), #0c0d10',
                   borderRadius: 'var(--radius-xs)',
-                  border: '2px solid var(--color-burgundy-primary)'
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  display: 'flex',
+                  alignItems: 'flex-end',
+                  justifyContent: 'center',
+                  padding: '1rem 0.5rem 0 0.5rem'
                 }}
-              />
+              >
+                <img
+                  src={selectedAgent.photoNobgUrl || selectedAgent.photoUrl}
+                  alt={selectedAgent.name}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                    objectPosition: 'bottom center',
+                    filter: 'drop-shadow(0 12px 24px rgba(0, 0, 0, 0.5))'
+                  }}
+                />
+              </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                 <div>

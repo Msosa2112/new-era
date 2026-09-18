@@ -59,11 +59,12 @@ export const Navbar: React.FC<NavbarProps> = ({
           transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
           backgroundColor: scrolled
             ? 'rgba(18, 20, 24, 0.94)'
-            : 'rgba(18, 20, 24, 0.45)',
-          backdropFilter: 'blur(16px)',
+            : 'transparent',
+          backdropFilter: scrolled ? 'blur(16px)' : 'none',
+          WebkitBackdropFilter: scrolled ? 'blur(16px)' : 'none',
           borderBottom: scrolled
             ? '1px solid rgba(255, 255, 255, 0.08)'
-            : '1px solid rgba(255, 255, 255, 0.04)',
+            : 'none',
           boxShadow: scrolled ? '0 10px 30px rgba(0, 0, 0, 0.3)' : 'none',
           padding: scrolled ? '0.75rem 0' : '1.15rem 0'
         }}
@@ -271,7 +272,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             overflow: 'hidden'
           }}
         >
-          <HexPattern variant="gradient-vibrant" opacity={0.16} size={280} />
+          <HexPattern variant="gradient-vibrant" opacity={0.16} />
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem', position: 'relative', zIndex: 1 }}>
             <span className="display-subtitle">
               {lang === 'es' ? 'Menú Principal' : 'Navigation'}

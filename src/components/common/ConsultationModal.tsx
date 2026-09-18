@@ -3,6 +3,7 @@ import { X, CheckCircle2, Phone, Calendar, ArrowRight, ShieldCheck } from 'lucid
 import { BrandLogo } from './BrandLogo';
 import { HexPattern } from './HexPattern';
 import { BROKERAGE_DATA } from '../../data/agentsData';
+import { submitLead } from '../../lib/supabase';
 
 interface ConsultationModalProps {
   isOpen: boolean;
@@ -23,11 +24,22 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
   const [time, setTime] = useState('10:00 AM');
   const [notes, setNotes] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    await submitLead({
+      name,
+      email,
+      phone,
+      message: notes,
+      type: 'general',
+      metadata: { service, preferredDate: date, preferredTime: time }
+    });
+    setIsSubmitting(false);
     setSubmitted(true);
   };
 
@@ -61,7 +73,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
           overflowY: 'auto'
         }}
       >
-        <HexPattern variant="gradient-vibrant" opacity={0.18} size={240} />
+        <HexPattern variant="gradient-vibrant" opacity={0.18} />
         <button
           onClick={onClose}
           style={{

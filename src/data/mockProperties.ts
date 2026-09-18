@@ -146,7 +146,7 @@ export const MOCK_PROPERTIES: Property[] = [
       yearBuilt: 1912,
       daysOnMarket: 9
     },
-    agentId: 'claudiakyrealtor',
+    agentId: 'claudia-aguilera-cuenca',
     listedAt: '2026-09-08',
     updatedAt: '2026-09-16'
   },
@@ -207,7 +207,7 @@ export const MOCK_PROPERTIES: Property[] = [
       yearBuilt: 2024,
       daysOnMarket: 3
     },
-    agentId: 'dianelis-rodriguez',
+    agentId: 'dianelis-segrea-castellon',
     listedAt: '2026-09-14',
     updatedAt: '2026-09-17'
   },
@@ -321,7 +321,7 @@ export const MOCK_PROPERTIES: Property[] = [
       yearBuilt: 1954,
       daysOnMarket: 11
     },
-    agentId: 'geraldine-sanchez',
+    agentId: 'geraldine-santiago-then',
     listedAt: '2026-09-06',
     updatedAt: '2026-09-14'
   },
@@ -375,7 +375,7 @@ export const MOCK_PROPERTIES: Property[] = [
       yearBuilt: 2022,
       daysOnMarket: 18
     },
-    agentId: 'gio-del-mare',
+    agentId: 'yenny-mendoza-molina',
     listedAt: '2026-08-30',
     updatedAt: '2026-09-12'
   }

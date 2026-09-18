@@ -20,7 +20,7 @@ import {
   Compass,
   ArrowRight
 } from 'lucide-react';
-import { Property, TourBookingRequest } from '../../types/property';
+import { Property, TourBookingRequest, Agent } from '../../types/property';
 import { propertyService } from '../../services/propertyService';
 import { BROKERAGE_DATA } from '../../data/agentsData';
 import { HexPattern } from '../common/HexPattern';
@@ -29,6 +29,7 @@ interface PropertyDetailViewProps {
   property: Property;
   onClose: () => void;
   onSelectProperty: (property: Property) => void;
+  onSelectAgent?: (agent: Agent) => void;
   lang: 'en' | 'es';
 }
 
@@ -36,6 +37,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
   property,
   onClose,
   onSelectProperty,
+  onSelectAgent,
   lang
 }) => {
   const [activeMediaIndex, setActiveMediaIndex] = useState(0);
@@ -46,6 +48,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
   const [clientEmail, setClientEmail] = useState('');
   const [clientPhone, setClientPhone] = useState('');
   const [tourBooked, setTourBooked] = useState(false);
+  const [isSubmittingTour, setIsSubmittingTour] = useState(false);
 
   // Mortgage Calculator State
   const [downPaymentPercent, setDownPaymentPercent] = useState(20);
@@ -77,8 +80,26 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
     maximumFractionDigits: 0
   }).format(property.price);
 
-  const handleTourSubmit = (e: React.FormEvent) => {
+  const handleTourSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmittingTour(true);
+    const { submitLead } = await import('../../lib/supabase');
+    await submitLead({
+      name: clientName,
+      email: clientEmail,
+      phone: clientPhone,
+      type: 'tour',
+      propertyId: property.id,
+      agentId: property.agentId,
+      message: `Requested ${tourType} tour on ${tourDate} at ${tourTime}`,
+      metadata: {
+        tourDate,
+        tourTime,
+        tourType,
+        propertyTitle: property.title
+      }
+    });
+    setIsSubmittingTour(false);
     setTourBooked(true);
   };
 
@@ -522,6 +543,20 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                   </p>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                    {onSelectAgent && (
+                      <button
+                        onClick={() => {
+                          onClose();
+                          onSelectAgent(agent);
+                        }}
+                        className="btn-primary"
+                        style={{ width: '100%', justifyContent: 'center', fontSize: '0.8rem', padding: '0.75rem', backgroundColor: '#660E1A' }}
+                      >
+                        <span>{lang === 'es' ? 'Ver Perfil del Asesor' : 'View Full Agent Profile'}</span>
+                        <ArrowRight size={14} />
+                      </button>
+                    )}
+
                     <a
                       href={`tel:${agent.phone.replace(/[^0-9]/g, '')}`}
                       className="btn-outline"
@@ -555,7 +590,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                   overflow: 'hidden'
                 }}
               >
-                <HexPattern variant="gradient-vibrant" opacity={0.20} size={240} />
+                <HexPattern variant="gradient-vibrant" opacity={0.20} />
                 <div style={{ position: 'relative', zIndex: 1 }}>
                   <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
                     <Calendar size={16} color="var(--color-orange-accent)" />

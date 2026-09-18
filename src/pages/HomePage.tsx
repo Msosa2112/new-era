@@ -6,6 +6,7 @@ import { PropertyCard } from '../components/properties/PropertyCard';
 import { AgentCard } from '../components/agents/AgentCard';
 import { PhilosophySection } from '../components/sections/PhilosophySection';
 import { BuySellSection } from '../components/sections/BuySellSection';
+import { TeamShowcaseSection } from '../components/sections/TeamShowcaseSection';
 import { TechnologySection } from '../components/sections/TechnologySection';
 import { ContactSection } from '../components/sections/ContactSection';
 import { Property, PropertyFilter, Agent } from '../types/property';
@@ -41,7 +42,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
   return (
     <main style={{ position: 'relative' }}>
-      {/* CHAPTER 01 & 02: THE BRAND & 3D BLUEPRINT TRANSFORMATION HERO */}
+      {/* CHAPTER 01 & 02: BRAND HERO */}
       <BlueprintHero3D
         onExploreProperties={() => {
           const searchSection = document.getElementById('search-chapter');
@@ -50,14 +51,21 @@ export const HomePage: React.FC<HomePageProps> = ({
         lang={lang}
       />
 
+      {/* TEAM MEMBERS / ADVISORS SHOWCASE */}
+      <TeamShowcaseSection
+        onSelectAgent={onSelectAgent}
+        onNavigate={onNavigate}
+        lang={lang}
+      />
+
       {/* CHAPTER 03: FIND YOUR NEXT ERA SEARCH INTERFACE */}
       <section
         id="search-chapter"
         style={{
           position: 'relative',
-          marginTop: '-4rem',
-          zIndex: 30,
-          paddingBottom: '3rem'
+          zIndex: 10,
+          backgroundColor: 'var(--bg-primary)',
+          padding: '4.5rem 0 3.5rem 0'
         }}
       >
         <div className="container">
@@ -102,11 +110,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
           {/* Editorial 2x2 Large Property Grid */}
           <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-              gap: '2.5rem'
-            }}
+            className="property-grid-container"
           >
             {featuredProperties.map((prop, idx) => (
               <PropertyCard
@@ -133,58 +137,6 @@ export const HomePage: React.FC<HomePageProps> = ({
         onNavigate={onNavigate}
         onOpenConsultation={onOpenConsultation}
       />
-
-      {/* CHAPTER 08: THE PEOPLE (AGENTS BEHIND THE PROPERTY) */}
-      <section className="section-padding" style={{ backgroundColor: 'var(--bg-surface)', position: 'relative' }}>
-        <div className="container">
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'space-between',
-              alignItems: 'flex-end',
-              gap: '1.5rem',
-              marginBottom: '3.5rem'
-            }}
-          >
-            <div>
-              <span className="display-subtitle">
-                {lang === 'es' ? 'EL EQUIPO HUMANO' : 'THE ADVISORS'}
-              </span>
-              <h2 className="display-title" style={{ marginTop: '0.5rem' }}>
-                {lang === 'es' ? 'LAS PERSONAS DETRÁS DE CADA PROPIEDAD' : 'THE PEOPLE BEHIND THE PROPERTY'}
-              </h2>
-            </div>
-
-            <button
-              onClick={() => onNavigate('agents')}
-              className="btn-outline"
-            >
-              <span>{lang === 'es' ? 'Conocer Todo el Roster' : 'View All Agents'}</span>
-              <ArrowRight size={16} />
-            </button>
-          </div>
-
-          {/* Agents Grid */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-              gap: '2rem'
-            }}
-          >
-            {featuredAgents.slice(0, 4).map((agent, idx) => (
-              <AgentCard
-                key={agent.id}
-                agent={agent}
-                index={idx}
-                onSelectAgent={onSelectAgent}
-                lang={lang}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* CHAPTER 09: THE TECHNOLOGY & MLS INTEGRATION ARCHITECTURE */}
       <TechnologySection lang={lang} />

@@ -93,9 +93,8 @@ export const PhilosophySection: React.FC<PhilosophySectionProps> = ({ lang, onEx
         overflow: 'hidden'
       }}
     >
-      {/* Background CAD grid & Subtle Corner Brand Pattern */}
-      <div className="arch-grid-dark" />
-      <HexPattern variant="gradient-glow" opacity={0.08} size={640} maskFade="radial-corner" />
+      {/* Official Brand Vector Pattern Background */}
+      <HexPattern variant="gradient-burgundy" opacity={0.22} maskFade="none" />
 
       <div className="container" style={{ position: 'relative', zIndex: 10 }}>
         {/* Section Header */}
@@ -235,7 +234,7 @@ export const PhilosophySection: React.FC<PhilosophySectionProps> = ({ lang, onEx
             overflow: 'hidden'
           }}
         >
-          <HexPattern variant="gradient-orange" opacity={0.14} size={540} maskFade="radial-center" />
+          <HexPattern variant="gradient-orange" opacity={0.14} maskFade="radial-center" />
           <div style={{ position: 'relative', zIndex: 1 }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
               <span className="tag-badge tag-badge-accent">

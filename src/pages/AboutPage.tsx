@@ -20,7 +20,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenConsultation, lang }
           position: 'relative'
         }}
       >
-        <HexPattern variant="gradient-orange" opacity={0.16} size={580} maskFade="radial-top-right" />
+        <HexPattern variant="gradient-orange" opacity={0.16} maskFade="radial-top-right" />
         <div className="container" style={{ position: 'relative', zIndex: 1, maxWidth: '880px' }}>
           <span className="display-subtitle" style={{ color: 'var(--color-orange-accent)' }}>
             {lang === 'es' ? 'NUESTRA HISTORIA' : 'OUR HERITAGE & VISION'}

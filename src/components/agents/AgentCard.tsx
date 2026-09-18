@@ -72,37 +72,63 @@ export const AgentCard: React.FC<AgentCardProps> = ({
         </span>
       </div>
 
-      {/* Portrait Photo with Luxury Framing */}
+      {/* Portrait Cutout Photo with Luxury Studio Backdrop */}
       <div
         style={{
           position: 'relative',
           width: '100%',
-          aspectRatio: '1/1.15',
+          aspectRatio: '1 / 1.18',
           overflow: 'hidden',
-          backgroundColor: 'var(--color-charcoal-900)'
+          background:
+            'radial-gradient(circle at 50% 32%, rgba(139, 29, 65, 0.24) 0%, rgba(18, 20, 24, 0.98) 75%), #0c0d10',
+          display: 'flex',
+          alignItems: 'flex-end',
+          justifyContent: 'center',
+          padding: '1rem 0.5rem 0 0.5rem'
         }}
       >
+        {/* Subtle Ambient Studio Halo */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '20%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '65%',
+            height: '65%',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(230, 81, 0, 0.15) 0%, transparent 70%)',
+            pointerEvents: 'none',
+            filter: 'blur(20px)'
+          }}
+        />
+
         <img
-          src={agent.photoUrl}
+          src={agent.photoNobgUrl || agent.photoUrl}
           alt={agent.name}
           style={{
             width: '100%',
             height: '100%',
-            objectFit: 'cover',
-            objectPosition: 'center 20%',
-            transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-            transform: isHovered ? 'scale(1.04)' : 'scale(1)'
+            objectFit: 'contain',
+            objectPosition: 'bottom center',
+            transition: 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.45s ease',
+            transform: isHovered ? 'scale(1.05) translateY(-2px)' : 'scale(1)',
+            filter: isHovered
+              ? 'brightness(1.06) drop-shadow(0 14px 28px rgba(0, 0, 0, 0.6))'
+              : 'drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45))',
+            zIndex: 1
           }}
         />
 
-        {/* Ambient Dark Gradient at bottom */}
+        {/* Ambient Bottom Gradient for seamless transition */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
             background:
-              'linear-gradient(180deg, transparent 60%, rgba(12, 13, 16, 0.75) 100%)',
-            pointerEvents: 'none'
+              'linear-gradient(180deg, transparent 70%, rgba(12, 13, 16, 0.6) 100%)',
+            pointerEvents: 'none',
+            zIndex: 2
           }}
         />
 
@@ -110,10 +136,11 @@ export const AgentCard: React.FC<AgentCardProps> = ({
         <div
           style={{
             position: 'absolute',
-            bottom: '1rem',
+            bottom: '0.85rem',
             left: '1.25rem',
             display: 'flex',
-            gap: '0.4rem'
+            gap: '0.4rem',
+            zIndex: 3
           }}
         >
           {agent.languages.map((l) => (
@@ -124,11 +151,12 @@ export const AgentCard: React.FC<AgentCardProps> = ({
                 fontWeight: 700,
                 letterSpacing: '0.08em',
                 textTransform: 'uppercase',
-                backgroundColor: 'rgba(18, 20, 24, 0.8)',
+                backgroundColor: 'rgba(18, 20, 24, 0.85)',
                 color: '#FFFFFF',
                 padding: '0.2rem 0.5rem',
                 borderRadius: 'var(--radius-xs)',
-                backdropFilter: 'blur(4px)'
+                backdropFilter: 'blur(6px)',
+                border: '1px solid rgba(255, 255, 255, 0.1)'
               }}
             >
               {l}

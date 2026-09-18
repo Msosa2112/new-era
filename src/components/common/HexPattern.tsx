@@ -25,12 +25,15 @@ export type HexPatternMaskFade =
   | 'right-to-left'
   | 'top-to-bottom';
 
+export type HexPatternMode = 'cover' | 'repeat' | 'contain' | 'auto';
+
 interface HexPatternProps {
   opacity?: number;
   className?: string;
   variant?: HexPatternVariant;
   gradient?: string;
-  size?: number; // Size in px of pattern tile (defaults to larger 520px for clear architectural geometry)
+  size?: number; // Base height scale in px (width will preserve native 1.9733 aspect ratio to prevent distorted seams)
+  mode?: HexPatternMode;
   maskFade?: HexPatternMaskFade;
   blendMode?: React.CSSProperties['mixBlendMode'];
   style?: React.CSSProperties;
@@ -41,7 +44,8 @@ export const HexPattern: React.FC<HexPatternProps> = ({
   className = '',
   variant = 'subtle',
   gradient,
-  size = 520,
+  size,
+  mode = 'auto',
   maskFade = 'none',
   blendMode,
   style = {}
@@ -137,6 +141,28 @@ export const HexPattern: React.FC<HexPatternProps> = ({
     };
   }
 
+  // Exact aspect ratio of the master pattern SVG (18736.6 / 9494.85 = 1.973354)
+  const patternAspect = 18736.6 / 9494.85;
+
+  // Master Hero-matched visual scale: 960px height = 1894px width
+  const UNIFIED_PATTERN_HEIGHT = 960;
+
+  let bgSize = 'cover';
+  let bgRepeat = 'no-repeat';
+
+  if (mode === 'cover') {
+    bgSize = 'cover';
+    bgRepeat = 'no-repeat';
+  } else if (mode === 'contain') {
+    bgSize = 'contain';
+    bgRepeat = 'no-repeat';
+  } else {
+    // Exact identical line thickness & proportion as the Hero everywhere
+    const s = size || UNIFIED_PATTERN_HEIGHT;
+    bgSize = `${Math.round(s * patternAspect)}px ${s}px`;
+    bgRepeat = 'repeat';
+  }
+
   // If a custom gradient string is passed
   if (gradient) {
     return (
@@ -152,10 +178,12 @@ export const HexPattern: React.FC<HexPatternProps> = ({
           background: gradient,
           WebkitMaskImage: `url('/assets/pattern-white.svg')`,
           maskImage: `url('/assets/pattern-white.svg')`,
-          WebkitMaskRepeat: 'repeat',
-          maskRepeat: 'repeat',
-          WebkitMaskSize: `${size}px ${size}px`,
-          maskSize: `${size}px ${size}px`,
+          WebkitMaskRepeat: bgRepeat,
+          maskRepeat: bgRepeat,
+          WebkitMaskSize: bgSize,
+          maskSize: bgSize,
+          WebkitMaskPosition: 'center center',
+          maskPosition: 'center center',
           mixBlendMode: blendMode,
           ...maskStyle,
           ...style
@@ -176,8 +204,9 @@ export const HexPattern: React.FC<HexPatternProps> = ({
         zIndex: 0,
         opacity: finalOpacity,
         backgroundImage: `url('${patternAsset}')`,
-        backgroundRepeat: 'repeat',
-        backgroundSize: `${size}px ${size}px`,
+        backgroundRepeat: bgRepeat,
+        backgroundSize: bgSize,
+        backgroundPosition: 'center center',
         mixBlendMode: blendMode,
         ...maskStyle,
         ...style

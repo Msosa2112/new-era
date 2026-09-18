@@ -16,7 +16,7 @@ export type BrandLogoVariant =
 interface BrandLogoProps {
   variant?: BrandLogoVariant;
   className?: string;
-  height?: number;
+  height?: number | string;
   color?: string;
   style?: React.CSSProperties;
 }
@@ -52,6 +52,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
 }) => {
   const isChampagne = variant === 'full-champagne' || variant === 'monogram-champagne';
   const gradientId = 'brandChampagneGradient';
+  const heightStyle = typeof height === 'number' ? `${height}px` : height;
 
   // Determine fill color based on variant
   let fillColor = '#FFFFFF';
@@ -72,7 +73,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 520.74 371.96"
         style={{
-          height: `${height}px`,
+          height: heightStyle,
           width: 'auto',
           display: 'inline-block',
           verticalAlign: 'middle',
@@ -106,7 +107,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 988.05 466.52"
         style={{
-          height: `${height}px`,
+          height: heightStyle,
           width: 'auto',
           display: 'inline-block',
           verticalAlign: 'middle',
@@ -128,7 +129,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 988.05 466.52"
       style={{
-        height: `${height}px`,
+        height: heightStyle,
         width: 'auto',
         display: 'inline-block',
         verticalAlign: 'middle',

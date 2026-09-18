@@ -27,33 +27,38 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
 
   const formattedSqft = new Intl.NumberFormat('en-US').format(property.sqft);
 
+  // Clean short address for compact mobile cards
+  const shortAddress = `${property.location.address}, ${property.location.city}`;
+
   return (
     <article
       onClick={() => onSelect(property)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      className="property-card"
       style={{
         cursor: 'pointer',
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: 'var(--bg-surface)',
-        border: '1px solid var(--border-subtle)',
-        borderRadius: 'var(--radius-xs)',
+        backgroundColor: '#FFFFFF',
+        border: '1px solid rgba(0, 0, 0, 0.08)',
+        borderRadius: '12px',
         overflow: 'hidden',
-        transition: 'all var(--transition-normal)',
-        transform: isHovered ? 'translateY(-6px)' : 'none',
-        boxShadow: isHovered ? 'var(--shadow-luxury)' : 'var(--shadow-sm)',
+        transition: 'transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease',
+        transform: isHovered ? 'translateY(-4px)' : 'none',
+        boxShadow: isHovered ? '0 16px 32px -8px rgba(17, 24, 39, 0.12)' : '0 2px 8px rgba(0, 0, 0, 0.04)',
         position: 'relative'
       }}
     >
-      {/* Editorial Image Container */}
+      {/* 1. MEDIA CONTAINER */}
       <div
+        className="property-card-image-wrap"
         style={{
           position: 'relative',
           width: '100%',
           aspectRatio: '16/10',
           overflow: 'hidden',
-          backgroundColor: 'var(--color-charcoal-900)'
+          backgroundColor: '#111827'
         }}
       >
         <img
@@ -63,88 +68,93 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
             width: '100%',
             height: '100%',
             objectFit: 'cover',
-            transition: 'transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
-            transform: isHovered ? 'scale(1.05)' : 'scale(1)'
+            transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+            transform: isHovered ? 'scale(1.04)' : 'scale(1)'
           }}
           loading={priority ? 'eager' : 'lazy'}
         />
 
-        {/* Ambient Gradient Overlay */}
+        {/* Cinematic Bottom Gradient Overlay for Legibility */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            background:
-              'linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, transparent 40%, rgba(12, 13, 16, 0.6) 100%)',
+            background: 'linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, transparent 45%, rgba(0, 0, 0, 0.7) 100%)',
             pointerEvents: 'none'
           }}
         />
 
-        {/* Status Badge */}
+        {/* Status Badge (Top-Left) */}
         <div
+          className="property-card-badges"
           style={{
             position: 'absolute',
-            top: '1.25rem',
-            left: '1.25rem',
+            top: '0.85rem',
+            left: '0.85rem',
             display: 'flex',
-            gap: '0.5rem',
+            alignItems: 'center',
+            gap: '0.35rem',
             zIndex: 2
           }}
         >
           <span
-            className="tag-badge"
+            className="property-card-badge-status"
             style={{
-              backgroundColor: 'rgba(18, 20, 24, 0.85)',
+              backgroundColor: 'rgba(17, 24, 39, 0.82)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
               color: '#FFFFFF',
-              borderColor: 'rgba(255, 255, 255, 0.2)',
-              backdropFilter: 'blur(6px)'
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              fontSize: '0.65rem',
+              fontWeight: 700,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              padding: '0.22rem 0.55rem',
+              borderRadius: '4px'
             }}
           >
             {property.status}
           </span>
-          <span
-            className="tag-badge tag-badge-accent"
-            style={{ backdropFilter: 'blur(6px)' }}
-          >
-            {property.propertyType}
-          </span>
         </div>
 
-        {/* Price Floating Pill */}
+        {/* Price Floating (Bottom-Left) */}
         <div
+          className="property-card-price-wrap"
           style={{
             position: 'absolute',
-            bottom: '1.25rem',
-            left: '1.25rem',
+            bottom: '0.75rem',
+            left: '0.85rem',
             zIndex: 2
           }}
         >
           <div
+            className="property-card-price"
             style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: '1.75rem',
-              fontWeight: 600,
+              fontSize: '1.45rem',
+              fontWeight: 700,
               color: '#FFFFFF',
-              textShadow: '0 2px 10px rgba(0,0,0,0.5)',
-              letterSpacing: '-0.02em'
+              textShadow: '0 2px 8px rgba(0,0,0,0.6)',
+              letterSpacing: '-0.02em',
+              lineHeight: 1.1
             }}
           >
             {formattedPrice}
           </div>
         </div>
 
-        {/* MLS Code Indicator */}
+        {/* MLS Code Indicator (Desktop only) */}
         <div
+          className="property-card-mls"
           style={{
             position: 'absolute',
-            bottom: '1.25rem',
-            right: '1.25rem',
+            bottom: '0.75rem',
+            right: '0.85rem',
             fontFamily: 'monospace',
-            fontSize: '0.7rem',
-            color: 'rgba(255, 255, 255, 0.7)',
-            background: 'rgba(0, 0, 0, 0.4)',
-            padding: '0.2rem 0.5rem',
-            borderRadius: 'var(--radius-xs)',
+            fontSize: '0.65rem',
+            color: 'rgba(255, 255, 255, 0.8)',
+            background: 'rgba(0, 0, 0, 0.45)',
+            padding: '0.15rem 0.45rem',
+            borderRadius: '4px',
             backdropFilter: 'blur(4px)'
           }}
         >
@@ -152,140 +162,186 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
         </div>
       </div>
 
-      {/* Property Details Content */}
+      {/* 2. CARD CONTENT HIERARCHY */}
       <div
+        className="property-card-body"
         style={{
-          padding: '1.5rem 1.75rem 1.75rem 1.75rem',
+          padding: '1.15rem 1.25rem 1.25rem 1.25rem',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
           flex: 1,
-          gap: '1.25rem'
+          gap: '0.85rem'
         }}
       >
         <div>
+          {/* Neighborhood Subtitle */}
           <div
+            className="property-card-location"
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '0.4rem',
-              color: 'var(--color-orange-accent)',
-              fontSize: '0.75rem',
+              gap: '0.3rem',
+              color: '#660E1A',
+              fontSize: '0.7rem',
               fontWeight: 700,
-              letterSpacing: '0.12em',
+              letterSpacing: '0.08em',
               textTransform: 'uppercase',
-              marginBottom: '0.35rem'
+              marginBottom: '0.25rem'
             }}
           >
-            <MapPin size={12} />
-            <span>{property.location.neighborhood}, {property.location.city}</span>
+            <MapPin size={11} color="#660E1A" style={{ flexShrink: 0 }} />
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {property.location.neighborhood || property.location.city}, {property.location.state}
+            </span>
           </div>
 
+          {/* Property Title (Bold & Editorial) */}
           <h3
+            className="property-card-title"
             style={{
-              fontSize: '1.35rem',
-              fontWeight: 500,
-              color: 'var(--text-primary)',
+              fontSize: '1.1rem',
+              fontWeight: 600,
+              color: '#111827',
               lineHeight: 1.25,
-              marginBottom: '0.35rem'
+              margin: '0 0 0.25rem 0',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap'
             }}
+            title={property.title}
           >
             {property.title}
           </h3>
 
+          {/* Clean Address */}
           <p
+            className="property-card-address"
             style={{
-              fontSize: '0.85rem',
-              color: 'var(--text-secondary)',
-              fontFamily: 'var(--font-sans)',
-              letterSpacing: '0.04em',
-              textTransform: 'uppercase'
+              fontSize: '0.78rem',
+              color: '#6B7280',
+              margin: 0,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap'
             }}
+            title={shortAddress}
           >
-            {property.location.address}, {property.location.city}, {property.location.state} {property.location.zip}
+            {shortAddress}
           </p>
         </div>
 
-        {/* Architectural Specs Strip */}
+        {/* 3. SPECS METADATA STRIP */}
         <div
+          className="property-card-specs"
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            paddingTop: '1rem',
-            borderTop: '1px solid var(--border-subtle)',
-            fontSize: '0.825rem',
-            color: 'var(--text-secondary)',
-            fontWeight: 600
+            paddingTop: '0.75rem',
+            borderTop: '1px solid #F3F4F6',
+            fontSize: '0.78rem',
+            color: '#4B5563',
+            fontWeight: 500
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <Bed size={15} color="var(--color-burgundy-primary)" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+            <Bed size={13} color="#660E1A" />
             <span>{property.bedrooms} {lang === 'es' ? 'Hab' : 'Beds'}</span>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <Bath size={15} color="var(--color-burgundy-primary)" />
+          <span className="property-card-spec-dot" style={{ color: '#D1D5DB' }}>•</span>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+            <Bath size={13} color="#660E1A" />
             <span>{property.bathrooms} {lang === 'es' ? 'Baños' : 'Baths'}</span>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <Square size={15} color="var(--color-burgundy-primary)" />
-            <span>{formattedSqft} Sq Ft</span>
+          <span className="property-card-spec-dot" style={{ color: '#D1D5DB' }}>•</span>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+            <Square size={13} color="#660E1A" />
+            <span>{formattedSqft} sqft</span>
           </div>
         </div>
 
-        {/* Footer Action & Agent Attribution */}
+        {/* 4. FOOTER: AGENT & ACTION */}
         <div
+          className="property-card-footer"
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            paddingTop: '0.75rem'
+            paddingTop: '0.65rem',
+            borderTop: '1px solid #F9FAFB'
           }}
         >
           {agent ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', minWidth: 0 }}>
               <img
                 src={agent.photoUrl}
                 alt={agent.name}
+                className="property-card-agent-avatar"
                 style={{
-                  width: '28px',
-                  height: '28px',
+                  width: '22px',
+                  height: '22px',
                   borderRadius: '50%',
                   objectFit: 'cover',
-                  border: '1px solid var(--color-burgundy-primary)'
+                  border: '1px solid rgba(102, 14, 26, 0.4)',
+                  flexShrink: 0
                 }}
               />
-              <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-primary)' }}>
-                {agent.name}
+              <span
+                className="property-card-agent-name"
+                style={{
+                  fontSize: '0.72rem',
+                  fontWeight: 600,
+                  color: '#374151',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                {agent.name.split(' ')[0]} {agent.name.split(' ')[1]?.[0] ? `${agent.name.split(' ')[1][0]}.` : ''}
               </span>
             </div>
           ) : (
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-              New Era Signature
+            <span
+              className="property-card-agent-name"
+              style={{
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                color: '#6B7280',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              New Era
             </span>
           )}
 
           <div
+            className="property-card-action-btn"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '0.35rem',
-              fontSize: '0.8rem',
+              gap: '0.25rem',
+              fontSize: '0.75rem',
               fontWeight: 700,
-              letterSpacing: '0.1em',
+              letterSpacing: '0.04em',
               textTransform: 'uppercase',
-              color: isHovered ? 'var(--color-orange-accent)' : 'var(--color-burgundy-primary)',
-              transition: 'color var(--transition-fast)'
+              color: isHovered ? '#E64A2A' : '#660E1A',
+              transition: 'color 0.2s ease',
+              flexShrink: 0
             }}
           >
-            <span>{lang === 'es' ? 'Ver Propiedad' : 'View Property'}</span>
+            <span>{lang === 'es' ? 'Ver' : 'View'}</span>
             <ArrowUpRight
-              size={15}
+              size={13}
               style={{
                 transform: isHovered ? 'translate(2px, -2px)' : 'none',
-                transition: 'transform var(--transition-fast)'
+                transition: 'transform 0.2s ease'
               }}
             />
           </div>

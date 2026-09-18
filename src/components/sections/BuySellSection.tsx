@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ArrowRight, ShieldCheck, TrendingUp, Sparkles, Home, CheckCircle2, DollarSign } from 'lucide-react';
 import { ValuationRequest } from '../../types/property';
 import { HexPattern } from '../common/HexPattern';
+import { submitHomeValuation } from '../../lib/supabase';
 
 interface BuySellSectionProps {
   lang: 'en' | 'es';
@@ -17,9 +18,17 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
   const [valAddress, setValAddress] = useState('');
   const [valEmail, setValEmail] = useState('');
   const [valSubmitted, setValSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleValuationSubmit = (e: React.FormEvent) => {
+  const handleValuationSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    await submitHomeValuation({
+      address: valAddress,
+      ownerEmail: valEmail,
+      ownerName: 'Website Visitor'
+    });
+    setIsSubmitting(false);
     setValSubmitted(true);
   };
 
@@ -49,7 +58,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
               overflow: 'hidden'
             }}
           >
-            <HexPattern variant="subtle" opacity={0.08} size={540} maskFade="radial-top-right" />
+            <HexPattern variant="subtle" opacity={0.08} maskFade="radial-top-right" />
             <div style={{ position: 'relative', zIndex: 1 }}>
               <span className="display-subtitle">{lang === 'es' ? 'COMPRAR RESIDENCIA' : 'ACQUISITION & BUYING'}</span>
               <h3
@@ -130,7 +139,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
               overflow: 'hidden'
             }}
           >
-            <HexPattern variant="brand-card" opacity={0.28} size={580} maskFade="radial-center" />
+            <HexPattern variant="brand-card" opacity={0.28} maskFade="radial-center" />
             <div style={{ position: 'relative', zIndex: 1 }}>
               <span className="display-subtitle" style={{ color: 'var(--color-orange-accent)' }}>
                 {lang === 'es' ? 'VENTA ESTRATÉGICA' : 'MAXIMIZING VALUE & SELLING'}

@@ -6,6 +6,7 @@ import { PropertiesPage } from './pages/PropertiesPage';
 import { BuyPage } from './pages/BuyPage';
 import { SellPage } from './pages/SellPage';
 import { AgentsPage } from './pages/AgentsPage';
+import { AgentProfilePage } from './pages/AgentProfilePage';
 import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
 import { PropertyDetailView } from './components/properties/PropertyDetailView';
@@ -29,6 +30,15 @@ export const App: React.FC = () => {
         propertyService.getPropertyById(slug).then((p) => {
           if (p) setSelectedProperty(p);
         });
+      } else if (hash.startsWith('agents/') || hash.startsWith('agent/')) {
+        const agentId = hash.replace('agents/', '').replace('agent/', '');
+        const found = propertyService.getAgentById(agentId);
+        if (found) {
+          setSelectedAgent(found);
+          setActivePage('agent-profile');
+        } else {
+          setActivePage('agents');
+        }
       } else if (hash) {
         setActivePage(hash);
       } else {
@@ -46,6 +56,8 @@ export const App: React.FC = () => {
     setActivePage(page);
     if (param && page === 'properties') {
       window.location.hash = `#/properties/${param}`;
+    } else if (param && (page === 'agents' || page === 'agent-profile')) {
+      window.location.hash = `#/agents/${param}`;
     } else {
       window.location.hash = `#/${page}`;
     }
@@ -59,12 +71,18 @@ export const App: React.FC = () => {
 
   const handleCloseProperty = () => {
     setSelectedProperty(null);
-    window.location.hash = `#/${activePage}`;
+    if (activePage === 'agent-profile' && selectedAgent) {
+      window.location.hash = `#/agents/${selectedAgent.id}`;
+    } else {
+      window.location.hash = `#/${activePage}`;
+    }
   };
 
   const handleSelectAgent = (agent: Agent) => {
     setSelectedAgent(agent);
-    setActivePage('agents');
+    setActivePage('agent-profile');
+    window.location.hash = `#/agents/${agent.id}`;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const toggleLanguage = () => {
@@ -75,7 +93,7 @@ export const App: React.FC = () => {
     <div className="app-container" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* Global Navbar */}
       <Navbar
-        activePage={activePage}
+        activePage={activePage === 'agent-profile' ? 'agents' : activePage}
         onNavigate={handleNavigate}
         lang={lang}
         onToggleLang={toggleLanguage}
@@ -119,6 +137,18 @@ export const App: React.FC = () => {
         {activePage === 'agents' && (
           <AgentsPage
             onSelectProperty={handleSelectProperty}
+            onSelectAgent={handleSelectAgent}
+            lang={lang}
+          />
+        )}
+
+        {activePage === 'agent-profile' && selectedAgent && (
+          <AgentProfilePage
+            agent={selectedAgent}
+            onSelectProperty={handleSelectProperty}
+            onSelectAgent={handleSelectAgent}
+            onBack={() => handleNavigate('agents')}
+            onOpenConsultation={() => setConsultationOpen(true)}
             lang={lang}
           />
         )}
@@ -144,6 +174,7 @@ export const App: React.FC = () => {
           property={selectedProperty}
           onClose={handleCloseProperty}
           onSelectProperty={handleSelectProperty}
+          onSelectAgent={handleSelectAgent}
           lang={lang}
         />
       )}

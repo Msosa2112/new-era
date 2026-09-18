@@ -137,6 +137,150 @@ class MockPropertyProvider implements IPropertyProvider {
 }
 
 /**
+ * Supabase Live Provider Implementation
+ */
+export class SupabasePropertyProvider implements IPropertyProvider {
+  private mockFallback = new MockPropertyProvider();
+
+  async getProperties(filter?: PropertyFilter): Promise<Property[]> {
+    try {
+      const { fetchSupabaseProperties } = await import('../lib/supabase');
+      const liveProperties = await fetchSupabaseProperties();
+      if (liveProperties && liveProperties.length > 0) {
+        let result = [...liveProperties];
+        if (!filter) return result;
+
+        if (filter.query) {
+          const q = filter.query.toLowerCase();
+          result = result.filter(
+            p =>
+              p.title.toLowerCase().includes(q) ||
+              p.location.address.toLowerCase().includes(q) ||
+              p.location.city.toLowerCase().includes(q) ||
+              p.location.neighborhood.toLowerCase().includes(q) ||
+              p.location.zip.includes(q) ||
+              p.architecturalStyle.toLowerCase().includes(q)
+          );
+        }
+
+        if (filter.transactionType) {
+          result = result.filter(p => p.transactionType === filter.transactionType);
+        }
+
+        if (filter.propertyType && filter.propertyType !== 'All') {
+          result = result.filter(p => p.propertyType === filter.propertyType);
+        }
+
+        if (filter.city && filter.city !== 'All') {
+          result = result.filter(p => p.location.city.toLowerCase() === filter.city?.toLowerCase());
+        }
+
+        if (filter.neighborhood && filter.neighborhood !== 'All') {
+          result = result.filter(p => p.location.neighborhood.toLowerCase() === filter.neighborhood?.toLowerCase());
+        }
+
+        if (filter.minPrice !== undefined) {
+          result = result.filter(p => p.price >= filter.minPrice!);
+        }
+
+        if (filter.maxPrice !== undefined) {
+          result = result.filter(p => p.price <= filter.maxPrice!);
+        }
+
+        if (filter.minBeds !== undefined) {
+          result = result.filter(p => p.bedrooms >= filter.minBeds!);
+        }
+
+        if (filter.minBaths !== undefined) {
+          result = result.filter(p => p.bathrooms >= filter.minBaths!);
+        }
+
+        if (filter.status && filter.status !== 'All') {
+          result = result.filter(p => p.status === filter.status);
+        }
+
+        if (filter.sortBy) {
+          switch (filter.sortBy) {
+            case 'price-asc':
+              result.sort((a, b) => a.price - b.price);
+              break;
+            case 'price-desc':
+              result.sort((a, b) => b.price - a.price);
+              break;
+            case 'sqft-desc':
+              result.sort((a, b) => b.sqft - a.sqft);
+              break;
+            case 'newest':
+            default:
+              result.sort((a, b) => new Date(b.listedAt).getTime() - new Date(a.listedAt).getTime());
+              break;
+          }
+        }
+
+        return result;
+      }
+    } catch (e) {
+      console.warn('Falling back to local properties:', e);
+    }
+    return this.mockFallback.getProperties(filter);
+  }
+
+  async getPropertyById(idOrSlug: string): Promise<Property | null> {
+    try {
+      const { fetchSupabaseProperties } = await import('../lib/supabase');
+      const properties = await fetchSupabaseProperties();
+      if (properties && properties.length > 0) {
+        return properties.find(p => p.id === idOrSlug || p.slug === idOrSlug) || null;
+      }
+    } catch (e) {
+      console.warn('Falling back to local getPropertyById:', e);
+    }
+    return this.mockFallback.getPropertyById(idOrSlug);
+  }
+
+  async getFeaturedProperties(limit = 4): Promise<Property[]> {
+    try {
+      const properties = await this.getProperties();
+      return properties.filter(p => p.featured).slice(0, limit);
+    } catch {
+      return this.mockFallback.getFeaturedProperties(limit);
+    }
+  }
+
+  async getPropertiesByAgentId(agentId: string): Promise<Property[]> {
+    const properties = await this.getProperties();
+    return properties.filter(p => p.agentId === agentId);
+  }
+
+  async getSimilarProperties(propertyId: string, limit = 3): Promise<Property[]> {
+    const target = await this.getPropertyById(propertyId);
+    const properties = await this.getProperties();
+    if (!target) return properties.slice(0, limit);
+
+    return properties
+      .filter(p => p.id !== target.id)
+      .sort((a, b) => Math.abs(a.price - target.price) - Math.abs(b.price - target.price))
+      .slice(0, limit);
+  }
+
+  async getLocations(): Promise<{ cities: string[]; neighborhoods: string[] }> {
+    const properties = await this.getProperties();
+    const cities = Array.from(new Set(properties.map(p => p.location.city))).sort();
+    const neighborhoods = Array.from(new Set(properties.map(p => p.location.neighborhood))).sort();
+    return { cities, neighborhoods };
+  }
+
+  async getPriceBounds(): Promise<{ min: number; max: number }> {
+    const properties = await this.getProperties();
+    const prices = properties.map(p => p.price);
+    return {
+      min: prices.length ? Math.min(...prices) : 0,
+      max: prices.length ? Math.max(...prices) : 10000000
+    };
+  }
+}
+
+/**
  * Future SPARK MLS Provider Blueprint
  * Plugs in when API keys and credentials are provided.
  */
@@ -151,32 +295,31 @@ export class SparkMlsProvider implements IPropertyProvider {
 
   async getProperties(filter?: PropertyFilter): Promise<Property[]> {
     console.info('[SPARK MLS Provider] Ready for live endpoint query with filter:', filter);
-    // Future integration: fetch(`${this.apiBaseUrl}/v1/listings`, { headers: { Authorization: `Bearer ${this.apiKey}` } })
-    return new MockPropertyProvider().getProperties(filter);
+    return new SupabasePropertyProvider().getProperties(filter);
   }
 
   async getPropertyById(idOrSlug: string): Promise<Property | null> {
-    return new MockPropertyProvider().getPropertyById(idOrSlug);
+    return new SupabasePropertyProvider().getPropertyById(idOrSlug);
   }
 
   async getFeaturedProperties(limit?: number): Promise<Property[]> {
-    return new MockPropertyProvider().getFeaturedProperties(limit);
+    return new SupabasePropertyProvider().getFeaturedProperties(limit);
   }
 
   async getPropertiesByAgentId(agentId: string): Promise<Property[]> {
-    return new MockPropertyProvider().getPropertiesByAgentId(agentId);
+    return new SupabasePropertyProvider().getPropertiesByAgentId(agentId);
   }
 
   async getSimilarProperties(propertyId: string, limit?: number): Promise<Property[]> {
-    return new MockPropertyProvider().getSimilarProperties(propertyId, limit);
+    return new SupabasePropertyProvider().getSimilarProperties(propertyId, limit);
   }
 
   async getLocations(): Promise<{ cities: string[]; neighborhoods: string[] }> {
-    return new MockPropertyProvider().getLocations();
+    return new SupabasePropertyProvider().getLocations();
   }
 
   async getPriceBounds(): Promise<{ min: number; max: number }> {
-    return new MockPropertyProvider().getPriceBounds();
+    return new SupabasePropertyProvider().getPriceBounds();
   }
 }
 
@@ -188,8 +331,8 @@ export class PropertyService {
   private provider: IPropertyProvider;
 
   private constructor() {
-    // Default to high-fidelity Mock Provider, prepared for SPARK MLS instantiation
-    this.provider = new MockPropertyProvider();
+    // Default to Supabase live provider (with instant mock fallback)
+    this.provider = new SupabasePropertyProvider();
   }
 
   public static getInstance(): PropertyService {

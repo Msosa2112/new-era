@@ -1,5 +1,4 @@
 import React from 'react';
-import { ArrowDown, Compass, Sparkles } from 'lucide-react';
 import { BrandLogo } from '../common/BrandLogo';
 import { HexPattern } from '../common/HexPattern';
 import { LivePatternOverlay } from './LivePatternOverlay';
@@ -52,26 +51,25 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
     <div
       style={{
         position: 'relative',
-        height: '100vh',
-        minHeight: '680px',
+        minHeight: '100vh',
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
         overflow: 'hidden',
         // LAYER 1: Deep luxurious burgundy / wine background
-        background: 'radial-gradient(ellipse at 50% 48%, #280c14 0%, #1a060b 55%, #0d0204 100%)',
+        background: 'radial-gradient(ellipse at 50% 38%, #280c14 0%, #1a060b 55%, #0d0204 100%)',
         color: '#FFFFFF',
         ...style
       }}
       className={`vector-hero-root ${className}`}
       aria-label="New Era Real Estate Brand Hero"
     >
-      {/* LAYER 2: FULL-FRAME OFFICIAL GEOMETRIC PATTERN (Scaled large at 620px to match other sections) */}
+      {/* LAYER 2: FULL-FRAME MASTER GEOMETRIC PATTERN (100% CorelDRAW 8-quadrant vector master) */}
       <HexPattern
         variant="gradient-gold"
-        opacity={0.20}
-        size={620}
+        opacity={0.24}
+        mode="cover"
         maskFade="none"
         style={{ zIndex: 1 }}
       />
@@ -79,120 +77,42 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
       {/* LAYER 4: SUBTLE LIVE PATTERN ILLUMINATION (Ambient isolated lines catching champagne-gold light) */}
       <LivePatternOverlay style={{ zIndex: 2 }} />
 
-      {/* LAYER 3: ONLY ONE OFFICIAL NEW ERA REAL ESTATE LOGO (Centered, Satin Matte Champagne-Gold Finish) */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '47%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          zIndex: 3,
-          pointerEvents: 'none',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '100%',
-          padding: '0 1.5rem',
-          maxWidth: '820px'
-        }}
-        className="hero-logo-center-anchor"
-      >
-        <div
-          style={{
-            filter: 'drop-shadow(0 8px 36px rgba(0, 0, 0, 0.85))'
-          }}
-        >
-          {/* Responsive vector sizing: Large prominent brand presence */}
-          <div className="hidden sm:block">
-            <BrandLogo variant="full-champagne" height={185} />
-          </div>
-          <div className="block sm:hidden">
-            <BrandLogo variant="full-champagne" height={125} />
-          </div>
-        </div>
-      </div>
-
       {/* ========================================================================= */}
-      {/* HTML / UI INTERACTIVE LAYER (Frames the central logo with zero obstruction) */}
+      {/* TOP BAR: Official Brokerage Monogram (Top-Right on Desktop, Centered on Mobile) */}
       {/* ========================================================================= */}
-
-      {/* Top Telemetry & Official Brokerage Header Bar */}
       <div
-        className="container"
+        className="hero-top-bar container"
         style={{
           position: 'relative',
           zIndex: 10,
-          paddingTop: '6.25rem',
+          paddingTop: '5.5rem',
           display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-          flexWrap: 'wrap',
-          gap: '1rem',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
           pointerEvents: 'none'
         }}
       >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span
-              style={{
-                display: 'inline-block',
-                width: '7px',
-                height: '7px',
-                backgroundColor: 'var(--color-orange-accent)',
-                borderRadius: '50%',
-                boxShadow: '0 0 10px var(--color-orange-accent)'
-              }}
-            />
-            <span
-              style={{
-                fontFamily: 'monospace',
-                fontSize: '0.725rem',
-                letterSpacing: '0.18em',
-                color: 'rgba(255, 255, 255, 0.85)',
-                textShadow: '0 2px 8px rgba(0, 0, 0, 0.8)'
-              }}
-            >
-              LOUISVILLE, KY • 38.2527° N, 85.7585° W
-            </span>
-          </div>
-          <span
-            style={{
-              fontFamily: 'monospace',
-              fontSize: '0.625rem',
-              letterSpacing: '0.15em',
-              color: 'rgba(255, 255, 255, 0.55)',
-              textShadow: '0 2px 6px rgba(0, 0, 0, 0.8)'
-            }}
-          >
-            GLAR MLS DIRECT NETWORK // GREATER LOUISVILLE & SOUTHERN INDIANA
-          </span>
-        </div>
-
-        {/* Official Brokerage Monogram Pill */}
+        {/* Official Brokerage Monogram (Zero Box / Floating Cleanly) */}
         <div
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '0.65rem',
-            background: 'rgba(16, 4, 6, 0.65)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            padding: '0.4rem 0.85rem',
-            borderRadius: 'var(--radius-xs)',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
-            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)'
+            gap: '0.55rem',
+            background: 'transparent',
+            padding: '0.25rem 0',
+            pointerEvents: 'auto'
           }}
         >
-          <BrandLogo variant="monogram-champagne" height={18} />
+          <BrandLogo variant="monogram-champagne" height={21} />
           <span
             style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: '0.65rem',
+              fontSize: '0.72rem',
               fontWeight: 700,
-              letterSpacing: '0.16em',
+              letterSpacing: '0.18em',
               textTransform: 'uppercase',
-              color: '#FFFFFF'
+              color: '#FFFFFF',
+              textShadow: '0 2px 8px rgba(0, 0, 0, 0.95)'
             }}
           >
             Official Brokerage
@@ -200,171 +120,213 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
         </div>
       </div>
 
-      {/* Central Spatial Buffer - 100% open so the central logo and pattern shine */}
+      {/* ========================================================================= */}
+      {/* CENTER STAGE: Commanding Champagne-Gold Brand Logo + Hero CTAs */}
+      {/* ========================================================================= */}
       <div
+        className="container"
         style={{
           position: 'relative',
-          zIndex: 5,
-          flex: '1 1 auto',
-          pointerEvents: 'none'
+          zIndex: 10,
+          paddingTop: '2rem',
+          paddingBottom: '2.5rem',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          textAlign: 'center'
         }}
-        aria-hidden="true"
-      />
+      >
+        {/* Large Commanding Champagne-Gold Brand Logo with Dark Backdrop */}
+        <div
+          style={{
+            position: 'relative',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            marginBottom: '2.5rem'
+          }}
+        >
+          {/* Soft Dark Radial Vignette to soften pattern behind logo */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: 'min(880px, 96vw)',
+              height: 'clamp(280px, 35vw, 420px)',
+              background: 'radial-gradient(ellipse at center, rgba(8, 2, 4, 0.92) 0%, rgba(18, 4, 8, 0.72) 48%, rgba(26, 6, 12, 0) 78%)',
+              pointerEvents: 'none',
+              zIndex: 1,
+              filter: 'blur(24px)'
+            }}
+          />
 
-      {/* Lower Editorial Baseline & Action Deck */}
+          <div
+            style={{
+              position: 'relative',
+              zIndex: 2,
+              filter: 'drop-shadow(0 18px 60px rgba(0, 0, 0, 0.98))',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <BrandLogo
+              variant="full-champagne"
+              height="clamp(165px, 21vw, 245px)"
+              style={{
+                maxWidth: '92vw'
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Primary Action Buttons */}
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 10,
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '1rem',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <button
+            onClick={onExploreProperties}
+            className="btn-primary"
+            style={{
+              padding: '1rem 2rem',
+              fontSize: '0.84rem',
+              letterSpacing: '0.12em'
+            }}
+          >
+            <span>{lang === 'es' ? 'EXPLORAR PROPIEDADES' : 'FIND YOUR NEXT ERA'}</span>
+          </button>
+
+          <button
+            onClick={() => {
+              const searchSection = document.getElementById('search-chapter');
+              searchSection?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="btn-outline btn-outline-white"
+            style={{
+              padding: '1rem 1.75rem',
+              fontSize: '0.8rem',
+              letterSpacing: '0.1em'
+            }}
+          >
+            <span>{lang === 'es' ? 'BÚSQUEDA AVANZADA' : 'ADVANCED SEARCH'}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* BOTTOM STRIP: High-Contrast Brand Pillars (2 Rows x 2 Columns Matrix) */}
+      {/* ========================================================================= */}
       <div
         style={{
           position: 'relative',
           zIndex: 10,
-          background: 'linear-gradient(to top, rgba(12, 3, 5, 0.94) 0%, rgba(12, 3, 5, 0.72) 65%, transparent 100%)',
-          paddingTop: '2rem',
-          paddingBottom: '0.5rem'
+          backgroundColor: 'transparent',
+          padding: '1rem 0 2.25rem 0'
         }}
       >
-        <div className="container" style={{ paddingBottom: '1.25rem' }}>
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'space-between',
-              alignItems: 'flex-end',
-              gap: '1.5rem'
-            }}
-          >
-            {/* Left: Editorial Statement */}
-            <div style={{ maxWidth: '580px' }}>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                <span className="tag-badge tag-badge-accent" style={{ fontSize: '0.65rem', padding: '0.2rem 0.6rem' }}>
-                  <Sparkles size={10} style={{ marginRight: '3px' }} />
-                  {lang === 'es' ? 'Experiencia Inmobiliaria' : 'Architectural Real Estate'}
-                </span>
-                <span style={{ fontFamily: 'monospace', fontSize: '0.65rem', color: 'rgba(255, 255, 255, 0.5)' }}>
-                  EST. 2026
-                </span>
-              </div>
-
-              <p
-                style={{
-                  fontSize: 'clamp(0.85rem, 1.1vw, 0.95rem)',
-                  color: 'rgba(255, 255, 255, 0.85)',
-                  lineHeight: 1.55,
-                  margin: 0,
-                  textShadow: '0 2px 8px rgba(0, 0, 0, 0.8)'
-                }}
-              >
-                {lang === 'es'
-                  ? 'Elevando la representación residencial y de lujo a través de precisión arquitectónica y asesoría privada en Kentucky e Indiana.'
-                  : 'Elevating residential and luxury property representation with architectural precision across Kentucky and Southern Indiana.'}
-              </p>
-            </div>
-
-            {/* Right: Primary Action Buttons */}
+        <div className="hero-pillars-container container">
+          {brandPillars.map((pillar) => (
             <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: '0.85rem',
-                alignItems: 'center'
-              }}
+              key={pillar.num}
+              className="hero-pillar-item"
             >
-              <button
-                onClick={onExploreProperties}
-                className="btn-primary"
-                style={{
-                  padding: '0.85rem 1.65rem',
-                  fontSize: '0.8rem',
-                  letterSpacing: '0.12em'
-                }}
-              >
-                <span>{lang === 'es' ? 'EXPLORAR PROPIEDADES' : 'FIND YOUR NEXT ERA'}</span>
-                <Compass size={15} />
-              </button>
-
-              <button
-                onClick={() => {
-                  const searchSection = document.getElementById('search-chapter');
-                  searchSection?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="btn-outline btn-outline-white"
-                style={{
-                  padding: '0.85rem 1.35rem',
-                  fontSize: '0.75rem',
-                  letterSpacing: '0.1em'
-                }}
-              >
-                <span>{lang === 'es' ? 'Búsqueda Avanzada' : 'Advanced Search'}</span>
-                <ArrowDown size={13} />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Brand Pillars Credential Strip */}
-        <div
-          style={{
-            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-            backgroundColor: 'rgba(10, 2, 4, 0.88)',
-            padding: '0.75rem 0'
-          }}
-        >
-          <div
-            className="container"
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-              gap: '1rem',
-              alignItems: 'center'
-            }}
-          >
-            {brandPillars.map((pillar) => (
-              <div
-                key={pillar.num}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '0.15rem',
-                  borderLeft: '2px solid rgba(250, 47, 14, 0.4)',
-                  paddingLeft: '0.65rem'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <span
-                    style={{
-                      fontFamily: 'monospace',
-                      fontSize: '0.65rem',
-                      fontWeight: 700,
-                      color: 'var(--color-orange-accent)'
-                    }}
-                  >
-                    {pillar.num}
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-sans)',
-                      fontSize: '0.75rem',
-                      fontWeight: 600,
-                      color: '#FFFFFF'
-                    }}
-                  >
-                    {lang === 'es' ? pillar.titleEs : pillar.titleEn}
-                  </span>
-                </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexShrink: 0 }}>
                 <span
                   style={{
-                    fontSize: '0.65rem',
-                    color: 'rgba(255, 255, 255, 0.5)',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis'
+                    fontFamily: 'monospace',
+                    fontSize: '0.78rem',
+                    fontWeight: 800,
+                    color: 'var(--color-orange-accent)',
+                    textShadow: '0 0 10px rgba(250, 47, 14, 0.4)'
                   }}
                 >
-                  {lang === 'es' ? pillar.descEs : pillar.descEn}
+                  {pillar.num}
+                </span>
+                <span
+                  className="hero-pillar-title"
+                  style={{
+                    fontFamily: 'var(--font-sans)',
+                    fontSize: '0.84rem',
+                    fontWeight: 700,
+                    color: '#FFFFFF',
+                    letterSpacing: '0.02em',
+                    textShadow: '0 2px 8px rgba(0, 0, 0, 0.95)'
+                  }}
+                >
+                  {lang === 'es' ? pillar.titleEs : pillar.titleEn}
                 </span>
               </div>
-            ))}
-          </div>
+              <span
+                className="hero-pillar-desc"
+                style={{
+                  fontSize: '0.72rem',
+                  color: 'rgba(255, 255, 255, 0.85)',
+                  lineHeight: 1.35,
+                  textShadow: '0 2px 6px rgba(0, 0, 0, 0.9)'
+                }}
+              >
+                {lang === 'es' ? pillar.descEs : pillar.descEn}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
+
+      <style>{`
+        .hero-top-bar {
+          justify-content: flex-end;
+        }
+        .hero-pillars-container {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 1.5rem;
+          align-items: start;
+        }
+        .hero-pillar-item {
+          display: flex;
+          flex-direction: column;
+          gap: 0.2rem;
+          border-left: 3px solid var(--color-orange-accent);
+          padding-left: 0.85rem;
+        }
+        @media (max-width: 900px) {
+          .hero-pillars-container {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 1rem 1.5rem !important;
+          }
+        }
+        @media (max-width: 768px) {
+          .hero-top-bar {
+            justify-content: center !important;
+            padding-top: 5rem !important;
+          }
+        }
+        @media (max-width: 640px) {
+          .hero-pillars-container {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 0.85rem 1rem !important;
+          }
+          .hero-pillar-item {
+            padding-left: 0.65rem !important;
+            border-left: 2px solid var(--color-orange-accent) !important;
+          }
+          .hero-pillar-desc {
+            font-size: 0.68rem !important;
+            line-height: 1.3 !important;
+          }
+        }
+      `}</style>
     </div>
   );
 };

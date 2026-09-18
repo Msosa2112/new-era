@@ -43,6 +43,7 @@ export interface Agent {
   phone: string;
   email: string;
   photoUrl: string;
+  photoNobgUrl?: string;
   bio: string;
   specialties: string[];
   languages: string[];

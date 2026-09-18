@@ -14,15 +14,14 @@ export const BlueprintHero3D: React.FC<BlueprintHero3DProps> = ({
     <section
       style={{
         position: 'relative',
-        height: '100vh',
-        minHeight: '680px',
+        minHeight: '100vh',
         width: '100%',
         overflow: 'hidden',
         backgroundColor: '#0d0204'
       }}
       aria-label="New Era Real Estate Brand Hero"
     >
-      {/* 100% REAL VECTOR HERO (Deep Burgundy, Large-scale 620px Pattern, Single Champagne-Gold Logo & Live Ambient Line Illumination) */}
+      {/* 100% MASTER VECTOR HERO */}
       <VectorHero
         onExploreProperties={onExploreProperties}
         lang={lang}
@@ -30,3 +29,4 @@ export const BlueprintHero3D: React.FC<BlueprintHero3DProps> = ({
     </section>
   );
 };
+

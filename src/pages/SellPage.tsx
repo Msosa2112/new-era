@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { CheckCircle2, TrendingUp, Camera, Share2, DollarSign, Shield, ArrowRight, Home } from 'lucide-react';
 import { HexPattern } from '../components/common/HexPattern';
 import { ValuationRequest, PropertyType } from '../types/property';
+import { submitHomeValuation } from '../lib/supabase';
 
 interface SellPageProps {
   onOpenConsultation: () => void;
@@ -19,9 +20,23 @@ export const SellPage: React.FC<SellPageProps> = ({ onOpenConsultation, lang }) 
   const [ownerEmail, setOwnerEmail] = useState('');
   const [ownerPhone, setOwnerPhone] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    await submitHomeValuation({
+      address,
+      bedrooms,
+      bathrooms,
+      condition,
+      timeline,
+      ownerName,
+      ownerEmail,
+      ownerPhone,
+      notes: `Property Type: ${propertyType}`
+    });
+    setIsSubmitting(false);
     setSubmitted(true);
   };
 
@@ -67,7 +82,7 @@ export const SellPage: React.FC<SellPageProps> = ({ onOpenConsultation, lang }) 
           position: 'relative'
         }}
       >
-        <HexPattern variant="gradient-vibrant" opacity={0.18} size={580} maskFade="radial-top-right" />
+        <HexPattern variant="gradient-vibrant" opacity={0.18} maskFade="radial-top-right" />
         <div className="container" style={{ position: 'relative', zIndex: 1, maxWidth: '880px' }}>
           <span className="display-subtitle" style={{ color: 'var(--color-orange-accent)' }}>
             {lang === 'es' ? 'ESTRATEGIA PARA VENDEDORES' : 'SELLER EXPERIENCE'}
