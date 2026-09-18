@@ -559,3 +559,51 @@ input:focus, select:focus, textarea:focus {
     height: 11px !important;
   }
 }
+
+/* Google Places Autocomplete Dropdown Luxury Styling */
+.pac-container {
+  background-color: #FFFFFF !important;
+  font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif) !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 16px 36px rgba(18, 20, 24, 0.16) !important;
+  margin-top: 4px !important;
+  z-index: 99999 !important;
+  padding: 4px 0 !important;
+}
+
+.pac-item {
+  padding: 8px 14px !important;
+  font-size: 13px !important;
+  color: #121418 !important;
+  cursor: pointer !important;
+  border-top: 1px solid #F3EFE8 !important;
+  transition: background-color 150ms ease !important;
+  display: flex !important;
+  align-items: center !important;
+  line-height: 1.4 !important;
+}
+
+.pac-item:first-child {
+  border-top: none !important;
+}
+
+.pac-item:hover, .pac-item-selected {
+  background-color: #FAF8F5 !important;
+}
+
+.pac-item-query {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: var(--color-burgundy-primary, #660E1A) !important;
+  padding-right: 4px !important;
+}
+
+.pac-icon {
+  margin-top: 2px !important;
+}
+
+.pac-matched {
+  font-weight: 800 !important;
+  color: var(--color-burgundy-primary, #660E1A) !important;
+}

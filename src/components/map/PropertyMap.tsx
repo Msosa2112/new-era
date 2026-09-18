@@ -3,7 +3,10 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './PropertyMap.css';
 import { Property } from '../../types/property';
-import { Layers, Crosshair, ZoomIn, ZoomOut, Maximize2, Bed, Bath, Square, ArrowUpRight } from 'lucide-react';
+import { Layers, Crosshair, ZoomIn, ZoomOut, Globe, Map as MapIcon } from 'lucide-react';
+import { GOOGLE_MAP_TILES } from '../../lib/googleMaps';
+
+type MapLayerStyle = 'google-hybrid' | 'google-roadmap' | 'architectural';
 
 interface PropertyMapProps {
   properties: Property[];
@@ -44,19 +47,27 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersRef = useRef<Map<string, L.Marker>>(new Map());
   const tileLayerRef = useRef<L.TileLayer | null>(null);
-  const [mapStyle, setMapStyle] = useState<'light' | 'satellite'>('light');
+  const [mapStyle, setMapStyle] = useState<MapLayerStyle>('google-hybrid');
 
-  // Tile layer sources
-  const tileSources = {
-    light: {
-      url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      maxZoom: 19
+  // Tile layer sources: Official Google Maps & Architectural
+  const tileSources: Record<MapLayerStyle, { url: string; attribution: string; maxZoom: number; subdomains?: string[] | string }> = {
+    'google-hybrid': {
+      url: GOOGLE_MAP_TILES.hybrid.url,
+      attribution: GOOGLE_MAP_TILES.hybrid.attribution,
+      maxZoom: 20,
+      subdomains: GOOGLE_MAP_TILES.hybrid.subdomains
     },
-    satellite: {
-      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-      attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
-      maxZoom: 18
+    'google-roadmap': {
+      url: GOOGLE_MAP_TILES.roadmap.url,
+      attribution: GOOGLE_MAP_TILES.roadmap.attribution,
+      maxZoom: 20,
+      subdomains: GOOGLE_MAP_TILES.roadmap.subdomains
+    },
+    'architectural': {
+      url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+      maxZoom: 19,
+      subdomains: 'abcd'
     }
   };
 
@@ -292,36 +303,106 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
     }
   };
 
-  const toggleMapStyle = () => {
-    setMapStyle(prev => (prev === 'light' ? 'satellite' : 'light'));
-  };
-
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
       {/* Leaflet DOM Anchor */}
       <div ref={mapContainerRef} className="luxury-leaflet-container" />
 
       {/* Floating Modern Luxury Controls */}
-      <div className="map-custom-controls" style={{ top: '16px', right: '16px' }}>
-        {/* Style Switcher */}
-        <button
-          type="button"
-          onClick={toggleMapStyle}
-          className={`map-control-btn ${mapStyle === 'satellite' ? 'active' : ''}`}
-          title={mapStyle === 'light' ? 'Switch to Satellite View' : 'Switch to Cartographic View'}
+      <div className="map-custom-controls" style={{ top: '16px', right: '16px', alignItems: 'flex-end' }}>
+        {/* Google Maps & Architectural Layer Switcher Pill */}
+        <div
+          style={{
+            display: 'flex',
+            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            borderRadius: '8px',
+            padding: '3px',
+            border: '1px solid rgba(0, 0, 0, 0.12)',
+            boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)',
+            gap: '2px'
+          }}
         >
-          <Layers size={15} />
-          <span>{mapStyle === 'light' ? (lang === 'es' ? 'Satélite' : 'Satellite') : (lang === 'es' ? 'Mapa' : 'Map')}</span>
-        </button>
+          <button
+            type="button"
+            onClick={() => setMapStyle('google-hybrid')}
+            style={{
+              padding: '6px 10px',
+              borderRadius: '6px',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '11px',
+              fontWeight: 700,
+              backgroundColor: mapStyle === 'google-hybrid' ? 'var(--color-burgundy-primary, #660E1A)' : 'transparent',
+              color: mapStyle === 'google-hybrid' ? '#FFFFFF' : '#272C35',
+              transition: 'all 160ms ease',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}
+            title="Google Maps Hybrid Satellite View"
+          >
+            <Globe size={13} />
+            <span>{lang === 'es' ? 'Google Satélite' : 'Google Satellite'}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setMapStyle('google-roadmap')}
+            style={{
+              padding: '6px 10px',
+              borderRadius: '6px',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '11px',
+              fontWeight: 700,
+              backgroundColor: mapStyle === 'google-roadmap' ? 'var(--color-burgundy-primary, #660E1A)' : 'transparent',
+              color: mapStyle === 'google-roadmap' ? '#FFFFFF' : '#272C35',
+              transition: 'all 160ms ease',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}
+            title="Google Maps Standard Vector Roadmap"
+          >
+            <MapIcon size={13} />
+            <span>Google Maps</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setMapStyle('architectural')}
+            style={{
+              padding: '6px 10px',
+              borderRadius: '6px',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '11px',
+              fontWeight: 700,
+              backgroundColor: mapStyle === 'architectural' ? 'var(--color-burgundy-primary, #660E1A)' : 'transparent',
+              color: mapStyle === 'architectural' ? '#FFFFFF' : '#272C35',
+              transition: 'all 160ms ease',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}
+            title="Architectural Minimal Light View"
+          >
+            <Layers size={13} />
+            <span>{lang === 'es' ? 'Claro' : 'Light'}</span>
+          </button>
+        </div>
 
         {/* Recenter All */}
         <button
+          id="btn-recenter-map"
           type="button"
           onClick={handleRecenter}
           className="map-control-btn"
           title={lang === 'es' ? 'Re-centrar Louisville' : 'Recenter Properties'}
         >
-          <Crosshair size={15} />
+          <Crosshair size={14} />
           <span>{lang === 'es' ? 'Centrar' : 'Center'}</span>
         </button>
       </div>

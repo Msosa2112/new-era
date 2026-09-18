@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Search, SlidersHorizontal, MapPin, Home, DollarSign, Bed, Bath, X, ArrowRight } from 'lucide-react';
 import { PropertyFilter, TransactionType, PropertyType } from '../../types/property';
 import { LuxurySelect, SelectOption } from '../common/LuxurySelect';
+import { useGooglePlacesAutocomplete } from '../../hooks/useGooglePlacesAutocomplete';
 
 interface PropertySearchEngineProps {
   initialFilter?: PropertyFilter;
@@ -23,6 +24,26 @@ export const PropertySearchEngine: React.FC<PropertySearchEngineProps> = ({
   );
   const [query, setQuery] = useState<string>(initialFilter.query || '');
   const [city, setCity] = useState<string>(initialFilter.city || 'All');
+
+  const queryInputRef = useRef<HTMLInputElement>(null);
+
+  useGooglePlacesAutocomplete(queryInputRef, {
+    onPlaceSelected: (place) => {
+      const text = place.name || place.formattedAddress;
+      setQuery(text);
+      onSearch({
+        ...initialFilter,
+        query: text,
+        transactionType,
+        city: city === 'All' ? undefined : city,
+        propertyType: propertyType === 'All' ? undefined : propertyType,
+        minPrice,
+        maxPrice,
+        minBeds,
+        minBaths
+      });
+    }
+  });
   const [propertyType, setPropertyType] = useState<PropertyType | 'All'>(
     initialFilter.propertyType || 'All'
   );
@@ -247,6 +268,7 @@ export const PropertySearchEngine: React.FC<PropertySearchEngineProps> = ({
               {lang === 'es' ? 'Búsqueda o MLS' : 'Keyword, Street or MLS'}
             </label>
             <input
+              ref={queryInputRef}
               type="text"
               className="search-input-control"
               placeholder={lang === 'es' ? 'Ej. River Road, Cherokee, 40204...' : 'e.g. River Road, Cherokee, 40204...'}

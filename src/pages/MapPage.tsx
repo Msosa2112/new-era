@@ -4,6 +4,7 @@ import { propertyService } from '../services/propertyService';
 import { PropertyMap } from '../components/map/PropertyMap';
 import { MapPropertyCard } from '../components/map/MapPropertyCard';
 import { HexPattern } from '../components/common/HexPattern';
+import { useGooglePlacesAutocomplete } from '../hooks/useGooglePlacesAutocomplete';
 import {
   Search,
   Filter,
@@ -39,8 +40,17 @@ export const MapPage: React.FC<MapPageProps> = ({
   const [mobileViewMode, setMobileViewMode] = useState<'map' | 'list'>('map');
   const [filterDrawerOpen, setFilterDrawerOpen] = useState<boolean>(false);
 
-  // Search input state
+  // Search input state and Google Places Autocomplete
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useGooglePlacesAutocomplete(searchInputRef, {
+    onPlaceSelected: (place) => {
+      const queryText = place.name || place.formattedAddress;
+      setSearchQuery(queryText);
+      setFilter(prev => ({ ...prev, query: queryText }));
+    }
+  });
 
   // Fetch properties based on active filters
   useEffect(() => {
@@ -128,6 +138,7 @@ export const MapPage: React.FC<MapPageProps> = ({
             >
               <Search size={15} color="#847C74" style={{ marginRight: '8px', flexShrink: 0 }} />
               <input
+                ref={searchInputRef}
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}

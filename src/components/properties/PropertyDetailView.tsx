@@ -18,12 +18,15 @@ import {
   DollarSign,
   Calculator,
   Compass,
-  ArrowRight
+  ArrowRight,
+  Camera,
+  Globe
 } from 'lucide-react';
 import { Property, TourBookingRequest, Agent } from '../../types/property';
 import { propertyService } from '../../services/propertyService';
 import { BROKERAGE_DATA } from '../../data/agentsData';
 import { HexPattern } from '../common/HexPattern';
+import { getStreetViewEmbedUrl } from '../../lib/googleMaps';
 
 interface PropertyDetailViewProps {
   property: Property;
@@ -40,6 +43,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
   onSelectAgent,
   lang
 }) => {
+  const [mediaMode, setMediaMode] = useState<'photos' | 'streetview'>('photos');
   const [activeMediaIndex, setActiveMediaIndex] = useState(0);
   const [tourDate, setTourDate] = useState('');
   const [tourTime, setTourTime] = useState('11:00 AM');
@@ -138,10 +142,12 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '1rem 2rem',
-            backgroundColor: 'rgba(255, 255, 255, 0.95)',
-            backdropFilter: 'blur(10px)',
-            borderBottom: '1px solid var(--border-subtle)'
+            padding: '0.85rem 2rem',
+            backgroundColor: 'rgba(255, 255, 255, 0.96)',
+            backdropFilter: 'blur(12px)',
+            borderBottom: '1px solid var(--border-subtle)',
+            gap: '1rem',
+            flexWrap: 'wrap'
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -151,139 +157,241 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
             </span>
           </div>
 
+          {/* Media Switcher: Photos vs Google Street View 360 */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              backgroundColor: 'var(--bg-secondary)',
+              padding: '3px',
+              borderRadius: '8px',
+              border: '1px solid var(--border-subtle)',
+              gap: '4px'
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => setMediaMode('photos')}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                padding: '6px 12px',
+                borderRadius: '6px',
+                border: 'none',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                backgroundColor: mediaMode === 'photos' ? 'var(--color-burgundy-primary, #660E1A)' : 'transparent',
+                color: mediaMode === 'photos' ? '#FFFFFF' : 'var(--text-secondary)',
+                transition: 'all 160ms ease'
+              }}
+            >
+              <Camera size={14} />
+              <span>{lang === 'es' ? `Fotos (${property.media.length})` : `Photos (${property.media.length})`}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setMediaMode('streetview')}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                padding: '6px 12px',
+                borderRadius: '6px',
+                border: 'none',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                backgroundColor: mediaMode === 'streetview' ? 'var(--color-burgundy-primary, #660E1A)' : 'transparent',
+                color: mediaMode === 'streetview' ? '#FFFFFF' : 'var(--text-secondary)',
+                transition: 'all 160ms ease'
+              }}
+            >
+              <Globe size={14} />
+              <span>Google Street View 360°</span>
+            </button>
+          </div>
+
           <button
             onClick={onClose}
             style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: '40px',
-              height: '40px',
+              width: '38px',
+              height: '38px',
               borderRadius: '50%',
               backgroundColor: 'var(--bg-secondary)',
               color: 'var(--text-primary)',
+              border: '1px solid var(--border-subtle)',
+              cursor: 'pointer',
               transition: 'all var(--transition-fast)'
             }}
             aria-label="Close dialog"
           >
-            <X size={20} />
+            <X size={18} />
           </button>
         </div>
 
-        {/* Cinematic Media Carousel */}
+        {/* Cinematic Media Carousel or Google Street View 360 */}
         <div
           style={{
             position: 'relative',
             width: '100%',
-            height: 'clamp(340px, 50vh, 580px)',
-            backgroundColor: '#000000',
+            height: 'clamp(360px, 52vh, 600px)',
+            backgroundColor: '#0C0D10',
             overflow: 'hidden'
           }}
         >
-          <img
-            src={property.media[activeMediaIndex]?.url || property.media[0]?.url}
-            alt={property.title}
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover'
-            }}
-          />
-
-          {/* Navigation Controls */}
-          {property.media.length > 1 && (
+          {mediaMode === 'streetview' ? (
+            <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+              <iframe
+                title="Google Street View 360"
+                src={getStreetViewEmbedUrl(property.location.latitude, property.location.longitude)}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  border: 'none',
+                  display: 'block'
+                }}
+                allowFullScreen
+                loading="lazy"
+              />
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: '12px',
+                  left: '16px',
+                  backgroundColor: 'rgba(12, 13, 16, 0.85)',
+                  backdropFilter: 'blur(8px)',
+                  color: '#FFFFFF',
+                  padding: '6px 12px',
+                  borderRadius: '6px',
+                  fontSize: '0.78rem',
+                  fontWeight: 600,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  pointerEvents: 'none'
+                }}
+              >
+                <Globe size={14} color="var(--color-orange-accent, #8B1D2C)" />
+                <span>{property.location.address}, {property.location.city} &bull; 360° Interactive Street View</span>
+              </div>
+            </div>
+          ) : (
             <>
-              <button
-                onClick={() =>
-                  setActiveMediaIndex((prev) =>
-                    prev === 0 ? property.media.length - 1 : prev - 1
-                  )
-                }
+              <img
+                src={property.media[activeMediaIndex]?.url || property.media[0]?.url}
+                alt={property.title}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover'
+                }}
+              />
+
+              {/* Navigation Controls */}
+              {property.media.length > 1 && (
+                <>
+                  <button
+                    onClick={() =>
+                      setActiveMediaIndex((prev: number) =>
+                        prev === 0 ? property.media.length - 1 : prev - 1
+                      )
+                    }
+                    style={{
+                      position: 'absolute',
+                      left: '1.5rem',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      width: '46px',
+                      height: '46px',
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(18, 20, 24, 0.75)',
+                      color: '#FFFFFF',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backdropFilter: 'blur(8px)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <ChevronLeft size={24} />
+                  </button>
+                  <button
+                    onClick={() =>
+                      setActiveMediaIndex((prev: number) =>
+                        prev === property.media.length - 1 ? 0 : prev + 1
+                      )
+                    }
+                    style={{
+                      position: 'absolute',
+                      right: '1.5rem',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      width: '46px',
+                      height: '46px',
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(18, 20, 24, 0.75)',
+                      color: '#FFFFFF',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backdropFilter: 'blur(8px)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <ChevronRight size={24} />
+                  </button>
+                </>
+              )}
+
+              {/* Media Caption & Index Pill */}
+              <div
                 style={{
                   position: 'absolute',
-                  left: '1.5rem',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  width: '46px',
-                  height: '46px',
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(18, 20, 24, 0.75)',
-                  color: '#FFFFFF',
+                  bottom: '1.5rem',
+                  left: '2rem',
+                  right: '2rem',
                   display: 'flex',
+                  justifyContent: 'space-between',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  backdropFilter: 'blur(8px)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)'
+                  pointerEvents: 'none'
                 }}
               >
-                <ChevronLeft size={24} />
-              </button>
-              <button
-                onClick={() =>
-                  setActiveMediaIndex((prev) =>
-                    prev === property.media.length - 1 ? 0 : prev + 1
-                  )
-                }
-                style={{
-                  position: 'absolute',
-                  right: '1.5rem',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  width: '46px',
-                  height: '46px',
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(18, 20, 24, 0.75)',
-                  color: '#FFFFFF',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backdropFilter: 'blur(8px)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)'
-                }}
-              >
-                <ChevronRight size={24} />
-              </button>
+                <span
+                  style={{
+                    backgroundColor: 'rgba(18, 20, 24, 0.8)',
+                    color: '#FFFFFF',
+                    padding: '0.4rem 1rem',
+                    borderRadius: 'var(--radius-xs)',
+                    fontSize: '0.8rem',
+                    backdropFilter: 'blur(6px)'
+                  }}
+                >
+                  {property.media[activeMediaIndex]?.caption || property.title}
+                </span>
+
+                <span
+                  style={{
+                    backgroundColor: 'rgba(18, 20, 24, 0.8)',
+                    color: '#FFFFFF',
+                    padding: '0.4rem 0.8rem',
+                    borderRadius: 'var(--radius-xs)',
+                    fontSize: '0.8rem',
+                    fontFamily: 'monospace'
+                  }}
+                >
+                  {activeMediaIndex + 1} / {property.media.length}
+                </span>
+              </div>
             </>
           )}
-
-          {/* Media Caption & Index Pill */}
-          <div
-            style={{
-              position: 'absolute',
-              bottom: '1.5rem',
-              left: '2rem',
-              right: '2rem',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}
-          >
-            <span
-              style={{
-                backgroundColor: 'rgba(18, 20, 24, 0.8)',
-                color: '#FFFFFF',
-                padding: '0.4rem 1rem',
-                borderRadius: 'var(--radius-xs)',
-                fontSize: '0.8rem',
-                backdropFilter: 'blur(6px)'
-              }}
-            >
-              {property.media[activeMediaIndex]?.caption || property.title}
-            </span>
-
-            <span
-              style={{
-                backgroundColor: 'rgba(18, 20, 24, 0.8)',
-                color: '#FFFFFF',
-                padding: '0.4rem 0.8rem',
-                borderRadius: 'var(--radius-xs)',
-                fontSize: '0.8rem',
-                fontFamily: 'monospace'
-              }}
-            >
-              {activeMediaIndex + 1} / {property.media.length}
-            </span>
-          </div>
         </div>
 
         {/* Content Body Layout */}
