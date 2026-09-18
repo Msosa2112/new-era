@@ -70,10 +70,10 @@ export const HomePage: React.FC<HomePageProps> = ({
         id="search-chapter"
         style={{
           position: 'relative',
-          zIndex: 10,
+          zIndex: 30,
           backgroundColor: 'var(--bg-primary)',
           padding: '4.5rem 0 3.5rem 0',
-          overflow: 'hidden'
+          overflow: 'visible'
         }}
       >
         <HexPattern variant="subtle" opacity={0.06} maskFade="radial-center" />

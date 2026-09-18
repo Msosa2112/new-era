@@ -125,7 +125,8 @@ export const PropertySearchEngine: React.FC<PropertySearchEngineProps> = ({
           ? '0 25px 60px rgba(0, 0, 0, 0.75), 0 0 30px rgba(253, 230, 138, 0.05)'
           : 'var(--shadow-md)',
         position: 'relative',
-        zIndex: 20
+        zIndex: 20,
+        overflow: 'visible'
       }}
     >
       {/* Search Header / Mode Toggles */}

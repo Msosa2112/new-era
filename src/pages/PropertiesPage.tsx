@@ -70,8 +70,8 @@ export const PropertiesPage: React.FC<PropertiesPageProps> = ({
       </section>
 
       {/* Filter Engine */}
-      <section style={{ marginTop: '-2rem', position: 'relative', zIndex: 20 }}>
-        <div className="container">
+      <section style={{ marginTop: '-2rem', position: 'relative', zIndex: 30, overflow: 'visible' }}>
+        <div className="container" style={{ position: 'relative', overflow: 'visible' }}>
           <PropertySearchEngine
             initialFilter={filter}
             onSearch={handleSearch}
@@ -82,7 +82,7 @@ export const PropertiesPage: React.FC<PropertiesPageProps> = ({
       </section>
 
       {/* Results & Sorting Bar */}
-      <section className="section-padding-sm" style={{ position: 'relative', overflow: 'hidden' }}>
+      <section className="section-padding-sm" style={{ position: 'relative', zIndex: 10, overflow: 'visible' }}>
         <HexPattern variant="subtle" opacity={0.05} maskFade="none" />
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <div

@@ -88,6 +88,7 @@ export const LuxurySelect: React.FC<LuxurySelectProps> = ({
       style={{
         position: 'relative',
         width: '100%',
+        zIndex: isOpen ? 9999 : 1,
         ...style
       }}
     >
@@ -158,7 +159,7 @@ export const LuxurySelect: React.FC<LuxurySelectProps> = ({
             border: menuBorder,
             borderRadius: '6px',
             boxShadow: menuShadow,
-            zIndex: 100,
+            zIndex: 99999,
             overflow: 'hidden',
             padding: '0.35rem',
             animation: 'luxurySelectOpen 180ms var(--ease-out-fluid) both',
@@ -166,7 +167,7 @@ export const LuxurySelect: React.FC<LuxurySelectProps> = ({
           }}
           className="luxury-select-menu"
         >
-          <div style={{ maxHeight: '260px', overflowY: 'auto' }}>
+          <div style={{ maxHeight: '280px', overflowY: 'auto' }}>
             {options.map((opt) => {
               const isSelected = String(opt.value) === String(value);
               return (
