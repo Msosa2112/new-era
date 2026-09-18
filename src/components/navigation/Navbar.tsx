@@ -58,8 +58,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           zIndex: 1000,
           transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
           backgroundColor: scrolled
-            ? 'rgba(10, 11, 14, 0.82)'
-            : 'rgba(10, 11, 14, 0.45)',
+            ? 'rgba(10, 11, 14, 0.85)'
+            : 'rgba(10, 11, 14, 0.35)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
           borderBottom: '1px solid rgba(255, 255, 255, 0.08)',

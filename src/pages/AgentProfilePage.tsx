@@ -24,6 +24,7 @@ import { Agent, Property } from '../types/property';
 import { propertyService } from '../services/propertyService';
 import { PropertyCard } from '../components/properties/PropertyCard';
 import { HexPattern } from '../components/common/HexPattern';
+import { BrandLogo } from '../components/common/BrandLogo';
 import { BROKERAGE_DATA } from '../data/agentsData';
 import {
   ProfileAgentFraming,
@@ -160,136 +161,167 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
   return (
     <main
       style={{
-        paddingTop: 'var(--header-height)',
         minHeight: '100vh',
         backgroundColor: '#0C0D10',
-        color: '#FFFFFF'
+        color: '#FFFFFF',
+        position: 'relative'
       }}
     >
-      {/* 1. BREADCRUMB & ROSTER NAVIGATION BAR (FROSTED GLASS) */}
-      <div
-        style={{
-          backgroundColor: 'rgba(12, 13, 16, 0.65)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          padding: '0.85rem 0'
-        }}
-      >
-        <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <button
-            onClick={onBack}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              fontSize: '0.82rem',
-              fontWeight: 600,
-              color: '#E64A2A',
-              backgroundColor: 'transparent',
-              border: 'none',
-              cursor: 'pointer',
-              transition: 'transform 0.2s ease'
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateX(-3px)')}
-            onMouseLeave={(e) => (e.currentTarget.style.transform = 'none')}
-          >
-            <ArrowLeft size={16} color="#E64A2A" />
-            <span style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
-              {lang === 'es' ? 'Volver a Todos los Asesores' : 'Back to All Advisors'}
-            </span>
-          </button>
-
-          {/* Quick Roster Switcher */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.5)', display: 'none' }} className="roster-counter-text">
-              {currentIndex + 1} / {allAgents.length}
-            </span>
-            <button
-              onClick={() => onSelectAgent(prevAgent)}
-              title={prevAgent.name}
-              style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '50%',
-                border: '1px solid rgba(255, 255, 255, 0.18)',
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                color: '#FFFFFF',
-                transition: 'all 0.2s'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.16)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.35)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.18)';
-              }}
-            >
-              <ChevronLeft size={16} />
-            </button>
-            <button
-              onClick={() => onSelectAgent(nextAgent)}
-              title={nextAgent.name}
-              style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '50%',
-                border: '1px solid rgba(255, 255, 255, 0.18)',
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                color: '#FFFFFF',
-                transition: 'all 0.2s'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.16)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.35)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.18)';
-              }}
-            >
-              <ChevronRight size={16} />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* 2. LUXURY AGENT HERO HEADER */}
+      {/* LUXURY AGENT HERO HEADER & TOP CANVAS */}
       <section
         style={{
           position: 'relative',
           backgroundColor: '#0C0D10',
           color: '#FFFFFF',
-          padding: 'clamp(3rem, 6vw, 5.5rem) 0',
+          paddingTop: 'calc(var(--header-height, 75px) + 0.35rem)',
+          paddingBottom: 'clamp(2.5rem, 5vw, 4.5rem)',
           overflow: 'hidden'
         }}
       >
-        <HexPattern variant="gradient-burgundy" opacity={0.18} maskFade="radial-top-right" />
+        <HexPattern variant="gradient-burgundy" opacity={0.22} maskFade="radial-top-right" />
 
-        {/* Oversized Brand Watermark Vector */}
+        {/* Top ambient radial glow extending behind transparent fixed Navbar */}
         <div
           style={{
             position: 'absolute',
-            top: '50%',
-            right: '-5%',
-            transform: 'translateY(-50%)',
+            top: '-60px',
+            left: '35%',
+            transform: 'translateX(-50%)',
+            width: '80vw',
+            maxWidth: '1100px',
+            height: '380px',
+            borderRadius: '50%',
+            background: 'radial-gradient(ellipse, rgba(102, 14, 26, 0.45) 0%, rgba(230, 74, 42, 0.12) 48%, transparent 75%)',
+            filter: 'blur(50px)',
             pointerEvents: 'none',
-            opacity: 0.04,
             zIndex: 0
           }}
+        />
+
+        {/* 1. BREADCRUMB & ROSTER NAVIGATION BAR (SEAMLESS TRANSLUCENT) */}
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 10,
+            borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+            padding: '0.65rem 0 1rem 0',
+            marginBottom: 'clamp(1.5rem, 3.5vw, 2.5rem)'
+          }}
         >
-          <svg width="600" height="600" viewBox="0 0 443.85 68.23" fill="#FFFFFF">
-            <path d="M47.51 7.95c0,-1.26 -0.28,-2.22 -0.85,-2.89 -0.57,-0.66 -1.7,-1.4 -3.41,-2.22l0 -1.89 12.3 0 0 1.89c-1.7,0.82 -2.84,1.56 -3.41,2.22 -0.57,0.66 -0.85,1.62 -0.85,2.89l0 59.24 -1.42 0c-1.51,0 -2.74,-0.66 -3.69,-1.99l-35.49 -51.48c-0.82,-1.14 -1.45,-1.7 -1.89,-1.7 -0.5,0 -0.76,0.85 -0.76,2.56l0 45.62c0,1.26 0.28,2.22 0.85,2.89 0.57,0.66 1.7,1.4 3.41,2.22l0 1.89 -12.3 0 0 -1.89c1.7,-0.82 2.84,-1.56 3.41,-2.22 0.57,-0.66 0.85,-1.62 0.85,-2.89l0 -52.24c0,-1.26 -0.28,-2.22 -0.85,-2.89 -0.57,-0.66 -1.7,-1.4 -3.41,-2.22l0 -1.89 12.3 0 32.46 45.52c0.76,1.14 1.39,1.7 1.89,1.7 0.57,0 0.85,-0.88 0.85,-2.65l0 -37.57z" />
-          </svg>
+          <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <button
+              onClick={onBack}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                fontSize: '0.82rem',
+                fontWeight: 600,
+                color: '#E64A2A',
+                backgroundColor: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'transform 0.2s ease'
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateX(-3px)')}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = 'none')}
+            >
+              <ArrowLeft size={16} color="#E64A2A" />
+              <span style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
+                {lang === 'es' ? 'Volver a Todos los Asesores' : 'Back to All Advisors'}
+              </span>
+            </button>
+
+            {/* Quick Roster Switcher */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span style={{ fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.5)', display: 'none' }} className="roster-counter-text">
+                {currentIndex + 1} / {allAgents.length}
+              </span>
+              <button
+                onClick={() => onSelectAgent(prevAgent)}
+                title={prevAgent.name}
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '50%',
+                  border: '1px solid rgba(255, 255, 255, 0.18)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  color: '#FFFFFF',
+                  transition: 'all 0.2s'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.16)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.35)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.18)';
+                }}
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <button
+                onClick={() => onSelectAgent(nextAgent)}
+                title={nextAgent.name}
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '50%',
+                  border: '1px solid rgba(255, 255, 255, 0.18)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  color: '#FFFFFF',
+                  transition: 'all 0.2s'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.16)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.35)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.18)';
+                }}
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Oversized Brand Watermark Vector (Official NE Monogram, Ultra Subtle Luxury) */}
+        <div
+          className="agent-hero-watermark"
+          style={{
+            position: 'absolute',
+            top: '55%',
+            right: '-4%',
+            transform: 'translateY(-50%)',
+            pointerEvents: 'none',
+            userSelect: 'none',
+            opacity: 0.038,
+            zIndex: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+          aria-hidden="true"
+        >
+          <BrandLogo
+            variant="monogram-white"
+            height="auto"
+            style={{
+              width: 'clamp(360px, 48vw, 680px)',
+              height: 'auto',
+              color: '#FFFFFF'
+            }}
+          />
         </div>
 
         <div className="container" style={{ position: 'relative', zIndex: 10 }}>
@@ -1407,6 +1439,12 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
           }
           .roster-counter-text {
             display: inline !important;
+          }
+          .agent-hero-watermark {
+            right: 50% !important;
+            transform: translate(50%, -50%) !important;
+            opacity: 0.032 !important;
+            max-width: 90vw !important;
           }
         }
 
