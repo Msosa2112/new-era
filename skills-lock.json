@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "animate": {
+      "source": "emilkowalski/skills",
+      "sourceType": "github",
+      "skillPath": "skills/animate/SKILL.md",
+      "computedHash": "fb0a18403891238d4ce4fc80f891689678766c29092de1e3aadc0c917133ee5d"
+    },
+    "animate-ui": {
+      "source": "PrototyperAI/prototyper-ui",
+      "sourceType": "github",
+      "skillPath": "apps/docs/skill/animate-ui/SKILL.md",
+      "computedHash": "12ee34110908bc99b99e8b69633e80160ea21a2164e3d119a6f023a95785b901"
+    }
+  }
+}
