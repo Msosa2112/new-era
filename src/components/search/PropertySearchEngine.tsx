@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Search, SlidersHorizontal, MapPin, Home, DollarSign, Bed, Bath, X, ArrowRight } from 'lucide-react';
 import { PropertyFilter, TransactionType, PropertyType } from '../../types/property';
+import { LuxurySelect, SelectOption } from '../common/LuxurySelect';
 
 interface PropertySearchEngineProps {
   initialFilter?: PropertyFilter;
@@ -25,6 +26,53 @@ export const PropertySearchEngine: React.FC<PropertySearchEngineProps> = ({
   const [propertyType, setPropertyType] = useState<PropertyType | 'All'>(
     initialFilter.propertyType || 'All'
   );
+
+  const cityOptions: SelectOption[] = [
+    { value: 'All', label: lang === 'es' ? 'Todas las Zonas (KY / IN)' : 'All Areas (KY & IN)' },
+    { value: 'Louisville', label: 'Louisville, KY' },
+    { value: 'Prospect', label: 'Prospect / Harrods Creek, KY' },
+    { value: 'Anchorage', label: 'Anchorage, KY' },
+    { value: 'Jeffersonville', label: 'Jeffersonville, IN' },
+  ];
+
+  const propertyTypeOptions: SelectOption[] = [
+    { value: 'All', label: lang === 'es' ? 'Todos los Estilos' : 'All Architectural Types' },
+    { value: 'Luxury Estate', label: lang === 'es' ? 'Mansión & Villa de Lujo' : 'Luxury Estate' },
+    { value: 'Single Family', label: lang === 'es' ? 'Unifamiliar Residencial' : 'Single Family' },
+    { value: 'Modern Condo', label: lang === 'es' ? 'Condominio / Penthouse' : 'Modern Condo' },
+    { value: 'Townhome', label: 'Townhome' },
+  ];
+
+  const minPriceOptions: SelectOption[] = [
+    { value: '', label: lang === 'es' ? 'Sin Mínimo' : 'No Min' },
+    { value: '300000', label: '$300,000' },
+    { value: '500000', label: '$500,000' },
+    { value: '750000', label: '$750,000' },
+    { value: '1000000', label: '$1,000,000+' },
+  ];
+
+  const maxPriceOptions: SelectOption[] = [
+    { value: '', label: lang === 'es' ? 'Sin Límite' : 'Any Max' },
+    { value: '600000', label: '$600,000' },
+    { value: '900000', label: '$900,000' },
+    { value: '1500000', label: '$1,500,000' },
+    { value: '3000000', label: '$3,000,000+' },
+  ];
+
+  const minBedsOptions: SelectOption[] = [
+    { value: '', label: lang === 'es' ? 'Cualquiera' : 'Any' },
+    { value: '2', label: '2+ Beds' },
+    { value: '3', label: '3+ Beds' },
+    { value: '4', label: '4+ Beds' },
+    { value: '5', label: '5+ Beds' },
+  ];
+
+  const minBathsOptions: SelectOption[] = [
+    { value: '', label: lang === 'es' ? 'Cualquiera' : 'Any' },
+    { value: '2', label: '2+ Baths' },
+    { value: '3', label: '3+ Baths' },
+    { value: '4', label: '4+ Baths' },
+  ];
   const [minPrice, setMinPrice] = useState<number | undefined>(initialFilter.minPrice);
   const [maxPrice, setMaxPrice] = useState<number | undefined>(initialFilter.maxPrice);
   const [minBeds, setMinBeds] = useState<number | undefined>(initialFilter.minBeds);
@@ -230,27 +278,13 @@ export const PropertySearchEngine: React.FC<PropertySearchEngineProps> = ({
               <MapPin size={12} color={iconColor} />
               {lang === 'es' ? 'Zona / Ciudad' : 'Market Area'}
             </label>
-            <select
+            <LuxurySelect
               value={city}
-              className="search-input-control"
-              onChange={(e) => setCity(e.target.value)}
-              style={{
-                width: '100%',
-                border: inputBorder,
-                borderRadius: 'var(--radius-xs)',
-                fontFamily: 'inherit',
-                backgroundColor: inputBg,
-                color: inputColor
-              }}
-            >
-              <option value="All" style={{ backgroundColor: '#160408', color: '#fff' }}>
-                {lang === 'es' ? 'Todas las Zonas (KY / IN)' : 'All Areas (KY & IN)'}
-              </option>
-              <option value="Louisville" style={{ backgroundColor: '#160408', color: '#fff' }}>Louisville, KY</option>
-              <option value="Prospect" style={{ backgroundColor: '#160408', color: '#fff' }}>Prospect / Harrods Creek, KY</option>
-              <option value="Anchorage" style={{ backgroundColor: '#160408', color: '#fff' }}>Anchorage, KY</option>
-              <option value="Jeffersonville" style={{ backgroundColor: '#160408', color: '#fff' }}>Jeffersonville, IN</option>
-            </select>
+              onChange={(val) => setCity(val)}
+              options={cityOptions}
+              variant={variant}
+              aria-label={lang === 'es' ? 'Zona / Ciudad' : 'Market Area'}
+            />
           </div>
 
           {/* Property Type */}
@@ -269,35 +303,13 @@ export const PropertySearchEngine: React.FC<PropertySearchEngineProps> = ({
               <Home size={12} color={iconColor} />
               {lang === 'es' ? 'Tipo de Residencia' : 'Property Type'}
             </label>
-            <select
+            <LuxurySelect
               value={propertyType}
-              className="search-input-control"
-              onChange={(e) => setPropertyType(e.target.value as PropertyType | 'All')}
-              style={{
-                width: '100%',
-                border: inputBorder,
-                borderRadius: 'var(--radius-xs)',
-                fontFamily: 'inherit',
-                backgroundColor: inputBg,
-                color: inputColor
-              }}
-            >
-              <option value="All" style={{ backgroundColor: '#160408', color: '#fff' }}>
-                {lang === 'es' ? 'Todos los Estilos' : 'All Architectural Types'}
-              </option>
-              <option value="Luxury Estate" style={{ backgroundColor: '#160408', color: '#fff' }}>
-                {lang === 'es' ? 'Mansión & Villa de Lujo' : 'Luxury Estate'}
-              </option>
-              <option value="Single Family" style={{ backgroundColor: '#160408', color: '#fff' }}>
-                {lang === 'es' ? 'Unifamiliar Residencial' : 'Single Family'}
-              </option>
-              <option value="Modern Condo" style={{ backgroundColor: '#160408', color: '#fff' }}>
-                {lang === 'es' ? 'Condominio / Penthouse' : 'Modern Condo'}
-              </option>
-              <option value="Townhome" style={{ backgroundColor: '#160408', color: '#fff' }}>
-                {lang === 'es' ? 'Townhome' : 'Townhome'}
-              </option>
-            </select>
+              onChange={(val) => setPropertyType(val)}
+              options={propertyTypeOptions}
+              variant={variant}
+              aria-label={lang === 'es' ? 'Tipo de Residencia' : 'Property Type'}
+            />
           </div>
 
           {/* Submit Button */}
@@ -324,97 +336,58 @@ export const PropertySearchEngine: React.FC<PropertySearchEngineProps> = ({
           >
             {/* Min Price */}
             <div className="search-field" style={{ display: 'flex', flexDirection: 'column' }}>
-              <label style={{ fontWeight: 600, color: labelColor }}>
+              <label style={{ fontWeight: 600, color: labelColor, fontSize: '0.75rem' }}>
                 {lang === 'es' ? 'Precio Mínimo' : 'Min Price'}
               </label>
-              <select
-                value={minPrice || ''}
-                className="search-input-control"
-                onChange={(e) => setMinPrice(e.target.value ? Number(e.target.value) : undefined)}
-                style={{
-                  border: inputBorder,
-                  borderRadius: 'var(--radius-xs)',
-                  backgroundColor: inputBg,
-                  color: inputColor
-                }}
-              >
-                <option value="" style={{ backgroundColor: '#160408', color: '#fff' }}>{lang === 'es' ? 'Sin Mínimo' : 'No Min'}</option>
-                <option value="300000" style={{ backgroundColor: '#160408', color: '#fff' }}>$300,000</option>
-                <option value="500000" style={{ backgroundColor: '#160408', color: '#fff' }}>$500,000</option>
-                <option value="750000" style={{ backgroundColor: '#160408', color: '#fff' }}>$750,000</option>
-                <option value="1000000" style={{ backgroundColor: '#160408', color: '#fff' }}>$1,000,000+</option>
-              </select>
+              <LuxurySelect
+                value={minPrice ?? ''}
+                onChange={(val) => setMinPrice(val ? Number(val) : undefined)}
+                options={minPriceOptions}
+                variant={variant}
+                aria-label={lang === 'es' ? 'Precio Mínimo' : 'Min Price'}
+              />
             </div>
 
             {/* Max Price */}
             <div className="search-field" style={{ display: 'flex', flexDirection: 'column' }}>
-              <label style={{ fontWeight: 600, color: labelColor }}>
+              <label style={{ fontWeight: 600, color: labelColor, fontSize: '0.75rem' }}>
                 {lang === 'es' ? 'Precio Máximo' : 'Max Price'}
               </label>
-              <select
-                value={maxPrice || ''}
-                className="search-input-control"
-                onChange={(e) => setMaxPrice(e.target.value ? Number(e.target.value) : undefined)}
-                style={{
-                  border: inputBorder,
-                  borderRadius: 'var(--radius-xs)',
-                  backgroundColor: inputBg,
-                  color: inputColor
-                }}
-              >
-                <option value="" style={{ backgroundColor: '#160408', color: '#fff' }}>{lang === 'es' ? 'Sin Límite' : 'Any Max'}</option>
-                <option value="600000" style={{ backgroundColor: '#160408', color: '#fff' }}>$600,000</option>
-                <option value="900000" style={{ backgroundColor: '#160408', color: '#fff' }}>$900,000</option>
-                <option value="1500000" style={{ backgroundColor: '#160408', color: '#fff' }}>$1,500,000</option>
-                <option value="3000000" style={{ backgroundColor: '#160408', color: '#fff' }}>$3,000,000+</option>
-              </select>
+              <LuxurySelect
+                value={maxPrice ?? ''}
+                onChange={(val) => setMaxPrice(val ? Number(val) : undefined)}
+                options={maxPriceOptions}
+                variant={variant}
+                aria-label={lang === 'es' ? 'Precio Máximo' : 'Max Price'}
+              />
             </div>
 
             {/* Min Bedrooms */}
             <div className="search-field" style={{ display: 'flex', flexDirection: 'column' }}>
-              <label style={{ fontWeight: 600, color: labelColor }}>
+              <label style={{ fontWeight: 600, color: labelColor, fontSize: '0.75rem' }}>
                 {lang === 'es' ? 'Habitaciones (Min)' : 'Bedrooms (Min)'}
               </label>
-              <select
-                value={minBeds || ''}
-                className="search-input-control"
-                onChange={(e) => setMinBeds(e.target.value ? Number(e.target.value) : undefined)}
-                style={{
-                  border: inputBorder,
-                  borderRadius: 'var(--radius-xs)',
-                  backgroundColor: inputBg,
-                  color: inputColor
-                }}
-              >
-                <option value="" style={{ backgroundColor: '#160408', color: '#fff' }}>{lang === 'es' ? 'Cualquiera' : 'Any'}</option>
-                <option value="2" style={{ backgroundColor: '#160408', color: '#fff' }}>2+ Beds</option>
-                <option value="3" style={{ backgroundColor: '#160408', color: '#fff' }}>3+ Beds</option>
-                <option value="4" style={{ backgroundColor: '#160408', color: '#fff' }}>4+ Beds</option>
-                <option value="5" style={{ backgroundColor: '#160408', color: '#fff' }}>5+ Beds</option>
-              </select>
+              <LuxurySelect
+                value={minBeds ?? ''}
+                onChange={(val) => setMinBeds(val ? Number(val) : undefined)}
+                options={minBedsOptions}
+                variant={variant}
+                aria-label={lang === 'es' ? 'Habitaciones (Min)' : 'Bedrooms (Min)'}
+              />
             </div>
 
             {/* Min Bathrooms */}
             <div className="search-field" style={{ display: 'flex', flexDirection: 'column' }}>
-              <label style={{ fontWeight: 600, color: labelColor }}>
+              <label style={{ fontWeight: 600, color: labelColor, fontSize: '0.75rem' }}>
                 {lang === 'es' ? 'Baños (Min)' : 'Bathrooms (Min)'}
               </label>
-              <select
-                value={minBaths || ''}
-                className="search-input-control"
-                onChange={(e) => setMinBaths(e.target.value ? Number(e.target.value) : undefined)}
-                style={{
-                  border: inputBorder,
-                  borderRadius: 'var(--radius-xs)',
-                  backgroundColor: inputBg,
-                  color: inputColor
-                }}
-              >
-                <option value="" style={{ backgroundColor: '#160408', color: '#fff' }}>{lang === 'es' ? 'Cualquiera' : 'Any'}</option>
-                <option value="2" style={{ backgroundColor: '#160408', color: '#fff' }}>2+ Baths</option>
-                <option value="3" style={{ backgroundColor: '#160408', color: '#fff' }}>3+ Baths</option>
-                <option value="4" style={{ backgroundColor: '#160408', color: '#fff' }}>4+ Baths</option>
-              </select>
+              <LuxurySelect
+                value={minBaths ?? ''}
+                onChange={(val) => setMinBaths(val ? Number(val) : undefined)}
+                options={minBathsOptions}
+                variant={variant}
+                aria-label={lang === 'es' ? 'Baños (Min)' : 'Bathrooms (Min)'}
+              />
             </div>
           </div>
         )}

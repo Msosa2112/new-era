@@ -6,6 +6,7 @@ import { propertyService } from '../services/propertyService';
 import { HexPattern } from '../components/common/HexPattern';
 import { SlidersHorizontal, ArrowUpDown } from 'lucide-react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
+import { LuxurySelect, SelectOption } from '../components/common/LuxurySelect';
 
 interface PropertiesPageProps {
   onSelectProperty: (property: Property) => void;
@@ -20,6 +21,13 @@ export const PropertiesPage: React.FC<PropertiesPageProps> = ({
   const [properties, setProperties] = useState<Property[]>([]);
   const [filter, setFilter] = useState<PropertyFilter>({ transactionType: 'Buy', sortBy: 'newest' });
   const [loading, setLoading] = useState<boolean>(true);
+
+  const sortOptions: SelectOption[] = [
+    { value: 'newest', label: lang === 'es' ? 'Más Recientes' : 'Newest First' },
+    { value: 'price-asc', label: lang === 'es' ? 'Precio: Menor a Mayor' : 'Price: Low to High' },
+    { value: 'price-desc', label: lang === 'es' ? 'Precio: Mayor a Menor' : 'Price: High to Low' },
+    { value: 'sqft-desc', label: lang === 'es' ? 'Espacio (Sq Ft)' : 'Largest Living Area' },
+  ];
 
   useEffect(() => {
     setLoading(true);
@@ -100,28 +108,18 @@ export const PropertiesPage: React.FC<PropertiesPageProps> = ({
             </div>
 
             {/* Sort Selector */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <ArrowUpDown size={14} color="var(--color-burgundy-primary)" />
-              <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', minWidth: '220px' }}>
+              <ArrowUpDown size={14} color="var(--color-burgundy-primary)" style={{ flexShrink: 0 }} />
+              <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>
                 {lang === 'es' ? 'Ordenar por:' : 'Sort By:'}
               </span>
-              <select
+              <LuxurySelect
                 value={filter.sortBy || 'newest'}
-                onChange={(e) => setFilter({ ...filter, sortBy: e.target.value as any })}
-                style={{
-                  padding: '0.45rem 0.85rem',
-                  borderRadius: 'var(--radius-xs)',
-                  border: '1px solid var(--border-subtle)',
-                  backgroundColor: 'var(--bg-surface)',
-                  fontSize: '0.85rem',
-                  fontFamily: 'inherit'
-                }}
-              >
-                <option value="newest">{lang === 'es' ? 'Más Recientes' : 'Newest First'}</option>
-                <option value="price-asc">{lang === 'es' ? 'Precio: Menor a Mayor' : 'Price: Low to High'}</option>
-                <option value="price-desc">{lang === 'es' ? 'Precio: Mayor a Menor' : 'Price: High to Low'}</option>
-                <option value="sqft-desc">{lang === 'es' ? 'Espacio (Sq Ft)' : 'Largest Living Area'}</option>
-              </select>
+                onChange={(val) => setFilter({ ...filter, sortBy: val as any })}
+                options={sortOptions}
+                aria-label={lang === 'es' ? 'Ordenar por' : 'Sort By'}
+                style={{ minWidth: '170px' }}
+              />
             </div>
           </div>
 
