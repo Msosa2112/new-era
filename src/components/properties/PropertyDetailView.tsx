@@ -615,7 +615,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                       textAlign: 'center'
                     }}
                   >
-                    <CheckCircle2 size={32} color="var(--color-orange-accent)" style={{ margin: '0 auto 0.75rem' }} />
+                    <CheckCircle2 className="animate-success-icon" size={38} color="var(--color-orange-accent)" style={{ margin: '0 auto 0.75rem' }} />
                     <h4 style={{ color: '#FFFFFF', marginBottom: '0.35rem' }}>
                       {lang === 'es' ? 'Visita Solicitada' : 'Tour Requested'}
                     </h4>

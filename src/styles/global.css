@@ -173,7 +173,9 @@ img {
   justify-content: center;
 }
 
-/* Luxury Interactive Buttons */
+/* ========================================================================= */
+/* LUXURY INTERACTIVE BUTTONS (STABILITY RULE & INNER MOTION) */
+/* ========================================================================= */
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -186,37 +188,36 @@ img {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   border-radius: var(--radius-xs);
-  transition: all var(--transition-normal);
+  transition: background-color 160ms cubic-bezier(0.2, 0, 0, 1), box-shadow 160ms cubic-bezier(0.2, 0, 0, 1);
   position: relative;
   overflow: hidden;
   box-shadow: var(--shadow-sm);
-}
-
-.btn-primary::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: var(--color-orange-accent);
-  opacity: 0;
-  transition: opacity var(--transition-normal);
-  z-index: 1;
-}
-
-.btn-primary > * {
-  position: relative;
-  z-index: 2;
+  cursor: pointer;
+  border: none;
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-luxury);
+  background-color: #8B1D2C;
+  box-shadow: 0 4px 14px rgba(102, 14, 26, 0.35);
 }
 
-.btn-primary:hover::after {
-  opacity: 1;
+.btn-primary:active {
+  background-color: #550B15;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.35);
+}
+
+/* Inner Icon Micro-glide: Moves 3px without altering button footprint */
+.btn-primary svg,
+.btn-outline svg,
+.property-card-action-btn svg {
+  transition: transform 220ms cubic-bezier(0.2, 0, 0, 1);
+  will-change: transform;
+}
+
+.btn-primary:hover svg,
+.btn-outline:hover svg,
+.property-card-action-btn:hover svg {
+  transform: translateX(3px);
 }
 
 .btn-outline {
@@ -232,13 +233,18 @@ img {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   border-radius: var(--radius-xs);
-  transition: all var(--transition-normal);
+  transition: background-color 160ms cubic-bezier(0.2, 0, 0, 1), border-color 160ms cubic-bezier(0.2, 0, 0, 1), color 160ms cubic-bezier(0.2, 0, 0, 1), box-shadow 160ms cubic-bezier(0.2, 0, 0, 1);
+  cursor: pointer;
 }
 
 .btn-outline:hover {
   background-color: var(--text-primary);
   color: var(--bg-primary);
-  transform: translateY(-2px);
+  border-color: var(--text-primary);
+}
+
+.btn-outline:active {
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .btn-outline-white {
@@ -249,6 +255,81 @@ img {
 .btn-outline-white:hover {
   background-color: #FFFFFF;
   color: var(--color-charcoal-950);
+  border-color: #FFFFFF;
+}
+
+.btn-outline-white:active {
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Input Focus Bloom & Stability */
+input, select, textarea {
+  transition: border-color 180ms cubic-bezier(0.2, 0, 0, 1), box-shadow 180ms cubic-bezier(0.2, 0, 0, 1), background-color 180ms ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--color-burgundy-primary) !important;
+  box-shadow: 0 0 0 3px rgba(102, 14, 26, 0.14) !important;
+  outline: none;
+}
+
+/* Property Card Internal Image Depth & Card Hover */
+.property-card {
+  transition: border-color 220ms ease, box-shadow 240ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.property-card:hover {
+  border-color: rgba(102, 14, 26, 0.22);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+.property-card-image-wrap img {
+  transition: transform 450ms cubic-bezier(0.25, 1, 0.35, 1);
+  will-change: transform;
+}
+
+.property-card:hover .property-card-image-wrap img {
+  transform: scale(1.045);
+}
+
+/* Animated Success States (Checkmark Draw-on & Pop) */
+@keyframes checkmark-draw {
+  0% {
+    stroke-dashoffset: 40;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes success-pop {
+  0% {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-success-icon {
+  animation: success-pop 380ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-success-icon path {
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  animation: checkmark-draw 420ms cubic-bezier(0.2, 0, 0, 1) 80ms forwards;
 }
 
 /* Subtle Architectural Grid Lines */

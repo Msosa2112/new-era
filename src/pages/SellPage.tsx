@@ -138,7 +138,7 @@ export const SellPage: React.FC<SellPageProps> = ({ onOpenConsultation, lang }) 
                     textAlign: 'center'
                   }}
                 >
-                  <CheckCircle2 size={36} color="var(--color-burgundy-primary)" style={{ margin: '0 auto 0.75rem' }} />
+                  <CheckCircle2 className="animate-success-icon" size={42} color="var(--color-burgundy-primary)" style={{ margin: '0 auto 0.75rem' }} />
                   <h4 style={{ fontSize: '1.3rem', marginBottom: '0.35rem' }}>
                     {lang === 'es' ? 'Solicitud de Valuación Recibida' : 'CMA Request Received'}
                   </h4>

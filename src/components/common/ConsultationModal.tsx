@@ -124,7 +124,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
               textAlign: 'center'
             }}
           >
-            <CheckCircle2 size={36} color="var(--color-orange-accent)" style={{ margin: '0 auto 0.75rem' }} />
+            <CheckCircle2 className="animate-success-icon" size={40} color="var(--color-orange-accent)" style={{ margin: '0 auto 0.75rem' }} />
             <h4 style={{ fontSize: '1.25rem', color: '#FFFFFF', marginBottom: '0.5rem' }}>
               {lang === 'es' ? 'Consulta Agendada' : 'Advisory Request Received'}
             </h4>
