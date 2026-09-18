@@ -136,6 +136,25 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
           textAlign: 'center'
         }}
       >
+        {/* Semantic H1 for SEO & Accessibility (Visually hidden, zero design impact) */}
+        <h1
+          style={{
+            position: 'absolute',
+            width: '1px',
+            height: '1px',
+            padding: 0,
+            margin: '-1px',
+            overflow: 'hidden',
+            clip: 'rect(0, 0, 0, 0)',
+            whiteSpace: 'nowrap',
+            border: 0
+          }}
+        >
+          {lang === 'es'
+            ? 'New Era Real Estate | Bienes Raíces y Asesoría Inmobiliaria en Louisville KY y Southern Indiana'
+            : 'New Era Real Estate | Premier Real Estate Brokerage in Louisville KY & Southern Indiana'}
+        </h1>
+
         {/* Large Commanding Champagne-Gold Brand Logo with Dark Backdrop */}
         <div
           style={{

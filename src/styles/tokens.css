@@ -7,11 +7,11 @@
   --color-burgundy-500: #961729;
   --color-burgundy-primary: #660E1A;
   
-  --color-orange-900: #991804;
-  --color-orange-700: #D12408;
-  --color-orange-500: #FA2F0E;
-  --color-orange-400: #FF4D2E;
-  --color-orange-accent: #FA2F0E;
+  --color-orange-900: #3E070E;
+  --color-orange-700: #540B14;
+  --color-orange-500: #660E1A;
+  --color-orange-400: #7D1222;
+  --color-orange-accent: #8B1D2C;
   
   --color-charcoal-950: #0C0D10;
   --color-charcoal-900: #121418;
@@ -40,7 +40,7 @@
   --text-muted: #847C74;
   --text-inverse: #FAF8F5;
   --text-burgundy: #660E1A;
-  --text-accent: #FA2F0E;
+  --text-accent: #8B1D2C;
   
   --border-subtle: #E8E2D8;
   --border-strong: #121418;

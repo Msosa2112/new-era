@@ -1,0 +1,11 @@
+# Robots.txt for New Era Real Estate
+# Production domain: https://newerarealestateky.com
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /scripts/
+Disallow: /dist/
+
+# XML Sitemap Location
+Sitemap: https://newerarealestateky.com/sitemap.xml

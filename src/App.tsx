@@ -11,6 +11,7 @@ import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
 import { PropertyDetailView } from './components/properties/PropertyDetailView';
 import { ConsultationModal } from './components/common/ConsultationModal';
+import { SEOHead } from './components/common/SEOHead';
 import { Property, Agent } from './types/property';
 import { propertyService } from './services/propertyService';
 
@@ -91,6 +92,14 @@ export const App: React.FC = () => {
 
   return (
     <div className="app-container" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* Reactive SEO Head Manager (Dynamic Titles, Meta, OpenGraph, JSON-LD) */}
+      <SEOHead
+        activePage={activePage}
+        lang={lang}
+        selectedAgent={selectedAgent}
+        selectedProperty={selectedProperty}
+      />
+
       {/* Global Navbar */}
       <Navbar
         activePage={activePage === 'agent-profile' ? 'agents' : activePage}

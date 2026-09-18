@@ -191,7 +191,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
             maxWidth: '1100px',
             height: '380px',
             borderRadius: '50%',
-            background: 'radial-gradient(ellipse, rgba(102, 14, 26, 0.45) 0%, rgba(230, 74, 42, 0.12) 48%, transparent 75%)',
+            background: 'radial-gradient(ellipse, rgba(102, 14, 26, 0.45) 0%, rgba(150, 23, 41, 0.15) 48%, transparent 75%)',
             filter: 'blur(50px)',
             pointerEvents: 'none',
             zIndex: 0
@@ -217,7 +217,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                 gap: '0.5rem',
                 fontSize: '0.82rem',
                 fontWeight: 600,
-                color: '#E64A2A',
+                color: '#961729',
                 backgroundColor: 'transparent',
                 border: 'none',
                 cursor: 'pointer',
@@ -226,7 +226,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
               onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateX(-3px)')}
               onMouseLeave={(e) => (e.currentTarget.style.transform = 'none')}
             >
-              <ArrowLeft size={16} color="#E64A2A" />
+              <ArrowLeft size={16} color="#961729" />
               <span style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
                 {lang === 'es' ? 'Volver a Todos los Asesores' : 'Back to All Advisors'}
               </span>
@@ -366,7 +366,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                   width: '90%',
                   height: '90%',
                   borderRadius: '50%',
-                  background: 'radial-gradient(circle, rgba(102, 14, 26, 0.55) 0%, rgba(230, 74, 42, 0.16) 45%, transparent 72%)',
+                  background: 'radial-gradient(circle, rgba(102, 14, 26, 0.65) 0%, rgba(125, 18, 34, 0.22) 45%, transparent 72%)',
                   filter: 'blur(36px)',
                   pointerEvents: 'none'
                 }}
@@ -404,13 +404,13 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                         fontWeight: 700,
                         letterSpacing: '0.14em',
                         textTransform: 'uppercase',
-                        color: '#E64A2A',
+                        color: '#961729',
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '0.4rem'
                       }}
                     >
-                      <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#E64A2A', display: 'inline-block' }} />
+                      <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#961729', display: 'inline-block' }} />
                       NEW ERA REAL ESTATE ADVISOR
                     </span>
                   </div>
@@ -495,7 +495,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                     href={`tel:${cleanPhone}`}
                     className="agent-btn-outline agent-btn-call"
                   >
-                    <Phone size={14} color="#E64A2A" style={{ flexShrink: 0 }} />
+                    <Phone size={14} color="#961729" style={{ flexShrink: 0 }} />
                     <span>{agent.phone}</span>
                   </a>
 
@@ -517,7 +517,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                     href={`mailto:${agent.email}`}
                     className="agent-email-link"
                   >
-                    <Mail size={14} color="#E64A2A" style={{ flexShrink: 0 }} />
+                    <Mail size={14} color="#961729" style={{ flexShrink: 0 }} />
                     <span className="agent-email-text">{agent.email}</span>
                   </a>
 
@@ -966,7 +966,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                 </div>
 
                 <div>
-                  <div style={{ fontSize: '2.4rem', fontWeight: 700, color: '#E64A2A', lineHeight: 1, marginBottom: '0.5rem' }}>
+                  <div style={{ fontSize: '2.4rem', fontWeight: 700, color: '#961729', lineHeight: 1, marginBottom: '0.5rem' }}>
                     18 {lang === 'es' ? 'Días' : 'Days'}
                   </div>
                   <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#111827', marginBottom: '0.35rem' }}>
@@ -1342,7 +1342,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
           line-height: 1;
         }
         .agent-stat-number.accent {
-          color: #E64A2A;
+          color: #961729;
         }
         .agent-stat-label {
           font-size: clamp(0.58rem, 1.6vw, 0.68rem);
