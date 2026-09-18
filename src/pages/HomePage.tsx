@@ -13,6 +13,8 @@ import { Property, PropertyFilter, Agent } from '../types/property';
 import { propertyService } from '../services/propertyService';
 import { CinematicVideoIntro } from '../components/hero/CinematicVideoIntro';
 import { HexPattern } from '../components/common/HexPattern';
+import { useScrollReveal } from '../hooks/useScrollReveal';
+import { AnimatedCounter } from '../components/common/AnimatedCounter';
 
 interface HomePageProps {
   onSelectProperty: (property: Property) => void;
@@ -29,6 +31,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   onOpenConsultation,
   lang
 }) => {
+  const mainRef = useScrollReveal<HTMLElement>();
   const [featuredProperties, setFeaturedProperties] = useState<Property[]>([]);
   const [featuredAgents, setFeaturedAgents] = useState<Agent[]>([]);
 
@@ -42,7 +45,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   };
 
   return (
-    <main style={{ position: 'relative' }}>
+    <main ref={mainRef} style={{ position: 'relative' }}>
       {/* FULLSCREEN CINEMATIC VIDEO INTRO (Smooth dissolve to Hero on end) */}
       <CinematicVideoIntro />
 
@@ -126,8 +129,60 @@ export const HomePage: React.FC<HomePageProps> = ({
                 onSelect={onSelectProperty}
                 lang={lang}
                 priority={idx === 0}
+                staggerIndex={(idx % 6) + 1}
               />
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CHAPTER 04.5: PERFORMANCE & TRACK RECORD STATS */}
+      <section
+        style={{
+          position: 'relative',
+          backgroundColor: 'var(--color-charcoal-950)',
+          color: '#FFFFFF',
+          padding: '4.5rem 0',
+          overflow: 'hidden',
+          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
+        }}
+      >
+        <HexPattern variant="gradient-burgundy" opacity={0.16} maskFade="radial-center" />
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: '2.5rem',
+              alignItems: 'center'
+            }}
+          >
+            <AnimatedCounter
+              target={45}
+              prefix="$"
+              suffix="M+"
+              duration={1800}
+              label={lang === 'es' ? 'Volumen Transaccionado' : 'Career Real Estate Volume'}
+            />
+            <AnimatedCounter
+              target={150}
+              suffix="+"
+              duration={1600}
+              label={lang === 'es' ? 'Familias Asesoradas' : 'Families Represented'}
+            />
+            <AnimatedCounter
+              target={98}
+              suffix="%"
+              duration={1700}
+              label={lang === 'es' ? 'Satisfacción de Clientes' : 'Client Satisfaction Rate'}
+            />
+            <AnimatedCounter
+              target={15}
+              suffix="+"
+              duration={1500}
+              label={lang === 'es' ? 'Años de Liderazgo Colectivo' : 'Years Market Leadership'}
+            />
           </div>
         </div>
       </section>

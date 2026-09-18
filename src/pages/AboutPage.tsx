@@ -2,6 +2,8 @@ import React from 'react';
 import { Award, Building2, Users, ShieldCheck, Heart, Sparkles, ArrowRight } from 'lucide-react';
 import { HexPattern } from '../components/common/HexPattern';
 import { BROKERAGE_DATA } from '../data/agentsData';
+import { useScrollReveal } from '../hooks/useScrollReveal';
+import { AnimatedCounter } from '../components/common/AnimatedCounter';
 
 interface AboutPageProps {
   onOpenConsultation: () => void;
@@ -9,8 +11,10 @@ interface AboutPageProps {
 }
 
 export const AboutPage: React.FC<AboutPageProps> = ({ onOpenConsultation, lang }) => {
+  const mainRef = useScrollReveal<HTMLElement>();
+
   return (
-    <main style={{ paddingTop: 'var(--header-height)', minHeight: '100vh', backgroundColor: 'var(--bg-primary)' }}>
+    <main ref={mainRef} style={{ paddingTop: 'var(--header-height)', minHeight: '100vh', backgroundColor: 'var(--bg-primary)' }}>
       {/* Hero Header */}
       <section
         style={{
@@ -117,6 +121,57 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenConsultation, lang }
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Heritage & Numbers Strip */}
+      <section
+        style={{
+          position: 'relative',
+          backgroundColor: 'var(--color-charcoal-950)',
+          color: '#FFFFFF',
+          padding: '4rem 0',
+          overflow: 'hidden',
+          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
+        }}
+      >
+        <HexPattern variant="gradient-gold" opacity={0.16} maskFade="radial-center" />
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: '2.5rem',
+              alignItems: 'center'
+            }}
+          >
+            <AnimatedCounter
+              target={45}
+              prefix="$"
+              suffix="M+"
+              duration={1800}
+              label={lang === 'es' ? 'Volumen en Bienes Raíces' : 'Closed Sales Volume'}
+            />
+            <AnimatedCounter
+              target={150}
+              suffix="+"
+              duration={1600}
+              label={lang === 'es' ? 'Transacciones Exitosas' : 'Satisfied Clients'}
+            />
+            <AnimatedCounter
+              target={100}
+              suffix="%"
+              duration={1700}
+              label={lang === 'es' ? 'Asesoría Bilingüe Certificada' : 'Bilingual Advocacy'}
+            />
+            <AnimatedCounter
+              target={19}
+              suffix="+"
+              duration={1500}
+              label={lang === 'es' ? 'Agentes y Especialistas' : 'Licensed Real Estate Advisors'}
+            />
           </div>
         </div>
       </section>

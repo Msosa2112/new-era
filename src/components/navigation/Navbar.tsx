@@ -57,17 +57,19 @@ export const Navbar: React.FC<NavbarProps> = ({
           left: 0,
           width: '100%',
           zIndex: 1000,
-          transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+          transition: 'padding 320ms var(--ease-out-fluid), background-color 320ms var(--ease-out-fluid), box-shadow 320ms var(--ease-out-fluid), border-color 320ms var(--ease-out-fluid)',
           backgroundColor: scrolled
-            ? 'rgba(10, 11, 14, 0.85)'
-            : 'rgba(10, 11, 14, 0.35)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+            ? 'rgba(10, 11, 14, 0.84)'
+            : 'rgba(10, 11, 14, 0.38)',
+          backdropFilter: 'blur(24px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+          borderBottom: scrolled
+            ? '1px solid rgba(255, 255, 255, 0.09)'
+            : '1px solid rgba(255, 255, 255, 0.05)',
           boxShadow: scrolled
-            ? '0 10px 30px rgba(0, 0, 0, 0.35)'
+            ? '0 12px 36px rgba(0, 0, 0, 0.45)'
             : 'none',
-          padding: scrolled ? '0.7rem 0' : '0.95rem 0'
+          padding: scrolled ? '0.68rem 0' : '0.95rem 0'
         }}
       >
         <div className="container flex items-center justify-between">
@@ -287,7 +289,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             flexDirection: 'column',
             justifyContent: 'space-between',
             padding: '7rem 2rem 3rem 2rem',
-            animation: 'fadeIn 0.3s ease-out',
+            animation: 'mobileMenuFadeIn 260ms var(--ease-out-fluid) both',
             overflow: 'hidden'
           }}
         >
@@ -301,6 +303,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 key={link.id}
                 onClick={() => handleLinkClick(link.id)}
+                className="mobile-nav-link-btn"
                 style={{
                   display: 'flex',
                   alignItems: 'baseline',
@@ -311,7 +314,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                   color: activePage === link.id ? 'var(--color-orange-accent)' : '#FFFFFF',
                   textAlign: 'left',
                   borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                  paddingBottom: '0.75rem'
+                  paddingBottom: '0.75rem',
+                  animation: 'mobileLinkStagger 360ms var(--ease-out-fluid) both',
+                  animationDelay: `${idx * 40 + 60}ms`
                 }}
               >
                 <span>{lang === 'es' ? link.labelEs : link.labelEn}</span>
@@ -373,6 +378,33 @@ export const Navbar: React.FC<NavbarProps> = ({
             opacity: 1;
             transform: translateY(0);
           }
+        }
+
+        @keyframes mobileMenuFadeIn {
+          from {
+            opacity: 0;
+            transform: scale(0.98);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        @keyframes mobileLinkStagger {
+          from {
+            opacity: 0;
+            transform: translateX(-14px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        .mobile-nav-link-btn:active {
+          transform: scale(0.98);
+          transition: transform 120ms ease;
         }
 
         @media (min-width: 960px) {

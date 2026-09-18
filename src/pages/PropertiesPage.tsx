@@ -5,6 +5,7 @@ import { Property, PropertyFilter } from '../types/property';
 import { propertyService } from '../services/propertyService';
 import { HexPattern } from '../components/common/HexPattern';
 import { SlidersHorizontal, ArrowUpDown } from 'lucide-react';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 
 interface PropertiesPageProps {
   onSelectProperty: (property: Property) => void;
@@ -15,6 +16,7 @@ export const PropertiesPage: React.FC<PropertiesPageProps> = ({
   onSelectProperty,
   lang
 }) => {
+  const mainRef = useScrollReveal<HTMLElement>();
   const [properties, setProperties] = useState<Property[]>([]);
   const [filter, setFilter] = useState<PropertyFilter>({ transactionType: 'Buy', sortBy: 'newest' });
   const [loading, setLoading] = useState<boolean>(true);
@@ -32,7 +34,7 @@ export const PropertiesPage: React.FC<PropertiesPageProps> = ({
   };
 
   return (
-    <main style={{ paddingTop: 'var(--header-height)', minHeight: '100vh', backgroundColor: 'var(--bg-primary)' }}>
+    <main ref={mainRef} style={{ paddingTop: 'var(--header-height)', minHeight: '100vh', backgroundColor: 'var(--bg-primary)' }}>
       {/* Page Header */}
       <section
         style={{
@@ -160,6 +162,7 @@ export const PropertiesPage: React.FC<PropertiesPageProps> = ({
                   onSelect={onSelectProperty}
                   lang={lang}
                   priority={idx < 2}
+                  staggerIndex={(idx % 6) + 1}
                 />
               ))}
             </div>

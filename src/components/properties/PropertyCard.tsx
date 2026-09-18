@@ -8,15 +8,18 @@ interface PropertyCardProps {
   onSelect: (property: Property) => void;
   lang: 'en' | 'es';
   priority?: boolean;
+  staggerIndex?: number;
 }
 
 export const PropertyCard: React.FC<PropertyCardProps> = ({
   property,
   onSelect,
   lang,
-  priority = false
+  priority = false,
+  staggerIndex
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [tilt, setTilt] = useState({ x: 0, y: 0, glareX: 50, glareY: 50 });
   const agent = propertyService.getAgentById(property.agentId);
 
   const formattedPrice = new Intl.NumberFormat('en-US', {
@@ -30,12 +33,43 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
   // Clean short address for compact mobile cards
   const shortAddress = `${property.location.address}, ${property.location.city}`;
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    // Only on fine-pointer devices (desktop mouse)
+    if (window.matchMedia('(hover: none) or (pointer: coarse)').matches) return;
+    
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const normX = (x / rect.width) * 2 - 1;
+    const normY = (y / rect.height) * 2 - 1;
+    
+    setTilt({
+      x: -normY * 3.5,
+      y: normX * 3.5,
+      glareX: (x / rect.width) * 100,
+      glareY: (y / rect.height) * 100
+    });
+  };
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setTilt({ x: 0, y: 0, glareX: 50, glareY: 50 });
+  };
+
+  const staggerClass = staggerIndex ? `stagger-${Math.min(staggerIndex, 6)}` : '';
+
   return (
     <article
       onClick={() => onSelect(property)}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className="property-card"
+      onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className={`property-card reveal-on-scroll ${staggerClass}`}
       style={{
         cursor: 'pointer',
         display: 'flex',
@@ -44,12 +78,28 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
         border: '1px solid rgba(0, 0, 0, 0.08)',
         borderRadius: '12px',
         overflow: 'hidden',
-        transition: 'transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease',
-        transform: isHovered ? 'translateY(-4px)' : 'none',
-        boxShadow: isHovered ? '0 16px 32px -8px rgba(17, 24, 39, 0.12)' : '0 2px 8px rgba(0, 0, 0, 0.04)',
-        position: 'relative'
+        transition: 'transform 320ms var(--ease-out-fluid), box-shadow 320ms var(--ease-out-fluid), border-color 260ms ease, opacity 600ms var(--ease-out-fluid)',
+        transform: isHovered
+          ? `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translateY(-4px)`
+          : 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)',
+        boxShadow: isHovered ? '0 20px 40px -10px rgba(17, 24, 39, 0.16)' : '0 2px 8px rgba(0, 0, 0, 0.04)',
+        position: 'relative',
+        willChange: 'transform, opacity'
       }}
     >
+      {/* Specular lighting glare overlay on luxury hover */}
+      {isHovered && (
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            pointerEvents: 'none',
+            background: `radial-gradient(circle at ${tilt.glareX}% ${tilt.glareY}%, rgba(255, 255, 255, 0.16) 0%, transparent 65%)`,
+            zIndex: 10,
+            borderRadius: '12px'
+          }}
+        />
+      )}
       {/* 1. MEDIA CONTAINER */}
       <div
         className="property-card-image-wrap"

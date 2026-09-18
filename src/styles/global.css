@@ -380,13 +380,54 @@ input:focus, select:focus, textarea:focus {
   border-color: rgba(255, 255, 255, 0.2);
 }
 
-/* Motion system accessibility */
+/* Motion system accessibility & Fluid 60fps Scroll Reveal */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 600ms var(--ease-out-fluid), transform 600ms var(--ease-out-fluid);
+  will-change: opacity, transform;
+}
+
+.reveal-on-scroll.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.stagger-1 { transition-delay: 60ms; }
+.stagger-2 { transition-delay: 120ms; }
+.stagger-3 { transition-delay: 180ms; }
+.stagger-4 { transition-delay: 240ms; }
+.stagger-5 { transition-delay: 300ms; }
+.stagger-6 { transition-delay: 360ms; }
+
+/* Apple-Style Physical Press Feedback (Mobile & Desktop) */
+@media (prefers-reduced-motion: no-preference) {
+  button:active:not(:disabled),
+  .btn-primary:active,
+  .btn-outline:active {
+    transform: scale(0.975);
+    transition: transform 120ms cubic-bezier(0.2, 0, 0, 1) !important;
+  }
+}
+
+/* Fine-Pointer 3D Tilt for Luxury Cards (Desktop Only) */
+@media (hover: hover) and (pointer: fine) {
+  .tilt-card-container {
+    perspective: 1100px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  .reveal-on-scroll {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }
 

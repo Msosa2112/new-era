@@ -45,32 +45,37 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
 
   return (
     <div
+      className="consultation-modal-backdrop"
       style={{
         position: 'fixed',
         inset: 0,
         zIndex: 3000,
         backgroundColor: 'rgba(12, 13, 16, 0.88)',
-        backdropFilter: 'blur(16px)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '1.5rem',
-        animation: 'fadeIn 0.25s ease-out'
+        animation: 'modalBackdropFade 180ms var(--ease-out-fluid) both'
       }}
     >
       <div
+        className="consultation-modal-card"
         style={{
           width: '100%',
           maxWidth: '560px',
           backgroundColor: 'var(--color-charcoal-950)',
           color: '#FFFFFF',
           borderRadius: 'var(--radius-sm)',
-          border: '1px solid rgba(255, 255, 255, 0.15)',
-          boxShadow: 'var(--shadow-dark)',
+          border: '1px solid rgba(255, 255, 255, 0.16)',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)',
           position: 'relative',
           padding: '2.5rem',
           maxHeight: '90vh',
-          overflowY: 'auto'
+          overflowY: 'auto',
+          animation: 'modalContentScale 240ms var(--ease-out-fluid) both',
+          willChange: 'transform, opacity'
         }}
       >
         <HexPattern variant="gradient-vibrant" opacity={0.18} />
@@ -284,6 +289,24 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
           </form>
         )}
       </div>
+
+      <style>{`
+        @keyframes modalBackdropFade {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        @keyframes modalContentScale {
+          from {
+            opacity: 0;
+            transform: scale(0.96) translateY(8px);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+          }
+        }
+      `}</style>
     </div>
   );
 };

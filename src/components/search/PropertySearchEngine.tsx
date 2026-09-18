@@ -317,7 +317,9 @@ export const PropertySearchEngine: React.FC<PropertySearchEngineProps> = ({
             style={{
               borderTop: isGlass ? '1px dashed rgba(255, 255, 255, 0.14)' : '1px dashed var(--border-subtle)',
               display: 'grid',
-              animation: 'fadeIn 0.25s ease-out'
+              animation: 'searchDrawerExpand 220ms var(--ease-out-fluid) both',
+              transformOrigin: 'top center',
+              willChange: 'transform, opacity'
             }}
           >
             {/* Min Price */}
@@ -465,6 +467,22 @@ export const PropertySearchEngine: React.FC<PropertySearchEngineProps> = ({
           padding-top: 1.5rem;
           grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
           gap: 1.25rem;
+        }
+
+        @keyframes searchDrawerExpand {
+          from {
+            opacity: 0;
+            transform: scale(0.97) translateY(-6px);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+          }
+        }
+
+        .search-mode-btn:active {
+          transform: scale(0.97);
+          transition: transform 120ms ease;
         }
 
         @media (max-width: 640px) {
