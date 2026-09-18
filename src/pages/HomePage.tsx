@@ -11,7 +11,7 @@ import { TechnologySection } from '../components/sections/TechnologySection';
 import { ContactSection } from '../components/sections/ContactSection';
 import { Property, PropertyFilter, Agent } from '../types/property';
 import { propertyService } from '../services/propertyService';
-import { ArchitecturalPortalIntro } from '../components/hero/ArchitecturalPortalIntro';
+import { CinematicVeilIntro } from '../components/hero/CinematicVeilIntro';
 import { HexPattern } from '../components/common/HexPattern';
 
 interface HomePageProps {
@@ -43,8 +43,8 @@ export const HomePage: React.FC<HomePageProps> = ({
 
   return (
     <main style={{ position: 'relative' }}>
-      {/* GRAND ENTRANCE: ARCHITECTURAL PORTAL REVEAL */}
-      <ArchitecturalPortalIntro />
+      {/* OPTION 1: CINEMATIC VEIL FADE & SCALE */}
+      <CinematicVeilIntro />
 
       {/* CHAPTER 01 & 02: BRAND HERO */}
       <BlueprintHero3D
