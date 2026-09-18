@@ -5,8 +5,19 @@ interface CinematicVideoIntroProps {
 }
 
 export const CinematicVideoIntro: React.FC<CinematicVideoIntroProps> = ({ onComplete }) => {
+  const [alreadyPlayed] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        return sessionStorage.getItem('newera_intro_played') === 'true';
+      } catch (e) {
+        return false;
+      }
+    }
+    return false;
+  });
+
   const [fading, setFading] = useState<boolean>(false);
-  const [done, setDone] = useState<boolean>(false);
+  const [done, setDone] = useState<boolean>(alreadyPlayed);
   const videoRef = useRef<HTMLVideoElement>(null);
   const fadeStartedRef = useRef<boolean>(false);
 
@@ -21,6 +32,14 @@ export const CinematicVideoIntro: React.FC<CinematicVideoIntroProps> = ({ onComp
     fadeStartedRef.current = true;
     setFading(true);
 
+    if (typeof window !== 'undefined') {
+      try {
+        sessionStorage.setItem('newera_intro_played', 'true');
+      } catch (e) {
+        // ignore storage errors
+      }
+    }
+
     setTimeout(() => {
       setDone(true);
       if (onComplete) onComplete();
@@ -28,6 +47,11 @@ export const CinematicVideoIntro: React.FC<CinematicVideoIntroProps> = ({ onComp
   };
 
   useEffect(() => {
+    if (alreadyPlayed) {
+      if (onComplete) onComplete();
+      return;
+    }
+
     const video = videoRef.current;
     if (!video) return;
 
