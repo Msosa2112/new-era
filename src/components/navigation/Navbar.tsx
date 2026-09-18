@@ -58,14 +58,14 @@ export const Navbar: React.FC<NavbarProps> = ({
           zIndex: 1000,
           transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
           backgroundColor: scrolled
-            ? 'rgba(10, 11, 14, 0.98)'
-            : 'rgba(10, 11, 14, 0.94)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
+            ? 'rgba(10, 11, 14, 0.82)'
+            : 'rgba(10, 11, 14, 0.45)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
           borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
           boxShadow: scrolled
-            ? '0 12px 32px rgba(0, 0, 0, 0.5)'
-            : '0 4px 20px rgba(0, 0, 0, 0.35)',
+            ? '0 10px 30px rgba(0, 0, 0, 0.35)'
+            : 'none',
           padding: scrolled ? '0.7rem 0' : '0.95rem 0'
         }}
       >

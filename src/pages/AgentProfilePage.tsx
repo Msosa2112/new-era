@@ -166,10 +166,12 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
         color: '#FFFFFF'
       }}
     >
-      {/* 1. BREADCRUMB & ROSTER NAVIGATION BAR */}
+      {/* 1. BREADCRUMB & ROSTER NAVIGATION BAR (FROSTED GLASS) */}
       <div
         style={{
-          backgroundColor: '#0C0D10',
+          backgroundColor: 'rgba(12, 13, 16, 0.65)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
           borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
           padding: '0.85rem 0'
         }}
