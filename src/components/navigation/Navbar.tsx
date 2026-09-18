@@ -50,6 +50,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <>
       <header
+        className="main-navbar-header"
         style={{
           position: 'fixed',
           top: 0,
@@ -359,6 +360,21 @@ export const Navbar: React.FC<NavbarProps> = ({
       )}
 
       <style>{`
+        .main-navbar-header {
+          animation: navbarSlideDown 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
+        }
+
+        @keyframes navbarSlideDown {
+          0% {
+            opacity: 0;
+            transform: translateY(-12px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
         @media (min-width: 960px) {
           .desktop-nav {
             display: flex !important;

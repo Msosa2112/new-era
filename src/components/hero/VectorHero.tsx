@@ -66,16 +66,19 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
       aria-label="New Era Real Estate Brand Hero"
     >
       {/* LAYER 2: FULL-FRAME MASTER GEOMETRIC PATTERN (100% CorelDRAW 8-quadrant vector master) */}
-      <HexPattern
-        variant="gradient-gold"
-        opacity={0.24}
-        mode="cover"
-        maskFade="none"
-        style={{ zIndex: 1 }}
-      />
+      <div className="hero-pattern-layer" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1 }}>
+        <HexPattern
+          variant="gradient-gold"
+          opacity={0.24}
+          mode="cover"
+          maskFade="none"
+        />
+      </div>
 
       {/* LAYER 4: SUBTLE LIVE PATTERN ILLUMINATION (Ambient isolated lines catching champagne-gold light) */}
-      <LivePatternOverlay style={{ zIndex: 2 }} />
+      <div className="hero-live-overlay" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2 }}>
+        <LivePatternOverlay />
+      </div>
 
       {/* ========================================================================= */}
       {/* TOP BAR: Official Brokerage Monogram (Top-Right on Desktop, Centered on Mobile) */}
@@ -124,7 +127,7 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
       {/* CENTER STAGE: Commanding Champagne-Gold Brand Logo + Hero CTAs */}
       {/* ========================================================================= */}
       <div
-        className="container"
+        className="hero-center-stage container"
         style={{
           position: 'relative',
           zIndex: 10,
@@ -157,6 +160,7 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
 
         {/* Large Commanding Champagne-Gold Brand Logo with Dark Backdrop */}
         <div
+          className="hero-logo-stage"
           style={{
             position: 'relative',
             display: 'flex',
@@ -204,6 +208,7 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
 
         {/* Primary Action Buttons */}
         <div
+          className="hero-actions-stage"
           style={{
             position: 'relative',
             zIndex: 10,
@@ -267,7 +272,7 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
                     fontSize: '0.78rem',
                     fontWeight: 800,
                     color: 'var(--color-orange-accent)',
-                    textShadow: '0 0 10px rgba(250, 47, 14, 0.4)'
+                    textShadow: '0 0 10px rgba(102, 14, 26, 0.4)'
                   }}
                 >
                   {pillar.num}
@@ -303,8 +308,25 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
       </div>
 
       <style>{`
+        /* Staggered Cinematic Hero Reveal Keyframes */
+        .vector-hero-root {
+          animation: heroBackgroundFade 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        .hero-pattern-layer {
+          animation: heroPatternFade 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+        }
+        .hero-live-overlay {
+          animation: heroPatternFade 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+        }
         .hero-top-bar {
           justify-content: flex-end;
+          animation: heroTopFade 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
+        }
+        .hero-logo-stage {
+          animation: heroLogoReveal 1.15s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
+        }
+        .hero-actions-stage {
+          animation: heroElementSlideUp 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.75s both;
         }
         .hero-pillars-container {
           display: grid;
@@ -318,7 +340,73 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
           gap: 0.2rem;
           border-left: 3px solid var(--color-orange-accent);
           padding-left: 0.85rem;
+          animation: heroElementSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
+        .hero-pillar-item:nth-child(1) { animation-delay: 0.9s; }
+        .hero-pillar-item:nth-child(2) { animation-delay: 1.0s; }
+        .hero-pillar-item:nth-child(3) { animation-delay: 1.1s; }
+        .hero-pillar-item:nth-child(4) { animation-delay: 1.2s; }
+
+        @keyframes heroBackgroundFade {
+          0% {
+            opacity: 0.65;
+            filter: brightness(0.7);
+          }
+          100% {
+            opacity: 1;
+            filter: brightness(1);
+          }
+        }
+
+        @keyframes heroPatternFade {
+          0% {
+            opacity: 0;
+            transform: scale(1.025);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        @keyframes heroTopFade {
+          0% {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes heroLogoReveal {
+          0% {
+            opacity: 0;
+            transform: translateY(18px) scale(0.96);
+            filter: blur(6px) drop-shadow(0 0 0 rgba(222, 192, 161, 0));
+          }
+          50% {
+            filter: blur(0px) drop-shadow(0 0 28px rgba(222, 192, 161, 0.28));
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0px) drop-shadow(0 18px 60px rgba(0, 0, 0, 0.98));
+          }
+        }
+
+        @keyframes heroElementSlideUp {
+          0% {
+            opacity: 0;
+            transform: translateY(18px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
         @media (max-width: 900px) {
           .hero-pillars-container {
             grid-template-columns: repeat(2, 1fr) !important;
