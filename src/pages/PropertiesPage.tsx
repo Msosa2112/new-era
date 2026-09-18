@@ -4,17 +4,19 @@ import { PropertyCard } from '../components/properties/PropertyCard';
 import { Property, PropertyFilter } from '../types/property';
 import { propertyService } from '../services/propertyService';
 import { HexPattern } from '../components/common/HexPattern';
-import { SlidersHorizontal, ArrowUpDown } from 'lucide-react';
+import { SlidersHorizontal, ArrowUpDown, Map as MapIcon } from 'lucide-react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { LuxurySelect, SelectOption } from '../components/common/LuxurySelect';
 
 interface PropertiesPageProps {
   onSelectProperty: (property: Property) => void;
+  onNavigateToMap?: () => void;
   lang: 'en' | 'es';
 }
 
 export const PropertiesPage: React.FC<PropertiesPageProps> = ({
   onSelectProperty,
+  onNavigateToMap,
   lang
 }) => {
   const mainRef = useScrollReveal<HTMLElement>();
@@ -107,19 +109,59 @@ export const PropertiesPage: React.FC<PropertiesPageProps> = ({
               )}
             </div>
 
-            {/* Sort Selector */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', minWidth: '220px' }}>
-              <ArrowUpDown size={14} color="var(--color-burgundy-primary)" style={{ flexShrink: 0 }} />
-              <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>
-                {lang === 'es' ? 'Ordenar por:' : 'Sort By:'}
-              </span>
-              <LuxurySelect
-                value={filter.sortBy || 'newest'}
-                onChange={(val) => setFilter({ ...filter, sortBy: val as any })}
-                options={sortOptions}
-                aria-label={lang === 'es' ? 'Ordenar por' : 'Sort By'}
-                style={{ minWidth: '170px' }}
-              />
+            {/* Controls: Sort and Map View Toggle */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+              {/* Map View Toggle Button */}
+              {onNavigateToMap && (
+                <button
+                  type="button"
+                  onClick={onNavigateToMap}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.45rem',
+                    padding: '0.55rem 1rem',
+                    backgroundColor: 'var(--color-charcoal-900, #121418)',
+                    color: '#FFFFFF',
+                    borderRadius: 'var(--radius-sm, 4px)',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    fontSize: '0.82rem',
+                    fontWeight: 700,
+                    letterSpacing: '0.02em',
+                    cursor: 'pointer',
+                    transition: 'all 200ms ease',
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.12)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'var(--color-burgundy-primary, #660E1A)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'var(--color-charcoal-900, #121418)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+                    e.currentTarget.style.transform = 'none';
+                  }}
+                >
+                  <MapIcon size={14} color="var(--color-orange-accent, #8B1D2C)" />
+                  <span>{lang === 'es' ? 'Ver en Mapa' : 'Map View'}</span>
+                </button>
+              )}
+
+              {/* Sort Selector */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', minWidth: '220px' }}>
+                <ArrowUpDown size={14} color="var(--color-burgundy-primary)" style={{ flexShrink: 0 }} />
+                <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>
+                  {lang === 'es' ? 'Ordenar por:' : 'Sort By:'}
+                </span>
+                <LuxurySelect
+                  value={filter.sortBy || 'newest'}
+                  onChange={(val) => setFilter({ ...filter, sortBy: val as any })}
+                  options={sortOptions}
+                  aria-label={lang === 'es' ? 'Ordenar por' : 'Sort By'}
+                  style={{ minWidth: '170px' }}
+                />
+              </div>
             </div>
           </div>
 

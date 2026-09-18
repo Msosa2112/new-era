@@ -1,0 +1,296 @@
+/* New Era Real Estate - Luxury Architectural Map Styling */
+
+/* Leaflet Container Reset & Polish */
+.luxury-leaflet-container {
+  width: 100%;
+  height: 100%;
+  background-color: #EFECE6;
+  font-family: var(--font-sans);
+  z-index: 1;
+}
+
+/* Custom Price Marker Badges */
+.custom-price-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.map-price-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 11px;
+  background-color: var(--color-burgundy-primary, #660E1A);
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  border-radius: 9999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 4px 14px rgba(10, 11, 14, 0.32), 0 1px 3px rgba(0, 0, 0, 0.18);
+  cursor: pointer;
+  transition: transform 220ms cubic-bezier(0.32, 0.72, 0, 1),
+              background-color 220ms ease,
+              box-shadow 220ms ease,
+              border-color 220ms ease;
+  user-select: none;
+  transform-origin: center bottom;
+}
+
+/* Marker Arrow Pointer Notch */
+.map-price-pill::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid var(--color-burgundy-primary, #660E1A);
+  transition: border-top-color 220ms ease;
+}
+
+/* Marker Hover State */
+.map-price-pill:hover,
+.map-price-pill.is-hovered {
+  background-color: #8B1D2C;
+  border-color: #F6D8A8;
+  transform: scale(1.14) translateY(-3px);
+  box-shadow: 0 10px 24px rgba(102, 14, 26, 0.45), 0 2px 6px rgba(0, 0, 0, 0.2);
+  z-index: 1000 !important;
+}
+.map-price-pill:hover::after,
+.map-price-pill.is-hovered::after {
+  border-top-color: #8B1D2C;
+}
+
+/* Marker Active / Selected State */
+.map-price-pill.is-active {
+  background-color: #0C0D10;
+  color: #FFFFFF;
+  border-color: #D49A3D;
+  transform: scale(1.18) translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5), 0 0 0 4px rgba(212, 154, 61, 0.35);
+  z-index: 2000 !important;
+}
+.map-price-pill.is-active::after {
+  border-top-color: #0C0D10;
+}
+
+/* Leaflet Popup Luxury Overwrite */
+.leaflet-popup-content-wrapper {
+  padding: 0 !important;
+  background: #FFFFFF !important;
+  border-radius: 12px !important;
+  box-shadow: 0 20px 40px -10px rgba(17, 24, 39, 0.28), 0 0 0 1px rgba(0, 0, 0, 0.08) !important;
+  overflow: hidden !important;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  line-height: normal !important;
+  width: 280px !important;
+}
+
+.leaflet-popup-tip-container {
+  margin-top: -1px !important;
+}
+
+.leaflet-popup-tip {
+  background: #FFFFFF !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15) !important;
+}
+
+.leaflet-container a.leaflet-popup-close-button {
+  top: 10px !important;
+  right: 10px !important;
+  padding: 4px !important;
+  width: 26px !important;
+  height: 26px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(10, 11, 14, 0.65) !important;
+  backdrop-filter: blur(8px) !important;
+  color: #FFFFFF !important;
+  border-radius: 50% !important;
+  font-size: 16px !important;
+  line-height: 1 !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  transition: background-color 200ms ease, transform 200ms ease !important;
+  z-index: 10 !important;
+}
+
+.leaflet-container a.leaflet-popup-close-button:hover {
+  background: var(--color-burgundy-primary, #660E1A) !important;
+  color: #FFFFFF !important;
+  transform: scale(1.08) !important;
+}
+
+/* Custom Floating Controls on Map */
+.map-custom-controls {
+  position: absolute;
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.map-control-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--color-charcoal-900, #121418);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: all 200ms ease;
+  user-select: none;
+}
+
+.map-control-btn:hover {
+  background: #FFFFFF;
+  color: var(--color-burgundy-primary, #660E1A);
+  border-color: rgba(102, 14, 26, 0.25);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-1px);
+}
+
+.map-control-btn.active {
+  background: var(--color-burgundy-primary, #660E1A);
+  color: #FFFFFF;
+  border-color: var(--color-burgundy-primary, #660E1A);
+}
+
+/* Popup preview card styling */
+.map-popup-card {
+  display: flex;
+  flex-direction: column;
+  background: #FFFFFF;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.map-popup-img-wrap {
+  position: relative;
+  width: 100%;
+  height: 160px;
+  background-color: #121418;
+  overflow: hidden;
+}
+
+.map-popup-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 400ms ease;
+}
+
+.map-popup-card:hover .map-popup-img {
+  transform: scale(1.05);
+}
+
+.map-popup-status {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 3px 8px;
+  background: rgba(10, 11, 14, 0.78);
+  backdrop-filter: blur(8px);
+  color: #FFFFFF;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.map-popup-price {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #FFFFFF;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+  letter-spacing: -0.02em;
+}
+
+.map-popup-info {
+  padding: 12px 14px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.map-popup-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #121418;
+  line-height: 1.3;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.map-popup-location {
+  font-size: 11px;
+  color: #5A606D;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.map-popup-specs {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #3A414E;
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px solid #F3EFE8;
+}
+
+.map-popup-btn {
+  margin-top: 8px;
+  width: 100%;
+  padding: 7px 12px;
+  background: var(--color-burgundy-primary, #660E1A);
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background-color 200ms ease;
+}
+
+.map-popup-btn:hover {
+  background: #8B1D2C;
+}

@@ -9,6 +9,7 @@ import { AgentsPage } from './pages/AgentsPage';
 import { AgentProfilePage } from './pages/AgentProfilePage';
 import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
+import { MapPage } from './pages/MapPage';
 import { PropertyDetailView } from './components/properties/PropertyDetailView';
 import { ConsultationModal } from './components/common/ConsultationModal';
 import { SEOHead } from './components/common/SEOHead';
@@ -124,6 +125,15 @@ export const App: React.FC = () => {
         {activePage === 'properties' && (
           <PropertiesPage
             onSelectProperty={handleSelectProperty}
+            onNavigateToMap={() => handleNavigate('map')}
+            lang={lang}
+          />
+        )}
+
+        {activePage === 'map' && (
+          <MapPage
+            onSelectProperty={handleSelectProperty}
+            onNavigateToGrid={() => handleNavigate('properties')}
             lang={lang}
           />
         )}
@@ -174,8 +184,8 @@ export const App: React.FC = () => {
         )}
       </div>
 
-      {/* Global Footer */}
-      <Footer onNavigate={handleNavigate} lang={lang} />
+      {/* Global Footer (hidden on interactive map page to allow full viewport layout) */}
+      {activePage !== 'map' && <Footer onNavigate={handleNavigate} lang={lang} />}
 
       {/* Standalone Cinematic Property Detail View Modal */}
       {selectedProperty && (

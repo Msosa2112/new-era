@@ -302,7 +302,7 @@ export const MOCK_PROPERTIES: Property[] = [
     media: [
       {
         id: 'm5-1',
-        url: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=1800&q=85',
+        url: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1800&q=85',
         caption: 'Front exterior with slate walkway and native garden',
         isPrimary: true,
         type: 'image'
