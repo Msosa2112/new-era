@@ -711,7 +711,17 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                   {lang === 'es' ? 'Cargando inventario...' : 'Loading listings...'}
                 </div>
               ) : properties.length > 0 ? (
-                <div className="property-grid-container">
+                <div
+                  className="property-grid-container"
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: properties.length === 1
+                      ? 'minmax(280px, 380px)'
+                      : 'repeat(auto-fill, minmax(300px, 380px))',
+                    gap: '2rem',
+                    justifyContent: 'start'
+                  }}
+                >
                   {properties.map((prop, idx) => (
                     <PropertyCard
                       key={prop.id}
@@ -989,10 +999,10 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
         style={{
           backgroundColor: '#FFFFFF',
           borderTop: '1px solid #E5E7EB',
-          padding: 'clamp(3rem, 6vw, 5rem) 0'
+          padding: 'clamp(2rem, 4vw, 4rem) 0'
         }}
       >
-        <div className="container" style={{ maxWidth: '760px' }}>
+        <div className="container" style={{ maxWidth: '680px' }}>
           <div>
             <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
               <span

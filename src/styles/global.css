@@ -307,11 +307,17 @@ img {
   }
 }
 
-/* Responsive Property Grid (2 columns on Mobile) */
+/* Responsive Property Grid (Capped at elegant card widths, never blowing up single cards) */
 .property-grid-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: 2.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 380px));
+  gap: 2rem;
+  justify-content: start;
+}
+
+.property-card {
+  max-width: 420px;
+  width: 100%;
 }
 
 @media (max-width: 768px) {
@@ -324,6 +330,7 @@ img {
     border-radius: 10px !important;
     border-color: rgba(0, 0, 0, 0.07) !important;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03) !important;
+    max-width: 100% !important;
   }
 
   .property-card-image-wrap {
