@@ -49,7 +49,7 @@ export const TechnologySection: React.FC<TechnologySectionProps> = ({ lang }) =>
         overflow: 'hidden'
       }}
     >
-      <HexPattern variant="gradient-orange" opacity={0.08} maskFade="radial-top-right" />
+      <HexPattern variant="subtle" opacity={0.06} maskFade="radial-top-right" />
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
         {/* Header */}
         <div style={{ maxWidth: '840px', marginBottom: '3.5rem' }}>

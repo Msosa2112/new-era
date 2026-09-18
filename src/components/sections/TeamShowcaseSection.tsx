@@ -19,6 +19,7 @@ import {
   loadSavedDesktopFraming,
   loadSavedMobileFraming
 } from '../../data/agentFramingConfig';
+import { HexPattern } from '../common/HexPattern';
 
 interface TeamShowcaseSectionProps {
   onSelectAgent: (agent: Agent) => void;
@@ -105,6 +106,8 @@ export const TeamShowcaseSection: React.FC<TeamShowcaseSectionProps> = ({
         userSelect: 'none'
       }}
     >
+      <HexPattern variant="subtle" opacity={0.055} maskFade="none" />
+
       {/* 1. SECTION HEADER (Minimalist Editorial Subtitle) */}
       <div className="container" style={{ position: 'relative', zIndex: 10, marginBottom: 'clamp(1.5rem, 3vw, 2.5rem)', padding: '0 1rem' }}>
         <div

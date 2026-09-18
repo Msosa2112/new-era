@@ -39,10 +39,11 @@ export const PropertiesPage: React.FC<PropertiesPageProps> = ({
           backgroundColor: 'var(--color-charcoal-950)',
           color: '#FFFFFF',
           padding: '4.5rem 0 3.5rem 0',
-          position: 'relative'
+          position: 'relative',
+          overflow: 'hidden'
         }}
       >
-        <HexPattern variant="gradient-orange" opacity={0.16} maskFade="radial-top-right" />
+        <HexPattern variant="gradient-burgundy" opacity={0.16} maskFade="radial-top-right" />
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <span className="display-subtitle" style={{ color: 'var(--color-orange-accent)' }}>
             {lang === 'es' ? 'PORTAFOLIO DE PROPIEDADES' : 'EXCLUSIVE INVENTORY'}
@@ -71,8 +72,9 @@ export const PropertiesPage: React.FC<PropertiesPageProps> = ({
       </section>
 
       {/* Results & Sorting Bar */}
-      <section className="section-padding-sm">
-        <div className="container">
+      <section className="section-padding-sm" style={{ position: 'relative', overflow: 'hidden' }}>
+        <HexPattern variant="subtle" opacity={0.05} maskFade="none" />
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <div
             style={{
               display: 'flex',

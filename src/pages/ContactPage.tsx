@@ -38,10 +38,11 @@ export const ContactPage: React.FC<ContactPageProps> = ({ lang }) => {
           backgroundColor: 'var(--color-charcoal-950)',
           color: '#FFFFFF',
           padding: '5rem 0 4rem 0',
-          position: 'relative'
+          position: 'relative',
+          overflow: 'hidden'
         }}
       >
-        <HexPattern variant="gradient-orange" opacity={0.16} maskFade="radial-top-right" />
+        <HexPattern variant="gradient-burgundy" opacity={0.16} maskFade="radial-top-right" />
         <div className="container" style={{ position: 'relative', zIndex: 1, maxWidth: '880px' }}>
           <span className="display-subtitle" style={{ color: 'var(--color-orange-accent)' }}>
             {lang === 'es' ? 'COMUNÍCATE CON NOSOTROS' : 'CONNECT WITH US'}
@@ -61,8 +62,9 @@ export const ContactPage: React.FC<ContactPageProps> = ({ lang }) => {
       <ContactSection lang={lang} />
 
       {/* FAQ Section */}
-      <section className="section-padding" style={{ backgroundColor: 'var(--bg-surface)', borderTop: '1px solid var(--border-subtle)' }}>
-        <div className="container" style={{ maxWidth: '900px' }}>
+      <section className="section-padding" style={{ backgroundColor: 'var(--bg-surface)', borderTop: '1px solid var(--border-subtle)', position: 'relative', overflow: 'hidden' }}>
+        <HexPattern variant="subtle" opacity={0.055} maskFade="radial-center" />
+        <div className="container" style={{ maxWidth: '900px', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
             <span className="display-subtitle">
               {lang === 'es' ? 'PREGUNTAS FRECUENTES' : 'FREQUENTLY ASKED QUESTIONS'}

@@ -234,7 +234,7 @@ export const PhilosophySection: React.FC<PhilosophySectionProps> = ({ lang, onEx
             overflow: 'hidden'
           }}
         >
-          <HexPattern variant="gradient-orange" opacity={0.14} maskFade="radial-center" />
+          <HexPattern variant="gradient-gold" opacity={0.18} maskFade="radial-center" />
           <div style={{ position: 'relative', zIndex: 1 }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
               <span className="tag-badge tag-badge-accent">

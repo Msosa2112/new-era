@@ -2,7 +2,6 @@ import React from 'react';
 import { BrandLogo } from '../common/BrandLogo';
 import { HexPattern } from '../common/HexPattern';
 import { LivePatternOverlay } from './LivePatternOverlay';
-import { HeroVideo } from './HeroVideo';
 
 interface VectorHeroProps {
   onExploreProperties: () => void;
@@ -66,9 +65,6 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
       className={`vector-hero-root ${className}`}
       aria-label="New Era Real Estate Brand Hero"
     >
-      {/* LAYER 0: RESPONSIVE CINEMATIC VIDEO (Autoplays desktop 1080p & mobile 1080p) */}
-      <HeroVideo />
-
       {/* LAYER 2: FULL-FRAME MASTER GEOMETRIC PATTERN (100% CorelDRAW 8-quadrant vector master) */}
       <div className="hero-pattern-layer" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1 }}>
         <HexPattern

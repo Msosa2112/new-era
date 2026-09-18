@@ -17,10 +17,11 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenConsultation, lang }
           backgroundColor: 'var(--color-charcoal-950)',
           color: '#FFFFFF',
           padding: '5rem 0 4rem 0',
-          position: 'relative'
+          position: 'relative',
+          overflow: 'hidden'
         }}
       >
-        <HexPattern variant="gradient-orange" opacity={0.16} maskFade="radial-top-right" />
+        <HexPattern variant="gradient-burgundy" opacity={0.16} maskFade="radial-top-right" />
         <div className="container" style={{ position: 'relative', zIndex: 1, maxWidth: '880px' }}>
           <span className="display-subtitle" style={{ color: 'var(--color-orange-accent)' }}>
             {lang === 'es' ? 'NUESTRA HISTORIA' : 'OUR HERITAGE & VISION'}
@@ -37,8 +38,9 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenConsultation, lang }
       </section>
 
       {/* Leadership & CEO Vision Section */}
-      <section className="section-padding">
-        <div className="container">
+      <section className="section-padding" style={{ position: 'relative', overflow: 'hidden' }}>
+        <HexPattern variant="subtle" opacity={0.055} maskFade="radial-top-right" />
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <div
             style={{
               display: 'grid',
@@ -120,8 +122,9 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenConsultation, lang }
       </section>
 
       {/* Team Culture & Office Photo Showcase */}
-      <section className="section-padding-sm" style={{ backgroundColor: 'var(--bg-surface)', borderTop: '1px solid var(--border-subtle)' }}>
-        <div className="container">
+      <section className="section-padding-sm" style={{ backgroundColor: 'var(--bg-surface)', borderTop: '1px solid var(--border-subtle)', position: 'relative', overflow: 'hidden' }}>
+        <HexPattern variant="subtle" opacity={0.05} maskFade="radial-center" />
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 3.5rem auto' }}>
             <span className="display-subtitle">
               {lang === 'es' ? 'NUESTRO EQUIPO Y ESPACIO' : 'OUR CULTURE & SPACE'}

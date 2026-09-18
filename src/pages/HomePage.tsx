@@ -11,6 +11,7 @@ import { TechnologySection } from '../components/sections/TechnologySection';
 import { ContactSection } from '../components/sections/ContactSection';
 import { Property, PropertyFilter, Agent } from '../types/property';
 import { propertyService } from '../services/propertyService';
+import { CinematicVideoIntro } from '../components/hero/CinematicVideoIntro';
 import { HexPattern } from '../components/common/HexPattern';
 
 interface HomePageProps {
@@ -42,6 +43,9 @@ export const HomePage: React.FC<HomePageProps> = ({
 
   return (
     <main style={{ position: 'relative' }}>
+      {/* FULLSCREEN CINEMATIC VIDEO INTRO (Smooth dissolve to Hero on end) */}
+      <CinematicVideoIntro />
+
       {/* CHAPTER 01 & 02: BRAND HERO */}
       <BlueprintHero3D
         onExploreProperties={() => {
@@ -65,10 +69,12 @@ export const HomePage: React.FC<HomePageProps> = ({
           position: 'relative',
           zIndex: 10,
           backgroundColor: 'var(--bg-primary)',
-          padding: '4.5rem 0 3.5rem 0'
+          padding: '4.5rem 0 3.5rem 0',
+          overflow: 'hidden'
         }}
       >
-        <div className="container">
+        <HexPattern variant="subtle" opacity={0.06} maskFade="radial-center" />
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <PropertySearchEngine
             onSearch={handleHeroSearch}
             lang={lang}
@@ -77,7 +83,8 @@ export const HomePage: React.FC<HomePageProps> = ({
       </section>
 
       {/* CHAPTER 04: FEATURED PROPERTIES SHOWCASE */}
-      <section className="section-padding" style={{ position: 'relative', backgroundColor: 'var(--bg-primary)' }}>
+      <section className="section-padding" style={{ position: 'relative', backgroundColor: 'var(--bg-primary)', overflow: 'hidden' }}>
+        <HexPattern variant="subtle" opacity={0.06} maskFade="radial-top-right" />
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           {/* Header */}
           <div

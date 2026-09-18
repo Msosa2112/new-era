@@ -624,8 +624,9 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
       </section>
 
       {/* 3. PROFILE TABS & SECTION CONTENT */}
-      <section className="section-padding" style={{ backgroundColor: '#FBFBFC', color: '#111827', paddingBottom: '3rem' }}>
-        <div className="container">
+      <section className="section-padding" style={{ backgroundColor: '#FBFBFC', color: '#111827', paddingBottom: '3rem', position: 'relative', overflow: 'hidden' }}>
+        <HexPattern variant="subtle" opacity={0.055} maskFade="radial-top-right" />
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           {/* NAVIGATION TABS */}
           <div
             style={{

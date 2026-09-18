@@ -590,7 +590,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                   overflow: 'hidden'
                 }}
               >
-                <HexPattern variant="gradient-vibrant" opacity={0.20} />
+                <HexPattern variant="gradient-burgundy" opacity={0.16} />
                 <div style={{ position: 'relative', zIndex: 1 }}>
                   <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
                     <Calendar size={16} color="var(--color-orange-accent)" />

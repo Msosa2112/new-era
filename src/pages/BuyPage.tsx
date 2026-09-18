@@ -59,10 +59,11 @@ export const BuyPage: React.FC<BuyPageProps> = ({
           backgroundColor: 'var(--color-charcoal-950)',
           color: '#FFFFFF',
           padding: '5rem 0 4rem 0',
-          position: 'relative'
+          position: 'relative',
+          overflow: 'hidden'
         }}
       >
-        <HexPattern variant="gradient-orange" opacity={0.16} maskFade="radial-top-right" />
+        <HexPattern variant="gradient-burgundy" opacity={0.16} maskFade="radial-top-right" />
         <div className="container" style={{ position: 'relative', zIndex: 1, maxWidth: '880px' }}>
           <span className="display-subtitle" style={{ color: 'var(--color-orange-accent)' }}>
             {lang === 'es' ? 'GUÍA DE COMPRA INMOBILIARIA' : 'BUYER EXPERIENCE'}
@@ -90,8 +91,9 @@ export const BuyPage: React.FC<BuyPageProps> = ({
       </section>
 
       {/* Down Payment Assistance & Loan Programs Banner */}
-      <section className="section-padding-sm" style={{ backgroundColor: 'var(--bg-surface)', borderBottom: '1px solid var(--border-subtle)' }}>
-        <div className="container">
+      <section className="section-padding-sm" style={{ backgroundColor: 'var(--bg-surface)', borderBottom: '1px solid var(--border-subtle)', position: 'relative', overflow: 'hidden' }}>
+        <HexPattern variant="subtle" opacity={0.045} maskFade="none" />
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <div
             style={{
               padding: 'clamp(2rem, 4vw, 3rem)',
@@ -101,10 +103,13 @@ export const BuyPage: React.FC<BuyPageProps> = ({
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
               gap: '2rem',
-              alignItems: 'center'
+              alignItems: 'center',
+              position: 'relative',
+              overflow: 'hidden'
             }}
           >
-            <div>
+            <HexPattern variant="gradient-gold" opacity={0.18} maskFade="radial-top-right" />
+            <div style={{ position: 'relative', zIndex: 1 }}>
               <span className="display-subtitle" style={{ color: 'var(--color-orange-accent)' }}>
                 {lang === 'es' ? 'PROGRAMAS ESPECIALES' : 'SPECIAL FINANCING'}
               </span>
@@ -118,7 +123,7 @@ export const BuyPage: React.FC<BuyPageProps> = ({
               </p>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', position: 'relative', zIndex: 1 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                 <CheckCircle2 size={18} color="var(--color-orange-accent)" />
                 <span style={{ fontSize: '0.9rem', color: '#FFFFFF' }}>
@@ -143,8 +148,9 @@ export const BuyPage: React.FC<BuyPageProps> = ({
       </section>
 
       {/* 5-Step Acquisition Roadmap */}
-      <section className="section-padding">
-        <div className="container">
+      <section className="section-padding" style={{ position: 'relative', overflow: 'hidden' }}>
+        <HexPattern variant="subtle" opacity={0.055} maskFade="radial-top-right" />
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <div style={{ maxWidth: '720px', marginBottom: '3.5rem' }}>
             <span className="display-subtitle">
               {lang === 'es' ? 'EL PROCESO PASO A PASO' : 'THE BUYER ROADMAP'}

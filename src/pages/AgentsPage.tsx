@@ -113,8 +113,9 @@ export const AgentsPage: React.FC<AgentsPageProps> = ({ onSelectProperty, onSele
       </section>
 
       {/* Agents Editorial Grid */}
-      <section className="section-padding">
-        <div className="container">
+      <section className="section-padding" style={{ position: 'relative', overflow: 'hidden' }}>
+        <HexPattern variant="subtle" opacity={0.055} maskFade="radial-top-right" />
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
             <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
               {filteredAgents.length} {lang === 'es' ? 'Asesores Disponibles' : 'Advisors Available'}

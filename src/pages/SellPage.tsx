@@ -79,10 +79,11 @@ export const SellPage: React.FC<SellPageProps> = ({ onOpenConsultation, lang }) 
           backgroundColor: 'var(--color-charcoal-950)',
           color: '#FFFFFF',
           padding: '5rem 0 4rem 0',
-          position: 'relative'
+          position: 'relative',
+          overflow: 'hidden'
         }}
       >
-        <HexPattern variant="gradient-vibrant" opacity={0.18} maskFade="radial-top-right" />
+        <HexPattern variant="gradient-burgundy" opacity={0.16} maskFade="radial-top-right" />
         <div className="container" style={{ position: 'relative', zIndex: 1, maxWidth: '880px' }}>
           <span className="display-subtitle" style={{ color: 'var(--color-orange-accent)' }}>
             {lang === 'es' ? 'ESTRATEGIA PARA VENDEDORES' : 'SELLER EXPERIENCE'}
@@ -99,8 +100,9 @@ export const SellPage: React.FC<SellPageProps> = ({ onOpenConsultation, lang }) 
       </section>
 
       {/* Main Form & Value Proposition Grid */}
-      <section className="section-padding">
-        <div className="container">
+      <section className="section-padding" style={{ position: 'relative', overflow: 'hidden' }}>
+        <HexPattern variant="subtle" opacity={0.055} maskFade="radial-top-right" />
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <div
             style={{
               display: 'grid',
