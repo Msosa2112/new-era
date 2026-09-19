@@ -12,7 +12,7 @@ interface PropertyMapProps {
   properties: Property[];
   selectedProperty: Property | null;
   hoveredPropertyId?: string | null;
-  onSelectProperty: (property: Property) => void;
+  onSelectProperty: (property: Property | null) => void;
   onOpenDetail?: (property: Property) => void;
   onHoverProperty?: (propertyId: string | null) => void;
   lang: 'en' | 'es';
@@ -135,12 +135,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
           const map = new googleInstance.maps.Map(mapContainerRef.current, {
             center: { lat: LOUISVILLE_CENTER[0], lng: LOUISVILLE_CENTER[1] },
             zoom: DEFAULT_ZOOM,
-            mapTypeId:
-              mapStyle === 'hybrid'
-                ? googleInstance.maps.MapTypeId.HYBRID
-                : mapStyle === 'roadmap'
-                ? googleInstance.maps.MapTypeId.ROADMAP
-                : googleInstance.maps.MapTypeId.TERRAIN,
+            mapTypeId: mapStyle,
             disableDefaultUI: true,
             gestureHandling: 'greedy',
             clickableIcons: false,
@@ -151,8 +146,13 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
             pixelOffset: new googleInstance.maps.Size(0, -32)
           });
 
+          infoWindow.addListener('closeclick', () => {
+            onSelectProperty(null);
+          });
+
           map.addListener('click', () => {
             infoWindow.close();
+            onSelectProperty(null);
           });
 
           googleMapRef.current = map;
@@ -177,6 +177,10 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
         zoom: DEFAULT_ZOOM,
         zoomControl: false,
         attributionControl: false
+      });
+
+      map.on('click', () => {
+        onSelectProperty(null);
       });
 
       leafletMapRef.current = map;
@@ -444,6 +448,10 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
             };
           }
         });
+
+        marker.on('popupclose', () => {
+          onSelectProperty(null);
+        });
       }
 
       marker.on('click', () => {
@@ -475,7 +483,19 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
 
   // Sync Selected Property (both engines)
   useEffect(() => {
-    if (!selectedProperty) return;
+    if (!selectedProperty) {
+      if (engine === 'google') {
+        googleInfoWindowRef.current?.close();
+        googleOverlaysRef.current.forEach((overlay) => overlay.setActive(false));
+      } else if (engine === 'leaflet' && leafletMapRef.current) {
+        leafletMapRef.current.closePopup();
+        properties.forEach((prop) => {
+          const el = document.getElementById(`marker-pill-${prop.id}`);
+          if (el) el.classList.remove('is-active');
+        });
+      }
+      return;
+    }
 
     if (engine === 'google' && googleMapRef.current && window.google?.maps) {
       googleOverlaysRef.current.forEach((overlay, id) => {
@@ -525,7 +545,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
         leafletMapRef.current.panTo(marker.getLatLng(), { animate: true, duration: 0.5 });
       }
     }
-  }, [selectedProperty, hoveredPropertyId, engine, lang]);
+  }, [selectedProperty, hoveredPropertyId, engine, lang, properties, onOpenDetail, onSelectProperty]);
 
   // Zoom and Recenter Handlers
   const handleZoomIn = useCallback(() => {

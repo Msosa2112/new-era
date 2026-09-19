@@ -58,21 +58,19 @@ export const MapPage: React.FC<MapPageProps> = ({
     propertyService.getProperties(filter).then((res) => {
       setProperties(res);
       setLoading(false);
-      // If we don't have a selected property or the current one is filtered out, pick the first one
-      if (res.length > 0) {
-        setSelectedProperty((prev) => (prev && res.some(p => p.id === prev.id) ? prev : res[0]));
-      } else {
-        setSelectedProperty(null);
-      }
+      // Never auto-select on load: start with clean map and keep selected property only if user actively selected it
+      setSelectedProperty((prev) => (prev && res.some(p => p.id === prev.id) ? prev : null));
     });
   }, [filter]);
 
-  // Handle marker click: center property and scroll card into view
-  const handleSelectFromMap = (property: Property) => {
+  // Handle marker click or dismiss
+  const handleSelectFromMap = (property: Property | null) => {
     setSelectedProperty(property);
-    const cardEl = document.getElementById(`map-card-${property.id}`);
-    if (cardEl) {
-      cardEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    if (property) {
+      const cardEl = document.getElementById(`map-card-${property.id}`);
+      if (cardEl) {
+        cardEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
     }
   };
 

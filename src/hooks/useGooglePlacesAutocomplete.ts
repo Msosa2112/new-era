@@ -31,8 +31,8 @@ export function useGooglePlacesAutocomplete(
 
         // Configure Louisville / Kentucky bias bounds
         const louisvilleBounds = new googleInstance.maps.LatLngBounds(
-          new googleInstance.maps.LatLng(38.0, -85.95), // Southwest
-          new googleInstance.maps.LatLng(38.45, -85.4)  // Northeast
+          { lat: 38.0, lng: -85.95 },
+          { lat: 38.45, lng: -85.4 }
         );
 
         const autocomplete = new googleInstance.maps.places.Autocomplete(inputRef.current, {

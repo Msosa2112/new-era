@@ -36,7 +36,7 @@ export const loadGoogleMapsScript = (): Promise<typeof google> => {
     return Promise.reject(new Error('Window is not available'));
   }
 
-  if (window.google && window.google.maps && window.google.maps.places) {
+  if (window.google && window.google.maps && window.google.maps.places && window.google.maps.Map) {
     return Promise.resolve(window.google);
   }
 
@@ -47,11 +47,24 @@ export const loadGoogleMapsScript = (): Promise<typeof google> => {
   const apiKey = getGoogleMapsApiKey();
 
   googleMapsPromise = new Promise((resolve, reject) => {
+    const callbackName = '__googleMapsInitCallback';
+    (window as any)[callbackName] = () => {
+      if (window.google && window.google.maps) {
+        resolve(window.google);
+      } else {
+        reject(new Error('Google Maps callback fired without window.google.maps'));
+      }
+    };
+
     // Check if script element already exists
     const existingScript = document.getElementById('google-maps-sdk-script');
     if (existingScript) {
+      if (window.google && window.google.maps && window.google.maps.Map) {
+        resolve(window.google);
+        return;
+      }
       existingScript.addEventListener('load', () => {
-        if (window.google) resolve(window.google);
+        if (window.google && window.google.maps) resolve(window.google);
         else reject(new Error('Google Maps script loaded without window.google'));
       });
       existingScript.addEventListener('error', () => reject(new Error('Google Maps failed to load')));
@@ -60,17 +73,9 @@ export const loadGoogleMapsScript = (): Promise<typeof google> => {
 
     const script = document.createElement('script');
     script.id = 'google-maps-sdk-script';
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,geometry&loading=async`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,geometry&callback=${callbackName}`;
     script.async = true;
     script.defer = true;
-
-    script.onload = () => {
-      if (window.google && window.google.maps) {
-        resolve(window.google);
-      } else {
-        reject(new Error('Google Maps loaded without window.google.maps'));
-      }
-    };
 
     script.onerror = (err) => {
       console.warn('Failed to load Google Maps SDK:', err);
