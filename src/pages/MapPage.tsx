@@ -91,7 +91,10 @@ export const MapPage: React.FC<MapPageProps> = ({
     <div
       style={{
         paddingTop: 'var(--header-height, 84px)',
-        height: '100vh',
+        height: '100dvh',
+        minHeight: '100dvh',
+        maxHeight: '100dvh',
+        boxSizing: 'border-box',
         display: 'flex',
         flexDirection: 'column',
         backgroundColor: '#F8F6F2',
@@ -104,7 +107,7 @@ export const MapPage: React.FC<MapPageProps> = ({
         style={{
           backgroundColor: '#FFFFFF',
           borderBottom: '1px solid rgba(0, 0, 0, 0.08)',
-          padding: '0.75rem 1.25rem',
+          padding: '0.65rem 1rem',
           zIndex: 100,
           flexShrink: 0,
           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.03)'
@@ -117,8 +120,8 @@ export const MapPage: React.FC<MapPageProps> = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '1rem',
-            flexWrap: 'wrap'
+            gap: '0.75rem',
+            flexWrap: 'nowrap'
           }}
         >
           {/* Left: Search input & Quick Filters */}
@@ -207,13 +210,13 @@ export const MapPage: React.FC<MapPageProps> = ({
           </div>
 
           {/* Right: Results Count & View Mode Toggle */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-            <span style={{ fontSize: '0.82rem', fontWeight: 600, color: '#5A606D' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
+            <span className="hidden-small-mobile" style={{ fontSize: '0.82rem', fontWeight: 600, color: '#5A606D', whiteSpace: 'nowrap' }}>
               {loading ? (
                 <span>{lang === 'es' ? 'Filtrando...' : 'Searching...'}</span>
               ) : (
                 <span>
-                  <strong>{properties.length}</strong> {lang === 'es' ? 'Propiedades en Louisville' : 'Homes on Map'}
+                  <strong>{properties.length}</strong> {lang === 'es' ? 'Propiedades' : 'Homes'}
                 </span>
               )}
             </span>
@@ -234,7 +237,8 @@ export const MapPage: React.FC<MapPageProps> = ({
                 fontWeight: 600,
                 color: '#121418',
                 cursor: 'pointer',
-                transition: 'all 160ms ease'
+                transition: 'all 160ms ease',
+                whiteSpace: 'nowrap'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.borderColor = 'var(--color-burgundy-primary, #660E1A)';
@@ -246,7 +250,7 @@ export const MapPage: React.FC<MapPageProps> = ({
               }}
             >
               <Grid size={14} />
-              <span>{lang === 'es' ? 'Vista Cuadrícula' : 'Grid View'}</span>
+              <span className="hidden-small-mobile">{lang === 'es' ? 'Vista Cuadrícula' : 'Grid View'}</span>
             </button>
           </div>
         </div>
@@ -396,7 +400,8 @@ export const MapPage: React.FC<MapPageProps> = ({
                 bottom: '76px',
                 left: '12px',
                 right: '12px',
-                zIndex: 800
+                zIndex: 800,
+                animation: 'slideUpCard 240ms cubic-bezier(0.32, 0.72, 0, 1)'
               }}
             >
               <MapPropertyCard
@@ -406,6 +411,7 @@ export const MapPage: React.FC<MapPageProps> = ({
                   setSelectedProperty(p);
                 }}
                 onOpenDetail={onSelectProperty}
+                onClose={() => setSelectedProperty(null)}
                 lang={lang}
                 compact={true}
               />
@@ -472,6 +478,23 @@ export const MapPage: React.FC<MapPageProps> = ({
         }
         .map-list-sidebar::-webkit-scrollbar-thumb:hover {
           background: var(--color-burgundy-primary, #660E1A);
+        }
+
+        @keyframes slideUpCard {
+          from {
+            opacity: 0;
+            transform: translateY(14px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @media (max-width: 540px) {
+          .hidden-small-mobile {
+            display: none !important;
+          }
         }
 
         @media (max-width: 900px) {

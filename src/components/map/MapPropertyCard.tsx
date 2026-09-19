@@ -1,6 +1,6 @@
 import React from 'react';
 import { Property } from '../../types/property';
-import { Bed, Bath, Square, MapPin, ArrowUpRight, CheckCircle2 } from 'lucide-react';
+import { Bed, Bath, Square, MapPin, ArrowUpRight, CheckCircle2, X } from 'lucide-react';
 import { propertyService } from '../../services/propertyService';
 
 interface MapPropertyCardProps {
@@ -10,6 +10,7 @@ interface MapPropertyCardProps {
   onSelect: (property: Property) => void;
   onOpenDetail: (property: Property) => void;
   onHover?: (id: string | null) => void;
+  onClose?: () => void;
   lang: 'en' | 'es';
   compact?: boolean;
 }
@@ -21,6 +22,7 @@ export const MapPropertyCard: React.FC<MapPropertyCardProps> = ({
   onSelect,
   onOpenDetail,
   onHover,
+  onClose,
   lang,
   compact = false
 }) => {
@@ -90,6 +92,40 @@ export const MapPropertyCard: React.FC<MapPropertyCardProps> = ({
           <CheckCircle2 size={11} color="#FFFFFF" />
           <span>{lang === 'es' ? 'SELECCIONADA' : 'ON MAP'}</span>
         </div>
+      )}
+
+      {/* Dismiss / Close button for compact mobile card */}
+      {compact && onClose && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onClose();
+          }}
+          style={{
+            position: 'absolute',
+            top: '8px',
+            right: '8px',
+            zIndex: 30,
+            width: '26px',
+            height: '26px',
+            borderRadius: '50%',
+            backgroundColor: 'rgba(18, 20, 24, 0.75)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#FFFFFF',
+            cursor: 'pointer',
+            padding: 0,
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25)'
+          }}
+          aria-label={lang === 'es' ? 'Cerrar vista previa' : 'Close preview'}
+        >
+          <X size={14} />
+        </button>
       )}
 
       {/* House Photo Container */}
