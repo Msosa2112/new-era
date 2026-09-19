@@ -4,6 +4,20 @@
  */
 
 let googleMapsPromise: Promise<typeof google> | null = null;
+let googleMapsAuthFailed = false;
+
+if (typeof window !== 'undefined') {
+  const originalAuth = (window as any).gm_authFailure;
+  (window as any).gm_authFailure = () => {
+    googleMapsAuthFailed = true;
+    window.dispatchEvent(new CustomEvent('google-maps-auth-failure'));
+    if (typeof originalAuth === 'function') {
+      try { originalAuth(); } catch {}
+    }
+  };
+}
+
+export const isGoogleMapsAuthFailed = (): boolean => googleMapsAuthFailed;
 
 export const getGoogleMapsApiKey = (): string => {
   return import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyB1HxGEstPbqv5eRXDc97UyixJx3cgHl4U';
@@ -11,7 +25,7 @@ export const getGoogleMapsApiKey = (): string => {
 
 export const hasGoogleMapsKey = (): boolean => {
   const key = getGoogleMapsApiKey();
-  return Boolean(key && key.trim().length > 10);
+  return Boolean(key && key.trim().length > 10 && !googleMapsAuthFailed);
 };
 
 /**
@@ -46,7 +60,7 @@ export const loadGoogleMapsScript = (): Promise<typeof google> => {
 
     const script = document.createElement('script');
     script.id = 'google-maps-sdk-script';
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,geometry`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,geometry&loading=async`;
     script.async = true;
     script.defer = true;
 

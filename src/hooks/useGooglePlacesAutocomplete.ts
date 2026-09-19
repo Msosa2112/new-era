@@ -66,10 +66,31 @@ export function useGooglePlacesAutocomplete(
         console.warn('Google Places Autocomplete initialization bypassed:', err);
       });
 
+    const handleAuthFailure = () => {
+      if (inputRef.current) {
+        inputRef.current.disabled = false;
+        if (inputRef.current.value.includes('Oops!')) {
+          inputRef.current.value = '';
+        }
+      }
+    };
+
+    window.addEventListener('google-maps-auth-failure', handleAuthFailure);
+
+    // Watch input to prevent Google from locking it with "Oops! Something went wrong."
+    const interval = setInterval(() => {
+      if (inputRef.current && inputRef.current.value.includes('Oops!')) {
+        inputRef.current.value = '';
+        inputRef.current.disabled = false;
+      }
+    }, 200);
+
     return () => {
       isMounted = false;
-      if (listenerRef.current) {
-        google.maps.event.removeListener(listenerRef.current);
+      clearInterval(interval);
+      window.removeEventListener('google-maps-auth-failure', handleAuthFailure);
+      if (listenerRef.current && window.google?.maps) {
+        window.google.maps.event.removeListener(listenerRef.current);
         listenerRef.current = null;
       }
       // Remove Google pac-container dropdown artifacts if left in DOM

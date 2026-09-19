@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Property } from '../../types/property';
 import { Layers, Crosshair, ZoomIn, ZoomOut, Globe, Map as MapIcon, Mountain, Loader2 } from 'lucide-react';
-import { loadGoogleMapsScript } from '../../lib/googleMaps';
+import { loadGoogleMapsScript, isGoogleMapsAuthFailed } from '../../lib/googleMaps';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import './PropertyMap.css';
 
-type GoogleMapStyle = 'hybrid' | 'roadmap' | 'terrain';
+type MapViewStyle = 'hybrid' | 'roadmap' | 'terrain';
 
 interface PropertyMapProps {
   properties: Property[];
@@ -16,11 +18,9 @@ interface PropertyMapProps {
   lang: 'en' | 'es';
 }
 
-// Center around Greater Louisville, KY
-const LOUISVILLE_CENTER = { lat: 38.2527, lng: -85.6585 };
+const LOUISVILLE_CENTER: [number, number] = [38.2527, -85.6585];
 const DEFAULT_ZOOM = 12;
 
-// Format price into compact pill label: e.g. $1.48M, $895K
 function formatPricePill(price: number): string {
   if (price >= 1000000) {
     const millions = price / 1000000;
@@ -32,7 +32,6 @@ function formatPricePill(price: number): string {
   return `$${price}`;
 }
 
-// Build Rich HTML Popup for Desktop InfoWindow
 function buildPopupHtml(prop: Property, lang: 'en' | 'es'): string {
   const primaryPhoto =
     prop.media.find((m) => m.isPrimary)?.url ||
@@ -81,89 +80,192 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
   lang
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<google.maps.Map | null>(null);
-  const infoWindowRef = useRef<google.maps.InfoWindow | null>(null);
-  const overlaysRef = useRef<Map<string, any>>(new Map());
-  const [mapStyle, setMapStyle] = useState<GoogleMapStyle>('hybrid');
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [loadError, setLoadError] = useState<string | null>(null);
+  const [mapStyle, setMapStyle] = useState<MapViewStyle>('hybrid');
+  const [engine, setEngine] = useState<'google' | 'leaflet'>(() => {
+    return isGoogleMapsAuthFailed() ? 'leaflet' : 'google';
+  });
+  const [isInitializing, setIsInitializing] = useState<boolean>(true);
 
-  // Initialize Native Google Maps SDK
+  // Google Maps Refs
+  const googleMapRef = useRef<google.maps.Map | null>(null);
+  const googleInfoWindowRef = useRef<google.maps.InfoWindow | null>(null);
+  const googleOverlaysRef = useRef<Map<string, any>>(new Map());
+
+  // Leaflet Refs (Fallback)
+  const leafletMapRef = useRef<L.Map | null>(null);
+  const leafletMarkersRef = useRef<Map<string, L.Marker>>(new Map());
+  const leafletTileLayersRef = useRef<L.Layer[]>([]);
+
+  // Listen for Google Maps auth failures (e.g. RefererNotAllowedMapError on localhost)
   useEffect(() => {
-    let isCancelled = false;
-
-    loadGoogleMapsScript()
-      .then((googleInstance) => {
-        if (isCancelled || !mapContainerRef.current) return;
-
-        // Custom Google Maps Styles to enhance luxury tone
-        const luxuryMap = new googleInstance.maps.Map(mapContainerRef.current, {
-          center: LOUISVILLE_CENTER,
-          zoom: DEFAULT_ZOOM,
-          mapTypeId: googleInstance.maps.MapTypeId.HYBRID,
-          disableDefaultUI: true, // We use custom styled luxury controls
-          gestureHandling: 'greedy', // Smooth navigation on mobile and desktop
-          clickableIcons: false, // Prevent distracting third-party POI popups
-          tilt: 0,
-          maxZoom: 21,
-          minZoom: 4
-        });
-
-        // Initialize Shared InfoWindow
-        const infoWindow = new googleInstance.maps.InfoWindow({
-          pixelOffset: new googleInstance.maps.Size(0, -32)
-        });
-
-        // Close InfoWindow on background click
-        luxuryMap.addListener('click', () => {
-          infoWindow.close();
-        });
-
-        mapRef.current = luxuryMap;
-        infoWindowRef.current = infoWindow;
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.error('Failed to initialize Google Maps SDK:', err);
-        if (!isCancelled) {
-          setLoadError(lang === 'es' ? 'No se pudo cargar Google Maps.' : 'Failed to load Google Maps.');
-          setIsLoading(false);
-        }
-      });
-
-    return () => {
-      isCancelled = true;
-      if (infoWindowRef.current) {
-        infoWindowRef.current.close();
-        infoWindowRef.current = null;
+    const handleAuthFailure = () => {
+      console.warn('Google Maps auth failure detected. Seamlessly switching to High-Definition Satellite Leaflet engine.');
+      if (googleMapRef.current) {
+        googleMapRef.current = null;
       }
-      overlaysRef.current.forEach((overlay) => overlay.setMap(null));
-      overlaysRef.current.clear();
-      mapRef.current = null;
+      if (mapContainerRef.current) {
+        mapContainerRef.current.innerHTML = '';
+      }
+      setEngine('leaflet');
+      setIsInitializing(false);
+    };
+
+    window.addEventListener('google-maps-auth-failure', handleAuthFailure);
+    return () => {
+      window.removeEventListener('google-maps-auth-failure', handleAuthFailure);
     };
   }, []);
 
-  // Update Map Type Style (Hybrid, Roadmap, Terrain)
+  // Initialize Map based on Active Engine
   useEffect(() => {
-    if (!mapRef.current || !window.google?.maps) return;
-    const typeId =
-      mapStyle === 'hybrid'
-        ? window.google.maps.MapTypeId.HYBRID
-        : mapStyle === 'roadmap'
-        ? window.google.maps.MapTypeId.ROADMAP
-        : window.google.maps.MapTypeId.TERRAIN;
+    if (!mapContainerRef.current) return;
+    let isCancelled = false;
 
-    mapRef.current.setMapTypeId(typeId);
-  }, [mapStyle]);
+    if (engine === 'google') {
+      loadGoogleMapsScript()
+        .then((googleInstance) => {
+          if (isCancelled || !mapContainerRef.current) return;
 
-  // Create & Sync Custom Overlays (Price Pills) on Google Maps
+          // Double check if auth failed during script load
+          if (isGoogleMapsAuthFailed()) {
+            setEngine('leaflet');
+            return;
+          }
+
+          const map = new googleInstance.maps.Map(mapContainerRef.current, {
+            center: { lat: LOUISVILLE_CENTER[0], lng: LOUISVILLE_CENTER[1] },
+            zoom: DEFAULT_ZOOM,
+            mapTypeId:
+              mapStyle === 'hybrid'
+                ? googleInstance.maps.MapTypeId.HYBRID
+                : mapStyle === 'roadmap'
+                ? googleInstance.maps.MapTypeId.ROADMAP
+                : googleInstance.maps.MapTypeId.TERRAIN,
+            disableDefaultUI: true,
+            gestureHandling: 'greedy',
+            clickableIcons: false,
+            tilt: 0
+          });
+
+          const infoWindow = new googleInstance.maps.InfoWindow({
+            pixelOffset: new googleInstance.maps.Size(0, -32)
+          });
+
+          map.addListener('click', () => {
+            infoWindow.close();
+          });
+
+          googleMapRef.current = map;
+          googleInfoWindowRef.current = infoWindow;
+          setIsInitializing(false);
+        })
+        .catch((err) => {
+          console.warn('Google Maps SDK unavailable, using high-definition satellite fallback:', err);
+          if (!isCancelled) {
+            setEngine('leaflet');
+            setIsInitializing(false);
+          }
+        });
+    } else {
+      // Initialize Leaflet Map Engine
+      if (mapContainerRef.current) {
+        mapContainerRef.current.innerHTML = '';
+      }
+
+      const map = L.map(mapContainerRef.current, {
+        center: LOUISVILLE_CENTER,
+        zoom: DEFAULT_ZOOM,
+        zoomControl: false,
+        attributionControl: false
+      });
+
+      leafletMapRef.current = map;
+      applyLeafletTiles(map, mapStyle);
+      setIsInitializing(false);
+
+      const resizeObserver = new ResizeObserver(() => {
+        map.invalidateSize();
+      });
+      resizeObserver.observe(mapContainerRef.current);
+
+      return () => {
+        resizeObserver.disconnect();
+        map.remove();
+        leafletMapRef.current = null;
+      };
+    }
+
+    return () => {
+      isCancelled = true;
+      if (googleInfoWindowRef.current) {
+        googleInfoWindowRef.current.close();
+        googleInfoWindowRef.current = null;
+      }
+      googleOverlaysRef.current.forEach((overlay) => overlay.setMap(null));
+      googleOverlaysRef.current.clear();
+      googleMapRef.current = null;
+    };
+  }, [engine]);
+
+  // Leaflet Tile Application Helper
+  const applyLeafletTiles = (map: L.Map, style: MapViewStyle) => {
+    leafletTileLayersRef.current.forEach((layer) => {
+      try {
+        if (map.hasLayer(layer)) map.removeLayer(layer);
+      } catch {}
+    });
+    leafletTileLayersRef.current = [];
+
+    if (style === 'hybrid') {
+      const satLayer = L.tileLayer(
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        { attribution: 'Esri, Maxar', maxZoom: 19 }
+      );
+      const labelsLayer = L.tileLayer(
+        'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+        { attribution: 'Esri', maxZoom: 19 }
+      );
+      satLayer.addTo(map);
+      labelsLayer.addTo(map);
+      leafletTileLayersRef.current = [satLayer, labelsLayer];
+    } else if (style === 'roadmap') {
+      const streetsLayer = L.tileLayer(
+        'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+        { attribution: 'OpenStreetMap, CARTO', subdomains: 'abcd', maxZoom: 19 }
+      );
+      streetsLayer.addTo(map);
+      leafletTileLayersRef.current = [streetsLayer];
+    } else {
+      const terrainLayer = L.tileLayer(
+        'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+        { attribution: 'OpenStreetMap, CARTO', subdomains: 'abcd', maxZoom: 19 }
+      );
+      terrainLayer.addTo(map);
+      leafletTileLayersRef.current = [terrainLayer];
+    }
+  };
+
+  // Sync Map Style Changes (Google vs Leaflet)
   useEffect(() => {
-    const map = mapRef.current;
-    if (!map || !window.google?.maps) return;
+    if (engine === 'google' && googleMapRef.current && window.google?.maps) {
+      const typeId =
+        mapStyle === 'hybrid'
+          ? window.google.maps.MapTypeId.HYBRID
+          : mapStyle === 'roadmap'
+          ? window.google.maps.MapTypeId.ROADMAP
+          : window.google.maps.MapTypeId.TERRAIN;
+      googleMapRef.current.setMapTypeId(typeId);
+    } else if (engine === 'leaflet' && leafletMapRef.current) {
+      applyLeafletTiles(leafletMapRef.current, mapStyle);
+    }
+  }, [mapStyle, engine]);
 
+  // Sync Markers for Google Engine
+  useEffect(() => {
+    if (engine !== 'google' || !googleMapRef.current || !window.google?.maps) return;
+    const map = googleMapRef.current;
     const googleInstance = window.google;
 
-    // Define Custom Price Pill OverlayView Class
     class PricePillOverlay extends googleInstance.maps.OverlayView {
       private position: google.maps.LatLng;
       private prop: Property;
@@ -262,66 +364,136 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
       }
     }
 
-    // Clear previous overlays
-    overlaysRef.current.forEach((overlay) => overlay.setMap(null));
-    overlaysRef.current.clear();
+    googleOverlaysRef.current.forEach((overlay) => overlay.setMap(null));
+    googleOverlaysRef.current.clear();
 
     const bounds = new googleInstance.maps.LatLngBounds();
-    let hasValidCoords = false;
+    let hasCoords = false;
 
     properties.forEach((prop) => {
       const lat = prop.location.latitude;
       const lng = prop.location.longitude;
       if (!lat || !lng) return;
 
-      hasValidCoords = true;
+      hasCoords = true;
       bounds.extend({ lat, lng });
 
       const overlay = new PricePillOverlay(prop, onSelectProperty, onHoverProperty);
       overlay.setMap(map);
-      overlaysRef.current.set(prop.id, overlay);
+      googleOverlaysRef.current.set(prop.id, overlay);
     });
 
-    if (hasValidCoords && properties.length > 0) {
-      map.fitBounds(bounds, {
-        top: 60,
-        right: 60,
-        bottom: 60,
-        left: 60
-      });
-
-      // Avoid excessive zoom on single property
-      const listener = googleInstance.maps.event.addListener(map, 'idle', () => {
-        if ((map.getZoom() || 12) > 15) {
-          map.setZoom(15);
-        }
-        googleInstance.maps.event.removeListener(listener);
-      });
+    if (hasCoords && properties.length > 0) {
+      map.fitBounds(bounds, { top: 60, right: 60, bottom: 60, left: 60 });
     }
-  }, [properties, onSelectProperty, onHoverProperty, isLoading]);
+  }, [engine, properties, onSelectProperty, onHoverProperty]);
 
-  // Sync Selected and Hover States
+  // Sync Markers for Leaflet Engine
   useEffect(() => {
-    overlaysRef.current.forEach((overlay, id) => {
-      overlay.setActive(selectedProperty?.id === id);
-      overlay.setHover(hoveredPropertyId === id);
+    if (engine !== 'leaflet' || !leafletMapRef.current) return;
+    const map = leafletMapRef.current;
+
+    leafletMarkersRef.current.forEach((marker) => marker.remove());
+    leafletMarkersRef.current.clear();
+
+    const bounds = L.latLngBounds([]);
+
+    properties.forEach((prop) => {
+      const lat = prop.location.latitude;
+      const lng = prop.location.longitude;
+      if (!lat || !lng) return;
+
+      const isSelected = selectedProperty?.id === prop.id;
+      const isHovered = hoveredPropertyId === prop.id;
+      const pillText = formatPricePill(prop.price);
+
+      const customIcon = L.divIcon({
+        className: 'custom-price-marker',
+        html: `<div id="marker-pill-${prop.id}" class="map-price-pill ${isSelected ? 'is-active' : ''} ${isHovered ? 'is-hovered' : ''}">${pillText}</div>`,
+        iconSize: [68, 30],
+        iconAnchor: [34, 34],
+        popupAnchor: [0, -32]
+      });
+
+      const marker = L.marker([lat, lng], { icon: customIcon });
+
+      // On desktop only, bind interactive popup
+      if (window.innerWidth > 768) {
+        marker.bindPopup(buildPopupHtml(prop, lang), {
+          maxWidth: 290,
+          minWidth: 260,
+          closeButton: true,
+          autoPan: true
+        });
+
+        marker.on('popupopen', () => {
+          onSelectProperty(prop);
+          const btn = document.getElementById(`btn-view-popup-${prop.id}`);
+          if (btn) {
+            btn.onclick = (e) => {
+              e.stopPropagation();
+              if (onOpenDetail) onOpenDetail(prop);
+              else onSelectProperty(prop);
+            };
+          }
+          const card = document.getElementById(`popup-card-${prop.id}`);
+          if (card) {
+            card.onclick = () => {
+              if (onOpenDetail) onOpenDetail(prop);
+              else onSelectProperty(prop);
+            };
+          }
+        });
+      }
+
+      marker.on('click', () => {
+        onSelectProperty(prop);
+        map.panTo([lat, lng], { animate: true, duration: 0.5 });
+      });
+
+      marker.on('mouseover', () => {
+        if (onHoverProperty) onHoverProperty(prop.id);
+        const el = document.getElementById(`marker-pill-${prop.id}`);
+        if (el) el.classList.add('is-hovered');
+      });
+
+      marker.on('mouseout', () => {
+        if (onHoverProperty) onHoverProperty(null);
+        const el = document.getElementById(`marker-pill-${prop.id}`);
+        if (el && selectedProperty?.id !== prop.id) el.classList.remove('is-hovered');
+      });
+
+      marker.addTo(map);
+      leafletMarkersRef.current.set(prop.id, marker);
+      bounds.extend([lat, lng]);
     });
 
-    if (selectedProperty && mapRef.current && window.google?.maps) {
+    if (properties.length > 0 && bounds.isValid()) {
+      map.fitBounds(bounds, { padding: [60, 60], maxZoom: 14 });
+    }
+  }, [engine, properties, lang]);
+
+  // Sync Selected Property (both engines)
+  useEffect(() => {
+    if (!selectedProperty) return;
+
+    if (engine === 'google' && googleMapRef.current && window.google?.maps) {
+      googleOverlaysRef.current.forEach((overlay, id) => {
+        overlay.setActive(selectedProperty.id === id);
+        overlay.setHover(hoveredPropertyId === id);
+      });
+
       const lat = selectedProperty.location.latitude;
       const lng = selectedProperty.location.longitude;
-
       if (lat && lng) {
-        mapRef.current.panTo({ lat, lng });
+        googleMapRef.current.panTo({ lat, lng });
 
-        // DESKTOP ONLY: Open rich InfoWindow (on mobile, bottom floating card takes precedence to prevent duplicates)
-        if (window.innerWidth > 768 && infoWindowRef.current) {
-          const infoWindow = infoWindowRef.current;
+        if (window.innerWidth > 768 && googleInfoWindowRef.current) {
+          const infoWindow = googleInfoWindowRef.current;
           infoWindow.setContent(buildPopupHtml(selectedProperty, lang));
           infoWindow.setPosition({ lat, lng });
-          infoWindow.open({ map: mapRef.current });
+          infoWindow.open({ map: googleMapRef.current });
 
-          // Attach DOM event listeners once InfoWindow is ready
           window.google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
             const btn = document.getElementById(`btn-view-popup-${selectedProperty.id}`);
             if (btn) {
@@ -331,58 +503,82 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
                 else onSelectProperty(selectedProperty);
               };
             }
-            const card = document.getElementById(`popup-card-${selectedProperty.id}`);
-            if (card) {
-              card.onclick = () => {
-                if (onOpenDetail) onOpenDetail(selectedProperty);
-                else onSelectProperty(selectedProperty);
-              };
-            }
           });
-        } else if (infoWindowRef.current) {
-          infoWindowRef.current.close();
         }
       }
-    }
-  }, [selectedProperty, hoveredPropertyId, lang, onOpenDetail, onSelectProperty]);
+    } else if (engine === 'leaflet' && leafletMapRef.current) {
+      properties.forEach((prop) => {
+        const el = document.getElementById(`marker-pill-${prop.id}`);
+        if (!el) return;
+        if (selectedProperty.id === prop.id) el.classList.add('is-active');
+        else el.classList.remove('is-active');
 
-  // Controls Handlers
-  const handleZoomIn = useCallback(() => {
-    if (mapRef.current) {
-      mapRef.current.setZoom((mapRef.current.getZoom() || DEFAULT_ZOOM) + 1);
+        if (hoveredPropertyId === prop.id) el.classList.add('is-hovered');
+        else if (selectedProperty.id !== prop.id) el.classList.remove('is-hovered');
+      });
+
+      const marker = leafletMarkersRef.current.get(selectedProperty.id);
+      if (marker) {
+        if (window.innerWidth > 768 && !marker.isPopupOpen()) {
+          marker.openPopup();
+        }
+        leafletMapRef.current.panTo(marker.getLatLng(), { animate: true, duration: 0.5 });
+      }
     }
-  }, []);
+  }, [selectedProperty, hoveredPropertyId, engine, lang]);
+
+  // Zoom and Recenter Handlers
+  const handleZoomIn = useCallback(() => {
+    if (engine === 'google' && googleMapRef.current) {
+      googleMapRef.current.setZoom((googleMapRef.current.getZoom() || DEFAULT_ZOOM) + 1);
+    } else if (engine === 'leaflet' && leafletMapRef.current) {
+      leafletMapRef.current.zoomIn();
+    }
+  }, [engine]);
 
   const handleZoomOut = useCallback(() => {
-    if (mapRef.current) {
-      mapRef.current.setZoom((mapRef.current.getZoom() || DEFAULT_ZOOM) - 1);
+    if (engine === 'google' && googleMapRef.current) {
+      googleMapRef.current.setZoom((googleMapRef.current.getZoom() || DEFAULT_ZOOM) - 1);
+    } else if (engine === 'leaflet' && leafletMapRef.current) {
+      leafletMapRef.current.zoomOut();
     }
-  }, []);
+  }, [engine]);
 
   const handleRecenter = useCallback(() => {
-    if (!mapRef.current || !window.google?.maps) return;
-    const bounds = new window.google.maps.LatLngBounds();
-    let hasCoords = false;
-
-    properties.forEach((p) => {
-      if (p.location.latitude && p.location.longitude) {
-        bounds.extend({ lat: p.location.latitude, lng: p.location.longitude });
-        hasCoords = true;
+    if (engine === 'google' && googleMapRef.current && window.google?.maps) {
+      const bounds = new window.google.maps.LatLngBounds();
+      let hasCoords = false;
+      properties.forEach((p) => {
+        if (p.location.latitude && p.location.longitude) {
+          bounds.extend({ lat: p.location.latitude, lng: p.location.longitude });
+          hasCoords = true;
+        }
+      });
+      if (hasCoords) {
+        googleMapRef.current.fitBounds(bounds, { top: 60, right: 60, bottom: 60, left: 60 });
+      } else {
+        googleMapRef.current.setCenter({ lat: LOUISVILLE_CENTER[0], lng: LOUISVILLE_CENTER[1] });
+        googleMapRef.current.setZoom(DEFAULT_ZOOM);
       }
-    });
-
-    if (hasCoords) {
-      mapRef.current.fitBounds(bounds, { top: 60, right: 60, bottom: 60, left: 60 });
-    } else {
-      mapRef.current.setCenter(LOUISVILLE_CENTER);
-      mapRef.current.setZoom(DEFAULT_ZOOM);
+    } else if (engine === 'leaflet' && leafletMapRef.current) {
+      const bounds = L.latLngBounds([]);
+      properties.forEach((p) => {
+        if (p.location.latitude && p.location.longitude) {
+          bounds.extend([p.location.latitude, p.location.longitude]);
+        }
+      });
+      if (bounds.isValid()) {
+        leafletMapRef.current.fitBounds(bounds, { padding: [60, 60], maxZoom: 14 });
+      } else {
+        leafletMapRef.current.setView(LOUISVILLE_CENTER, DEFAULT_ZOOM);
+      }
     }
-  }, [properties]);
+  }, [engine, properties]);
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
       {/* Loading Skeleton */}
-      {isLoading && (
+      {isInitializing && (
         <div
           style={{
             position: 'absolute',
@@ -398,34 +594,12 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
         >
           <Loader2 size={32} color="var(--color-burgundy-primary, #660E1A)" className="animate-spin" />
           <span style={{ fontSize: '13px', fontWeight: 600, color: '#5A606D' }}>
-            {lang === 'es' ? 'Conectando con Google Maps Satélite...' : 'Loading Google Maps Satellite...'}
+            {lang === 'es' ? 'Cargando mapa interactivo...' : 'Loading interactive map...'}
           </span>
         </div>
       )}
 
-      {/* Error Notice */}
-      {loadError && (
-        <div
-          style={{
-            position: 'absolute',
-            top: '20px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            zIndex: 100,
-            padding: '10px 18px',
-            backgroundColor: '#FEF2F2',
-            border: '1px solid #F87171',
-            borderRadius: '8px',
-            color: '#991B1B',
-            fontSize: '12px',
-            fontWeight: 600
-          }}
-        >
-          {loadError}
-        </div>
-      )}
-
-      {/* Google Maps Canvas DOM Anchor */}
+      {/* Map Canvas DOM Anchor */}
       <div ref={mapContainerRef} className="luxury-leaflet-container" />
 
       {/* Floating Modern Luxury Controls */}
@@ -461,7 +635,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
               alignItems: 'center',
               gap: '4px'
             }}
-            title={lang === 'es' ? 'Google Satélite HD' : 'Google Satellite HD'}
+            title={lang === 'es' ? 'Vista Satelital de Alta Definición' : 'High-Definition Satellite View'}
           >
             <Globe size={13} />
             <span>{lang === 'es' ? 'Satélite HD' : 'Satellite HD'}</span>
@@ -484,7 +658,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
               alignItems: 'center',
               gap: '4px'
             }}
-            title={lang === 'es' ? 'Mapa de Calles Google' : 'Google Roadmap'}
+            title={lang === 'es' ? 'Mapa de Calles' : 'Streets Map'}
           >
             <MapIcon size={13} />
             <span>{lang === 'es' ? 'Calles' : 'Streets'}</span>
@@ -507,10 +681,10 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
               alignItems: 'center',
               gap: '4px'
             }}
-            title={lang === 'es' ? 'Topografía y Terreno' : 'Terrain'}
+            title={lang === 'es' ? 'Vista Clara' : 'Light View'}
           >
             <Mountain size={13} />
-            <span>{lang === 'es' ? 'Terreno' : 'Terrain'}</span>
+            <span>{lang === 'es' ? 'Claro' : 'Light'}</span>
           </button>
         </div>
 
@@ -527,7 +701,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
         </button>
       </div>
 
-      {/* Zoom Controls (Ergonomically positioned above mobile bottom cards) */}
+      {/* Zoom Controls (Positioned high on mobile to never overlap bottom cards) */}
       <div className="map-zoom-controls-wrapper">
         <button
           type="button"
