@@ -49,21 +49,37 @@ function buildPopupHtml(prop: Property, lang: 'en' | 'es'): string {
       <div class="map-popup-img-wrap">
         <img class="map-popup-img" src="${primaryPhoto}" alt="${prop.title}" />
         <span class="map-popup-status">${prop.status}</span>
-        <div class="map-popup-price">${formattedFullPrice}</div>
+        <button type="button" class="map-popup-close-btn" id="btn-close-popup-${prop.id}" aria-label="${lang === 'es' ? 'Cerrar' : 'Close'}">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <div class="map-popup-price-tag">${formattedFullPrice}</div>
       </div>
       <div class="map-popup-info">
-        <h4 class="map-popup-title">${prop.title}</h4>
-        <div class="map-popup-location">${prop.location.address}, ${prop.location.city}</div>
+        <div class="map-popup-header-row">
+          <h4 class="map-popup-title">${prop.title}</h4>
+          <span class="map-popup-type-badge">${prop.propertyType}</span>
+        </div>
+        <div class="map-popup-location">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--color-burgundy-primary, #660E1A)" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>${prop.location.address}, ${prop.location.city}</span>
+        </div>
         <div class="map-popup-specs">
-          <span><strong>${prop.bedrooms}</strong> ${lang === 'es' ? 'Hab' : 'Beds'}</span>
-          <span>&bull;</span>
-          <span><strong>${prop.bathrooms}</strong> ${lang === 'es' ? 'Baños' : 'Baths'}</span>
-          <span>&bull;</span>
-          <span><strong>${new Intl.NumberFormat('en-US').format(prop.sqft)}</strong> Sq Ft</span>
+          <div class="map-spec-pill">
+            <strong>${prop.bedrooms}</strong>
+            <span>${lang === 'es' ? 'Hab' : 'Beds'}</span>
+          </div>
+          <div class="map-spec-pill">
+            <strong>${prop.bathrooms}</strong>
+            <span>${lang === 'es' ? 'Baños' : 'Baths'}</span>
+          </div>
+          <div class="map-spec-pill">
+            <strong>${new Intl.NumberFormat('en-US').format(prop.sqft)}</strong>
+            <span>Sq Ft</span>
+          </div>
         </div>
         <button class="map-popup-btn" id="btn-view-popup-${prop.id}">
-          <span>${lang === 'es' ? 'Ver Detalles' : 'View Property'}</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+          <span>${lang === 'es' ? 'Ver Propiedad' : 'View Property'}</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
         </button>
       </div>
     </div>
@@ -143,7 +159,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
           });
 
           const infoWindow = new googleInstance.maps.InfoWindow({
-            pixelOffset: new googleInstance.maps.Size(0, -32)
+            pixelOffset: new googleInstance.maps.Size(0, -10)
           });
 
           infoWindow.addListener('closeclick', () => {
@@ -424,10 +440,11 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
       // On desktop only, bind interactive popup
       if (window.innerWidth > 768) {
         marker.bindPopup(buildPopupHtml(prop, lang), {
-          maxWidth: 290,
-          minWidth: 260,
-          closeButton: true,
-          autoPan: true
+          maxWidth: 320,
+          minWidth: 300,
+          closeButton: false,
+          autoPan: true,
+          offset: L.point(0, -10)
         });
 
         marker.on('popupopen', () => {
@@ -438,6 +455,13 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
               e.stopPropagation();
               if (onOpenDetail) onOpenDetail(prop);
               else onSelectProperty(prop);
+            };
+          }
+          const closeBtn = document.getElementById(`btn-close-popup-${prop.id}`);
+          if (closeBtn) {
+            closeBtn.onclick = (e) => {
+              e.stopPropagation();
+              onSelectProperty(null);
             };
           }
           const card = document.getElementById(`popup-card-${prop.id}`);
@@ -519,6 +543,24 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
             if (btn) {
               btn.onclick = (e) => {
                 e.stopPropagation();
+                if (onOpenDetail) onOpenDetail(selectedProperty);
+                else onSelectProperty(selectedProperty);
+              };
+            }
+            const closeBtn = document.getElementById(`btn-close-popup-${selectedProperty.id}`);
+            if (closeBtn) {
+              closeBtn.onclick = (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                onSelectProperty(null);
+              };
+            }
+            const card = document.getElementById(`popup-card-${selectedProperty.id}`);
+            if (card) {
+              card.onclick = (e) => {
+                if ((e.target as HTMLElement).closest('.map-popup-close-btn') || (e.target as HTMLElement).closest('.map-popup-btn')) {
+                  return;
+                }
                 if (onOpenDetail) onOpenDetail(selectedProperty);
                 else onSelectProperty(selectedProperty);
               };

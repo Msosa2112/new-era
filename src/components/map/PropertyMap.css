@@ -85,15 +85,15 @@
 .leaflet-popup-content-wrapper {
   padding: 0 !important;
   background: #FFFFFF !important;
-  border-radius: 12px !important;
-  box-shadow: 0 20px 40px -10px rgba(17, 24, 39, 0.28), 0 0 0 1px rgba(0, 0, 0, 0.08) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 20px 45px -8px rgba(17, 24, 39, 0.32), 0 0 0 1px rgba(0, 0, 0, 0.08) !important;
   overflow: hidden !important;
 }
 
 .leaflet-popup-content {
   margin: 0 !important;
   line-height: normal !important;
-  width: 280px !important;
+  width: 310px !important;
 }
 
 .leaflet-popup-tip-container {
@@ -105,30 +105,9 @@
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15) !important;
 }
 
+/* Completely hide default Leaflet close button in favor of custom in-card close button */
 .leaflet-container a.leaflet-popup-close-button {
-  top: 10px !important;
-  right: 10px !important;
-  padding: 4px !important;
-  width: 26px !important;
-  height: 26px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  background: rgba(10, 11, 14, 0.65) !important;
-  backdrop-filter: blur(8px) !important;
-  color: #FFFFFF !important;
-  border-radius: 50% !important;
-  font-size: 16px !important;
-  line-height: 1 !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  transition: background-color 200ms ease, transform 200ms ease !important;
-  z-index: 10 !important;
-}
-
-.leaflet-container a.leaflet-popup-close-button:hover {
-  background: var(--color-burgundy-primary, #660E1A) !important;
-  color: #FFFFFF !important;
-  transform: scale(1.08) !important;
+  display: none !important;
 }
 
 /* Custom Floating Controls on Map */
@@ -179,15 +158,17 @@
   display: flex;
   flex-direction: column;
   background: #FFFFFF;
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
   cursor: pointer;
+  width: 310px;
+  box-sizing: border-box;
 }
 
 .map-popup-img-wrap {
   position: relative;
   width: 100%;
-  height: 160px;
+  height: 165px;
   background-color: #121418;
   overflow: hidden;
 }
@@ -196,45 +177,105 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 400ms ease;
+  display: block;
+  transition: transform 400ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .map-popup-card:hover .map-popup-img {
   transform: scale(1.05);
 }
 
+/* Luxury gradient shadow at base of image for contrast */
+.map-popup-img-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.22) 0%, transparent 45%, rgba(0, 0, 0, 0.65) 100%);
+  pointer-events: none;
+}
+
+/* Status Badge */
 .map-popup-status {
   position: absolute;
-  top: 8px;
-  left: 8px;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
   padding: 3px 8px;
-  background: rgba(10, 11, 14, 0.78);
+  background: rgba(10, 11, 14, 0.75);
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   color: #FFFFFF;
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.map-popup-price {
+/* Custom Unclipped Close Button (X) */
+.map-popup-close-btn {
   position: absolute;
-  bottom: 8px;
-  left: 8px;
-  font-size: 18px;
+  top: 10px;
+  right: 10px;
+  z-index: 30;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(10, 11, 14, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: all 180ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.map-popup-close-btn:hover {
+  background: var(--color-burgundy-primary, #660E1A);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(102, 14, 26, 0.5);
+}
+
+/* Modern High-Contrast Price Tag */
+.map-popup-price-tag {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  z-index: 10;
+  padding: 3px 9px;
+  background: rgba(10, 11, 14, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 6px;
+  font-size: 16px;
   font-weight: 800;
   color: #FFFFFF;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
   letter-spacing: -0.02em;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
 
+/* Info Section */
 .map-popup-info {
   padding: 12px 14px 14px 14px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 7px;
+  background: #FFFFFF;
+}
+
+.map-popup-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .map-popup-title {
@@ -246,6 +287,20 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  flex: 1;
+}
+
+.map-popup-type-badge {
+  flex-shrink: 0;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: #F4F1EA;
+  color: var(--color-burgundy-primary, #660E1A);
+  border: 1px solid rgba(102, 14, 26, 0.12);
 }
 
 .map-popup-location {
@@ -253,28 +308,55 @@
   color: #5A606D;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+/* 3-Column Specifications Pills */
 .map-popup-specs {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 11px;
-  font-weight: 600;
-  color: #3A414E;
-  margin-top: 4px;
-  padding-top: 8px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: 2px;
+  padding-top: 6px;
   border-top: 1px solid #F3EFE8;
 }
 
+.map-spec-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #F8F6F2;
+  border: 1px solid #ECE7DE;
+  border-radius: 6px;
+  padding: 4px 2px;
+  text-align: center;
+}
+
+.map-spec-pill strong {
+  font-size: 12px;
+  font-weight: 700;
+  color: #121418;
+  line-height: 1.1;
+}
+
+.map-spec-pill span {
+  font-size: 9px;
+  font-weight: 600;
+  color: #78736B;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-top: 1px;
+}
+
+/* Luxury View Property Button */
 .map-popup-btn {
-  margin-top: 8px;
+  margin-top: 4px;
   width: 100%;
-  padding: 7px 12px;
+  padding: 8px 14px;
   background: var(--color-burgundy-primary, #660E1A);
   color: #FFFFFF;
   font-size: 11px;
@@ -288,11 +370,14 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  transition: background-color 200ms ease;
+  transition: background-color 200ms ease, transform 180ms ease, box-shadow 180ms ease;
+  box-shadow: 0 2px 8px rgba(102, 14, 26, 0.25);
 }
 
 .map-popup-btn:hover {
   background: #8B1D2C;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 14, 26, 0.35);
 }
 
 /* Google Maps Custom Overlay Marker */
@@ -307,40 +392,27 @@
 /* Google Maps InfoWindow Luxury Polish */
 .gm-style-iw.gm-style-iw-c {
   padding: 0 !important;
-  border-radius: 12px !important;
-  box-shadow: 0 20px 40px -10px rgba(17, 24, 39, 0.32), 0 0 0 1px rgba(0, 0, 0, 0.08) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 20px 45px -8px rgba(10, 11, 14, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.08) !important;
   background: #FFFFFF !important;
-  max-width: 300px !important;
+  max-width: 320px !important;
+  min-width: 310px !important;
 }
 
 .gm-style-iw-d {
   overflow: hidden !important;
   padding: 0 !important;
-  max-width: 290px !important;
+  max-width: 320px !important;
 }
 
 .gm-style-iw-tc::after {
   background: #FFFFFF !important;
+  box-shadow: -1px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.gm-ui-hover-effect {
-  top: 8px !important;
-  right: 8px !important;
-  background: rgba(10, 11, 14, 0.65) !important;
-  backdrop-filter: blur(8px) !important;
-  -webkit-backdrop-filter: blur(8px) !important;
-  border-radius: 50% !important;
-  width: 26px !important;
-  height: 26px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  opacity: 1 !important;
-}
-
-.gm-ui-hover-effect span {
-  filter: invert(1) !important;
-  margin: 0 !important;
+/* Completely hide Google Maps default hover effect close button - replaced by custom in-card close button */
+button.gm-ui-hover-effect {
+  display: none !important;
 }
 
 /* Zoom Controls with Safe Mobile Positioning */
