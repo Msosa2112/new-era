@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Property, PropertyFilter } from '../types/property';
 import { propertyService } from '../services/propertyService';
 import { PropertyMap } from '../components/map/PropertyMap';
@@ -64,7 +64,7 @@ export const MapPage: React.FC<MapPageProps> = ({
   }, [filter]);
 
   // Handle marker click or dismiss
-  const handleSelectFromMap = (property: Property | null) => {
+  const handleSelectFromMap = useCallback((property: Property | null) => {
     setSelectedProperty(property);
     if (property) {
       const cardEl = document.getElementById(`map-card-${property.id}`);
@@ -72,7 +72,7 @@ export const MapPage: React.FC<MapPageProps> = ({
         cardEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
     }
-  };
+  }, []);
 
   // Quick search submission
   const handleSearchSubmit = (e: React.FormEvent) => {

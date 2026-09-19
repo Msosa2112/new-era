@@ -112,6 +112,23 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
   const leafletMarkersRef = useRef<Map<string, L.Marker>>(new Map());
   const leafletTileLayersRef = useRef<L.Layer[]>([]);
 
+  // Stable Refs for Props & Callbacks to prevent effect recreation & flickering
+  const onSelectPropertyRef = useRef(onSelectProperty);
+  onSelectPropertyRef.current = onSelectProperty;
+
+  const onHoverPropertyRef = useRef(onHoverProperty);
+  onHoverPropertyRef.current = onHoverProperty;
+
+  const onOpenDetailRef = useRef(onOpenDetail);
+  onOpenDetailRef.current = onOpenDetail;
+
+  const selectedPropertyRef = useRef(selectedProperty);
+  selectedPropertyRef.current = selectedProperty;
+
+  // Track property IDs to avoid recreating markers on every state/hover update
+  const prevGooglePropertyIdsRef = useRef<string>('');
+  const prevLeafletPropertyIdsRef = useRef<string>('');
+
   // Listen for Google Maps auth failures (e.g. RefererNotAllowedMapError on localhost)
   useEffect(() => {
     const handleAuthFailure = () => {
@@ -163,12 +180,12 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
           });
 
           infoWindow.addListener('closeclick', () => {
-            onSelectProperty(null);
+            onSelectPropertyRef.current?.(null);
           });
 
           map.addListener('click', () => {
             infoWindow.close();
-            onSelectProperty(null);
+            onSelectPropertyRef.current?.(null);
           });
 
           googleMapRef.current = map;
@@ -196,7 +213,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
       });
 
       map.on('click', () => {
-        onSelectProperty(null);
+        onSelectPropertyRef.current?.(null);
       });
 
       leafletMapRef.current = map;
@@ -280,32 +297,33 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
     }
   }, [mapStyle, engine]);
 
-  // Sync Markers for Google Engine
+  // Sync Markers for Google Engine (Runs only when engine or property list changes)
   useEffect(() => {
     if (engine !== 'google' || !googleMapRef.current || !window.google?.maps) return;
     const map = googleMapRef.current;
     const googleInstance = window.google;
 
+    const currentIds = properties.map((p) => p.id).join(',');
+    const propertiesChanged = currentIds !== prevGooglePropertyIdsRef.current;
+    prevGooglePropertyIdsRef.current = currentIds;
+
+    // Prevent destroying and recreating markers when properties have not changed
+    if (!propertiesChanged && googleOverlaysRef.current.size === properties.length) {
+      return;
+    }
+
     class PricePillOverlay extends googleInstance.maps.OverlayView {
       private position: google.maps.LatLng;
       private prop: Property;
       private div: HTMLDivElement | null = null;
-      private onSelect: (p: Property) => void;
-      private onHover?: (id: string | null) => void;
 
-      constructor(
-        prop: Property,
-        onSelect: (p: Property) => void,
-        onHover?: (id: string | null) => void
-      ) {
+      constructor(prop: Property) {
         super();
         this.prop = prop;
         this.position = new googleInstance.maps.LatLng(
           prop.location.latitude!,
           prop.location.longitude!
         );
-        this.onSelect = onSelect;
-        this.onHover = onHover;
       }
 
       onAdd() {
@@ -323,17 +341,17 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
 
         div.addEventListener('click', (e) => {
           e.stopPropagation();
-          this.onSelect(this.prop);
+          onSelectPropertyRef.current?.(this.prop);
         });
 
         div.addEventListener('mouseenter', () => {
-          if (this.onHover) this.onHover(this.prop.id);
+          onHoverPropertyRef.current?.(this.prop.id);
           div.querySelector('.map-price-pill')?.classList.add('is-hovered');
           div.style.zIndex = '1000';
         });
 
         div.addEventListener('mouseleave', () => {
-          if (this.onHover) this.onHover(null);
+          onHoverPropertyRef.current?.(null);
           div.querySelector('.map-price-pill')?.classList.remove('is-hovered');
           div.style.zIndex = '100';
         });
@@ -398,20 +416,29 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
       hasCoords = true;
       bounds.extend({ lat, lng });
 
-      const overlay = new PricePillOverlay(prop, onSelectProperty, onHoverProperty);
+      const overlay = new PricePillOverlay(prop);
       overlay.setMap(map);
       googleOverlaysRef.current.set(prop.id, overlay);
     });
 
-    if (hasCoords && properties.length > 0) {
+    if (hasCoords && properties.length > 0 && propertiesChanged) {
       map.fitBounds(bounds, { top: 60, right: 60, bottom: 60, left: 60 });
     }
-  }, [engine, properties, onSelectProperty, onHoverProperty]);
+  }, [engine, properties]);
 
-  // Sync Markers for Leaflet Engine
+  // Sync Markers for Leaflet Engine (Runs only when engine, property list, or language changes)
   useEffect(() => {
     if (engine !== 'leaflet' || !leafletMapRef.current) return;
     const map = leafletMapRef.current;
+
+    const currentIds = properties.map((p) => p.id).join(',');
+    const propertiesChanged = currentIds !== prevLeafletPropertyIdsRef.current;
+    prevLeafletPropertyIdsRef.current = currentIds;
+
+    // Prevent destroying and recreating markers when properties have not changed
+    if (!propertiesChanged && leafletMarkersRef.current.size === properties.length) {
+      return;
+    }
 
     leafletMarkersRef.current.forEach((marker) => marker.remove());
     leafletMarkersRef.current.clear();
@@ -423,13 +450,11 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
       const lng = prop.location.longitude;
       if (!lat || !lng) return;
 
-      const isSelected = selectedProperty?.id === prop.id;
-      const isHovered = hoveredPropertyId === prop.id;
       const pillText = formatPricePill(prop.price);
 
       const customIcon = L.divIcon({
         className: 'custom-price-marker',
-        html: `<div id="marker-pill-${prop.id}" class="map-price-pill ${isSelected ? 'is-active' : ''} ${isHovered ? 'is-hovered' : ''}">${pillText}</div>`,
+        html: `<div id="marker-pill-${prop.id}" class="map-price-pill">${pillText}</div>`,
         iconSize: [68, 30],
         iconAnchor: [34, 34],
         popupAnchor: [0, -32]
@@ -448,51 +473,52 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
         });
 
         marker.on('popupopen', () => {
-          onSelectProperty(prop);
+          onSelectPropertyRef.current?.(prop);
           const btn = document.getElementById(`btn-view-popup-${prop.id}`);
           if (btn) {
             btn.onclick = (e) => {
               e.stopPropagation();
-              if (onOpenDetail) onOpenDetail(prop);
-              else onSelectProperty(prop);
+              if (onOpenDetailRef.current) onOpenDetailRef.current(prop);
+              else onSelectPropertyRef.current?.(prop);
             };
           }
           const closeBtn = document.getElementById(`btn-close-popup-${prop.id}`);
           if (closeBtn) {
             closeBtn.onclick = (e) => {
               e.stopPropagation();
-              onSelectProperty(null);
+              onSelectPropertyRef.current?.(null);
             };
           }
           const card = document.getElementById(`popup-card-${prop.id}`);
           if (card) {
-            card.onclick = () => {
-              if (onOpenDetail) onOpenDetail(prop);
-              else onSelectProperty(prop);
+            card.onclick = (e) => {
+              if ((e.target as HTMLElement).closest('.map-popup-close-btn') || (e.target as HTMLElement).closest('.map-popup-btn')) return;
+              if (onOpenDetailRef.current) onOpenDetailRef.current(prop);
+              else onSelectPropertyRef.current?.(prop);
             };
           }
         });
 
         marker.on('popupclose', () => {
-          onSelectProperty(null);
+          onSelectPropertyRef.current?.(null);
         });
       }
 
       marker.on('click', () => {
-        onSelectProperty(prop);
+        onSelectPropertyRef.current?.(prop);
         map.panTo([lat, lng], { animate: true, duration: 0.5 });
       });
 
       marker.on('mouseover', () => {
-        if (onHoverProperty) onHoverProperty(prop.id);
+        onHoverPropertyRef.current?.(prop.id);
         const el = document.getElementById(`marker-pill-${prop.id}`);
         if (el) el.classList.add('is-hovered');
       });
 
       marker.on('mouseout', () => {
-        if (onHoverProperty) onHoverProperty(null);
+        onHoverPropertyRef.current?.(null);
         const el = document.getElementById(`marker-pill-${prop.id}`);
-        if (el && selectedProperty?.id !== prop.id) el.classList.remove('is-hovered');
+        if (el && selectedPropertyRef.current?.id !== prop.id) el.classList.remove('is-hovered');
       });
 
       marker.addTo(map);
@@ -500,12 +526,28 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
       bounds.extend([lat, lng]);
     });
 
-    if (properties.length > 0 && bounds.isValid()) {
+    if (properties.length > 0 && bounds.isValid() && propertiesChanged) {
       map.fitBounds(bounds, { padding: [60, 60], maxZoom: 14 });
     }
   }, [engine, properties, lang]);
 
-  // Sync Selected Property (both engines)
+  // Sync Hover State ONLY (Ultra-lightweight DOM class toggle - never pans, never recreates overlays)
+  useEffect(() => {
+    if (engine === 'google') {
+      googleOverlaysRef.current.forEach((overlay, id) => {
+        overlay.setHover(hoveredPropertyId === id);
+      });
+    } else if (engine === 'leaflet') {
+      properties.forEach((prop) => {
+        const el = document.getElementById(`marker-pill-${prop.id}`);
+        if (!el) return;
+        if (hoveredPropertyId === prop.id) el.classList.add('is-hovered');
+        else if (selectedProperty?.id !== prop.id) el.classList.remove('is-hovered');
+      });
+    }
+  }, [hoveredPropertyId, engine, properties, selectedProperty]);
+
+  // Sync Selected Property (both engines - only runs when selectedProperty or engine changes)
   useEffect(() => {
     if (!selectedProperty) {
       if (engine === 'google') {
@@ -524,7 +566,6 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
     if (engine === 'google' && googleMapRef.current && window.google?.maps) {
       googleOverlaysRef.current.forEach((overlay, id) => {
         overlay.setActive(selectedProperty.id === id);
-        overlay.setHover(hoveredPropertyId === id);
       });
 
       const lat = selectedProperty.location.latitude;
@@ -543,8 +584,8 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
             if (btn) {
               btn.onclick = (e) => {
                 e.stopPropagation();
-                if (onOpenDetail) onOpenDetail(selectedProperty);
-                else onSelectProperty(selectedProperty);
+                if (onOpenDetailRef.current) onOpenDetailRef.current(selectedProperty);
+                else onSelectPropertyRef.current?.(selectedProperty);
               };
             }
             const closeBtn = document.getElementById(`btn-close-popup-${selectedProperty.id}`);
@@ -552,7 +593,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
               closeBtn.onclick = (e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                onSelectProperty(null);
+                onSelectPropertyRef.current?.(null);
               };
             }
             const card = document.getElementById(`popup-card-${selectedProperty.id}`);
@@ -561,8 +602,8 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
                 if ((e.target as HTMLElement).closest('.map-popup-close-btn') || (e.target as HTMLElement).closest('.map-popup-btn')) {
                   return;
                 }
-                if (onOpenDetail) onOpenDetail(selectedProperty);
-                else onSelectProperty(selectedProperty);
+                if (onOpenDetailRef.current) onOpenDetailRef.current(selectedProperty);
+                else onSelectPropertyRef.current?.(selectedProperty);
               };
             }
           });
@@ -574,9 +615,6 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
         if (!el) return;
         if (selectedProperty.id === prop.id) el.classList.add('is-active');
         else el.classList.remove('is-active');
-
-        if (hoveredPropertyId === prop.id) el.classList.add('is-hovered');
-        else if (selectedProperty.id !== prop.id) el.classList.remove('is-hovered');
       });
 
       const marker = leafletMarkersRef.current.get(selectedProperty.id);
@@ -587,7 +625,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
         leafletMapRef.current.panTo(marker.getLatLng(), { animate: true, duration: 0.5 });
       }
     }
-  }, [selectedProperty, hoveredPropertyId, engine, lang, properties, onOpenDetail, onSelectProperty]);
+  }, [selectedProperty, engine, lang, properties]);
 
   // Zoom and Recenter Handlers
   const handleZoomIn = useCallback(() => {
