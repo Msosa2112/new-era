@@ -168,24 +168,24 @@ export const LivePatternOverlay: React.FC<LivePatternOverlayProps> = ({
         height: '100%',
         pointerEvents: 'none',
         zIndex: 2,
-        mixBlendMode: 'screen',
+        mixBlendMode: 'multiply',
         ...style
       }}
       className={`live-pattern-overlay ${className}`}
       aria-hidden="true"
     >
       <defs>
-        {/* Satin Champagne-Gold Core Gradient */}
-        <linearGradient id="liveGoldCoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
-          <stop offset="40%" stopColor="#FDE68A" stopOpacity="0.85" />
-          <stop offset="100%" stopColor="#DEC0A1" stopOpacity="0.75" />
+        {/* Rich Brand Burgundy / Ruby Core Gradient */}
+        <linearGradient id="liveBurgundyCoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#8B1D2C" stopOpacity="0.85" />
+          <stop offset="40%" stopColor="#660E1A" stopOpacity="0.75" />
+          <stop offset="100%" stopColor="#3E070E" stopOpacity="0.65" />
         </linearGradient>
 
-        {/* Ambient Subtle Warm Aura Gradient */}
-        <linearGradient id="liveGoldAuraGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.7" />
-          <stop offset="50%" stopColor="#FDE68A" stopOpacity="0.4" />
+        {/* Ambient Warm Ruby Halo Gradient */}
+        <linearGradient id="liveBurgundyAuraGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#8B1D2C" stopOpacity="0.35" />
+          <stop offset="50%" stopColor="#660E1A" stopOpacity="0.18" />
           <stop offset="100%" stopColor="transparent" stopOpacity="0" />
         </linearGradient>
 
@@ -209,7 +209,7 @@ export const LivePatternOverlay: React.FC<LivePatternOverlayProps> = ({
               glowRefs.current[i] = el;
             }}
             fill="none"
-            stroke="url(#liveGoldAuraGrad)"
+            stroke="url(#liveBurgundyAuraGrad)"
             strokeWidth={HALO_WIDTH}
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -218,7 +218,7 @@ export const LivePatternOverlay: React.FC<LivePatternOverlayProps> = ({
         ))}
       </g>
 
-      {/* LAYER 2: Crisp Satin Champagne Core Line */}
+      {/* LAYER 2: Crisp Brand Burgundy Core Line */}
       <g>
         {Array.from({ length: POOL_SIZE }).map((_, i) => (
           <path
@@ -226,8 +226,8 @@ export const LivePatternOverlay: React.FC<LivePatternOverlayProps> = ({
             ref={(el) => {
               pathRefs.current[i] = el;
             }}
-            fill="url(#liveGoldCoreGrad)"
-            stroke="url(#liveGoldCoreGrad)"
+            fill="url(#liveBurgundyCoreGrad)"
+            stroke="url(#liveBurgundyCoreGrad)"
             strokeWidth={STROKE_WIDTH}
             strokeLinecap="round"
             strokeLinejoin="round"

@@ -48,9 +48,9 @@ export const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
         style={{
           fontFamily: 'var(--font-serif)',
           fontSize: 'clamp(2rem, 4vw, 3.25rem)',
-          fontWeight: 400,
+          fontWeight: 600,
           lineHeight: 1.1,
-          color: 'var(--color-orange-accent)',
+          color: '#660E1A',
           letterSpacing: '-0.02em'
         }}
       >
@@ -66,7 +66,7 @@ export const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
             fontWeight: 700,
             letterSpacing: '0.12em',
             textTransform: 'uppercase',
-            color: 'rgba(255, 255, 255, 0.75)',
+            color: '#5A606D',
             marginTop: '0.4rem'
           }}
         >

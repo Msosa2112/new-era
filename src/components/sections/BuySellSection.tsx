@@ -49,7 +49,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
               padding: 'clamp(2rem, 4vw, 3.5rem)',
               backgroundColor: 'var(--bg-surface)',
               border: '1px solid var(--border-subtle)',
-              borderRadius: 'var(--radius-xs)',
+              borderRadius: 'var(--radius-md)',
               boxShadow: 'var(--shadow-sm)',
               display: 'flex',
               flexDirection: 'column',
@@ -127,11 +127,11 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
           <div
             style={{
               padding: 'clamp(2rem, 4vw, 3.5rem)',
-              backgroundColor: 'var(--color-burgundy-900)',
-              color: '#FFFFFF',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              borderRadius: 'var(--radius-xs)',
-              boxShadow: 'var(--shadow-luxury)',
+              backgroundColor: 'var(--bg-surface)',
+              color: 'var(--text-primary)',
+              border: '1px solid rgba(102, 14, 26, 0.18)',
+              borderRadius: 'var(--radius-md)',
+              boxShadow: 'var(--shadow-sm)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
@@ -139,9 +139,9 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
               overflow: 'hidden'
             }}
           >
-            <HexPattern variant="brand-card" opacity={0.28} maskFade="radial-center" />
+            <HexPattern variant="burgundy" opacity={0.08} maskFade="radial-center" />
             <div style={{ position: 'relative', zIndex: 1 }}>
-              <span className="display-subtitle" style={{ color: 'var(--color-orange-accent)' }}>
+              <span className="display-subtitle" style={{ color: 'var(--color-burgundy-primary)' }}>
                 {lang === 'es' ? 'VENTA ESTRATÉGICA' : 'MAXIMIZING VALUE & SELLING'}
               </span>
               <h3
@@ -151,7 +151,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
                   lineHeight: 1.15,
                   marginTop: '0.75rem',
                   marginBottom: '1rem',
-                  color: '#FFFFFF'
+                  color: 'var(--text-primary)'
                 }}
               >
                 {lang === 'es' ? 'TU PROPIEDAD. TU SIGUIENTE PASO.' : 'YOUR PROPERTY. YOUR NEXT MOVE.'}
@@ -159,14 +159,14 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
               <p
                 style={{
                   fontSize: '1.05rem',
-                  color: 'rgba(255, 255, 255, 0.85)',
+                  color: 'var(--text-secondary)',
                   lineHeight: 1.6,
                   marginBottom: '1.75rem'
                 }}
               >
                 {lang === 'es'
                   ? 'Posicionamos tu residencia para capturar el valor máximo del mercado mediante fotografía arquitectónica, marketing digital de alto impacto y negociación experta.'
-                  : 'Elevate your listing with cinematic staging, targeted buyer exposure across Kentucky & Indiana, and precision CMA valuation.'}
+                  : 'Elevate your listing with cinematic staging, targeted buyer exposure across Greater Louisville & Kentucky, and precision CMA valuation.'}
               </p>
 
               {/* Instant Valuation Preview Form */}
@@ -174,18 +174,18 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
                 <div
                   style={{
                     padding: '1.5rem',
-                    backgroundColor: 'rgba(230, 74, 42, 0.15)',
-                    border: '1px solid var(--color-orange-accent)',
-                    borderRadius: 'var(--radius-xs)',
+                    backgroundColor: 'rgba(102, 14, 26, 0.06)',
+                    border: '1.5px solid var(--color-burgundy-primary)',
+                    borderRadius: 'var(--radius-md)',
                     marginBottom: '1.5rem',
                     textAlign: 'center'
                   }}
                 >
-                  <CheckCircle2 size={28} color="var(--color-orange-accent)" style={{ margin: '0 auto 0.5rem' }} />
-                  <p style={{ fontSize: '0.9rem', fontWeight: 600 }}>
+                  <CheckCircle2 size={28} color="var(--color-burgundy-primary)" style={{ margin: '0 auto 0.5rem' }} />
+                  <p style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)' }}>
                     {lang === 'es' ? 'Valuación Solicitada' : 'Valuation Request Received'}
                   </p>
-                  <p style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.8)' }}>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                     {lang === 'es'
                       ? 'Analizaremos los comparables de tu zona y te enviaremos el reporte CMA.'
                       : 'We will generate your custom CMA report within 24 hours.'}
@@ -201,10 +201,10 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
                     onChange={(e) => setValAddress(e.target.value)}
                     style={{
                       padding: '0.85rem 1rem',
-                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                      border: '1px solid rgba(255, 255, 255, 0.25)',
-                      color: '#FFFFFF',
-                      borderRadius: 'var(--radius-xs)',
+                      backgroundColor: 'var(--bg-primary)',
+                      border: '1.5px solid #DCD5C9',
+                      color: 'var(--text-primary)',
+                      borderRadius: 'var(--radius-sm)',
                       fontSize: '0.9rem'
                     }}
                   />
@@ -216,29 +216,23 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
                     onChange={(e) => setValEmail(e.target.value)}
                     style={{
                       padding: '0.85rem 1rem',
-                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                      border: '1px solid rgba(255, 255, 255, 0.25)',
-                      color: '#FFFFFF',
-                      borderRadius: 'var(--radius-xs)',
+                      backgroundColor: 'var(--bg-primary)',
+                      border: '1.5px solid #DCD5C9',
+                      color: 'var(--text-primary)',
+                      borderRadius: 'var(--radius-sm)',
                       fontSize: '0.9rem'
                     }}
                   />
                   <button
                     type="submit"
+                    className="btn-primary"
                     style={{
-                      padding: '0.9rem',
-                      backgroundColor: 'var(--color-orange-accent)',
-                      color: '#FFFFFF',
-                      fontWeight: 700,
-                      letterSpacing: '0.12em',
-                      fontSize: '0.8rem',
-                      textTransform: 'uppercase',
-                      borderRadius: 'var(--radius-xs)',
-                      border: 'none',
-                      cursor: 'pointer'
+                      width: '100%',
+                      justifyContent: 'center',
+                      padding: '0.9rem'
                     }}
                   >
-                    {lang === 'es' ? 'OBTENER VALUACIÓN CMA GRATIS' : 'REQUEST INSTANT CMA VALUATION'}
+                    <span>{lang === 'es' ? 'OBTENER VALUACIÓN CMA GRATIS' : 'REQUEST INSTANT CMA VALUATION'}</span>
                   </button>
                 </form>
               )}
@@ -246,7 +240,7 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
 
             <button
               onClick={() => onNavigate('sell')}
-              className="btn-outline btn-outline-white"
+              className="btn-outline"
               style={{ width: '100%', justifyContent: 'center' }}
             >
               <span>{lang === 'es' ? 'ESTRATEGIA PARA VENDEDORES' : 'VIEW SELLER PLAYBOOK'}</span>

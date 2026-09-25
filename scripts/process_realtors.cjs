@@ -18,8 +18,8 @@ const realtorsList = [
     licenseNumber: 'KY-284910',
     phone: '(502) 500-0409',
     email: 'newerabroker25@gmail.com',
-    bioEn: 'Principal Broker and visionary founder of New Era Real Estate. Leading bilateral representation across Kentucky and Indiana with unwavering architectural excellence, bilingual negotiation mastery, and strategic wealth-building advisory.',
-    bioEs: 'Principal Broker y fundadora de New Era Real Estate. Liderando la representación inmobiliaria en Kentucky e Indiana con excelencia arquitectónica, dominio de negociación bilingüe y asesoría estratégica patrimonial.',
+    bioEn: 'Principal Broker and visionary founder of New Era Real Estate. Leading residential representation across Kentucky with unwavering architectural excellence, bilingual negotiation mastery, and strategic wealth-building advisory.',
+    bioEs: 'Principal Broker y fundadora de New Era Real Estate. Liderando la representación inmobiliaria en Kentucky con excelencia arquitectónica, dominio de negociación bilingüe y asesoría estratégica patrimonial.',
     specialties: ['Principal Brokerage', 'Luxury Portfolios', 'Bilingual Advisory', 'Investment Portfolios', 'New Construction'],
     languages: ['English', 'Spanish'],
     yearsExperience: 14,
@@ -309,12 +309,12 @@ const realtorsList = [
     id: 'rosa-mustelier-jimenez',
     name: 'Rosa Mustelier Jimenez',
     folderName: 'Rosa Mustelier',
-    title: 'Licensed REALTOR® | KY & IN Specialist',
+    title: 'Licensed REALTOR® | Residential Specialist',
     phone: '(502) 909-7399',
     email: 'rosamustelierrealtor@gmail.com',
-    bioEn: 'Dual-market specialist delivering sharp contract precision, cross-river relocation insight, and dedicated client advocacy.',
-    bioEs: 'Especialista en Kentucky e Indiana con precisión contractual, reubicación metropolitana y defensa total de sus clientes.',
-    specialties: ['Kentucky & Indiana', 'Relocation Advisory', 'Condos & Family Homes'],
+    bioEn: 'Residential specialist delivering sharp contract precision, relocation insight, and dedicated client advocacy across Kentucky.',
+    bioEs: 'Especialista en Greater Louisville y Kentucky con precisión contractual, reubicación y defensa total de sus clientes.',
+    specialties: ['Greater Louisville & Kentucky', 'Relocation Advisory', 'Condos & Family Homes'],
     languages: ['English', 'Spanish'],
     yearsExperience: 5,
     featured: false
@@ -405,7 +405,7 @@ export const BROKERAGE_DATA: BrokerageInfo = {
     fullFormatted: '6501 Shepherdsville Road, Suite 119, Louisville, KY 40219'
   },
   officeHours: 'Monday - Friday: 9:00 AM - 5:30 PM | Saturday & Sunday: By Appointment',
-  licenseNote: 'Licensed Real Estate Brokerage in Kentucky and Indiana. Equal Housing Opportunity.'
+  licenseNote: 'Licensed Real Estate Brokerage in Kentucky. Equal Housing Opportunity.'
 };
 
 export const AGENTS_DATA: Agent[] = ${JSON.stringify(

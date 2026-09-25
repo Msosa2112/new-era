@@ -162,8 +162,8 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
     <main
       style={{
         minHeight: '100vh',
-        backgroundColor: '#0C0D10',
-        color: '#FFFFFF',
+        backgroundColor: '#FAF7F2',
+        color: '#121418',
         position: 'relative'
       }}
     >
@@ -171,14 +171,15 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
       <section
         style={{
           position: 'relative',
-          backgroundColor: '#0C0D10',
-          color: '#FFFFFF',
+          backgroundColor: '#FAF7F2',
+          color: '#121418',
           paddingTop: 'calc(var(--header-height, 75px) + 0.35rem)',
           paddingBottom: 'clamp(2.5rem, 5vw, 4.5rem)',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          borderBottom: '1px solid #E8E2D8'
         }}
       >
-        <HexPattern variant="gradient-burgundy" opacity={0.22} maskFade="radial-top-right" />
+        <HexPattern variant="burgundy" opacity={0.08} maskFade="radial-top-right" />
 
         {/* Top ambient radial glow extending behind transparent fixed Navbar */}
         <div
@@ -191,7 +192,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
             maxWidth: '1100px',
             height: '380px',
             borderRadius: '50%',
-            background: 'radial-gradient(ellipse, rgba(102, 14, 26, 0.45) 0%, rgba(150, 23, 41, 0.15) 48%, transparent 75%)',
+            background: 'radial-gradient(ellipse, rgba(102, 14, 26, 0.08) 0%, rgba(150, 23, 41, 0.03) 48%, transparent 75%)',
             filter: 'blur(50px)',
             pointerEvents: 'none',
             zIndex: 0
@@ -203,7 +204,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
           style={{
             position: 'relative',
             zIndex: 10,
-            borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+            borderBottom: '1px solid rgba(102, 14, 26, 0.08)',
             padding: '0.65rem 0 1rem 0',
             marginBottom: 'clamp(1.5rem, 3.5vw, 2.5rem)'
           }}
@@ -216,8 +217,8 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                 alignItems: 'center',
                 gap: '0.5rem',
                 fontSize: '0.82rem',
-                fontWeight: 600,
-                color: '#961729',
+                fontWeight: 700,
+                color: '#660E1A',
                 backgroundColor: 'transparent',
                 border: 'none',
                 cursor: 'pointer',
@@ -226,15 +227,15 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
               onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateX(-3px)')}
               onMouseLeave={(e) => (e.currentTarget.style.transform = 'none')}
             >
-              <ArrowLeft size={16} color="#961729" />
-              <span style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
-                {lang === 'es' ? 'Volver a Todos los Asesores' : 'Back to All Advisors'}
+              <ArrowLeft size={16} color="#660E1A" />
+              <span style={{ color: '#121418' }}>
+                {lang === 'es' ? 'Volver al Inicio' : 'Back to Home'}
               </span>
             </button>
 
             {/* Quick Roster Switcher */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.5)', display: 'none' }} className="roster-counter-text">
+              <span style={{ fontSize: '0.78rem', color: '#5A606D', display: 'none' }} className="roster-counter-text">
                 {currentIndex + 1} / {allAgents.length}
               </span>
               <button
@@ -244,22 +245,23 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                   width: '32px',
                   height: '32px',
                   borderRadius: '50%',
-                  border: '1px solid rgba(255, 255, 255, 0.18)',
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                  border: '1px solid rgba(102, 14, 26, 0.2)',
+                  backgroundColor: '#FFFFFF',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
-                  color: '#FFFFFF',
+                  color: '#660E1A',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.04)',
                   transition: 'all 0.2s'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.16)';
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.35)';
+                  e.currentTarget.style.backgroundColor = 'rgba(102, 14, 26, 0.08)';
+                  e.currentTarget.style.borderColor = '#660E1A';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.18)';
+                  e.currentTarget.style.backgroundColor = '#FFFFFF';
+                  e.currentTarget.style.borderColor = 'rgba(102, 14, 26, 0.2)';
                 }}
               >
                 <ChevronLeft size={16} />
@@ -271,22 +273,23 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                   width: '32px',
                   height: '32px',
                   borderRadius: '50%',
-                  border: '1px solid rgba(255, 255, 255, 0.18)',
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                  border: '1px solid rgba(102, 14, 26, 0.2)',
+                  backgroundColor: '#FFFFFF',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
-                  color: '#FFFFFF',
+                  color: '#660E1A',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.04)',
                   transition: 'all 0.2s'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.16)';
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.35)';
+                  e.currentTarget.style.backgroundColor = 'rgba(102, 14, 26, 0.08)';
+                  e.currentTarget.style.borderColor = '#660E1A';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.18)';
+                  e.currentTarget.style.backgroundColor = '#FFFFFF';
+                  e.currentTarget.style.borderColor = 'rgba(102, 14, 26, 0.2)';
                 }}
               >
                 <ChevronRight size={16} />
@@ -305,7 +308,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
             transform: 'translateY(-50%)',
             pointerEvents: 'none',
             userSelect: 'none',
-            opacity: 0.038,
+            opacity: 0.04,
             zIndex: 0,
             display: 'flex',
             alignItems: 'center',
@@ -314,12 +317,12 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
           aria-hidden="true"
         >
           <BrandLogo
-            variant="monogram-white"
+            variant="monogram-burgundy"
             height="auto"
             style={{
               width: 'clamp(380px, 48vw, 700px)',
               height: 'auto',
-              color: '#FFFFFF'
+              color: '#660E1A'
             }}
           />
         </div>
@@ -366,7 +369,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                   width: '90%',
                   height: '90%',
                   borderRadius: '50%',
-                  background: 'radial-gradient(circle, rgba(102, 14, 26, 0.65) 0%, rgba(125, 18, 34, 0.22) 45%, transparent 72%)',
+                  background: 'radial-gradient(circle, rgba(102, 14, 26, 0.12) 0%, rgba(245, 238, 226, 0.35) 45%, transparent 72%)',
                   filter: 'blur(36px)',
                   pointerEvents: 'none'
                 }}
@@ -381,7 +384,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                   maxHeight: '480px',
                   objectFit: 'contain',
                   objectPosition: 'bottom center',
-                  filter: 'drop-shadow(0 20px 40px rgba(0, 0, 0, 0.6))',
+                  filter: 'drop-shadow(0 20px 30px rgba(0, 0, 0, 0.12))',
                   position: 'relative',
                   zIndex: 2,
                   transform: `translate(var(--p-d-x, 0px), var(--p-d-y, 0px)) scale(var(--p-d-scale, 1))`,
@@ -404,24 +407,24 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                         fontWeight: 700,
                         letterSpacing: '0.14em',
                         textTransform: 'uppercase',
-                        color: '#961729',
+                        color: '#660E1A',
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '0.4rem'
                       }}
                     >
-                      <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#961729', display: 'inline-block' }} />
+                      <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#660E1A', display: 'inline-block' }} />
                       NEW ERA REAL ESTATE ADVISOR
                     </span>
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexWrap: 'wrap' }}>
-                    <span style={{ fontSize: '0.78rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.75)', letterSpacing: '0.02em' }}>
+                    <span style={{ fontSize: '0.78rem', fontWeight: 600, color: '#5A606D', letterSpacing: '0.02em' }}>
                       {agent.languages.join(' & ')}
                     </span>
-                    <span style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.3)' }}>•</span>
-                    <span style={{ fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.75)' }}>
-                      KY & IN Licensed
+                    <span style={{ fontSize: '0.75rem', color: '#847C74' }}>•</span>
+                    <span style={{ fontSize: '0.78rem', color: '#5A606D' }}>
+                      KY Licensed
                     </span>
                   </div>
                 </div>
@@ -431,7 +434,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                     fontSize: 'clamp(2.1rem, 5vw, 3.25rem)',
                     fontWeight: 600,
                     letterSpacing: '-0.02em',
-                    color: '#FFFFFF',
+                    color: '#121418',
                     margin: '0 0 0.35rem 0',
                     lineHeight: 1.15
                   }}
@@ -445,18 +448,18 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                     fontWeight: 600,
                     letterSpacing: '0.06em',
                     textTransform: 'uppercase',
-                    color: '#9CA3AF',
+                    color: '#660E1A',
                     margin: '0 0 0.75rem 0'
                   }}
                 >
                   {agent.id === 'yeilen-contreras' ? 'Principal Broker & Founder' : agent.title}
                 </p>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.65)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', fontSize: '0.78rem', color: '#5A606D' }}>
                   <span style={{ fontFamily: 'monospace' }}>
                     {agent.licenseNumber ? `License #${agent.licenseNumber}` : 'Licensed Brokerage Member'}
                   </span>
-                  <span style={{ color: 'rgba(255, 255, 255, 0.3)' }}>•</span>
+                  <span style={{ color: '#847C74' }}>•</span>
                   <span>{BROKERAGE_DATA.name}</span>
                 </div>
               </div>
@@ -495,7 +498,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                     href={`tel:${cleanPhone}`}
                     className="agent-btn-outline agent-btn-call"
                   >
-                    <Phone size={14} color="#961729" style={{ flexShrink: 0 }} />
+                    <Phone size={14} color="#660E1A" style={{ flexShrink: 0 }} />
                     <span>{agent.phone}</span>
                   </a>
 
@@ -517,7 +520,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                     href={`mailto:${agent.email}`}
                     className="agent-email-link"
                   >
-                    <Mail size={14} color="#961729" style={{ flexShrink: 0 }} />
+                    <Mail size={14} color="#660E1A" style={{ flexShrink: 0 }} />
                     <span className="agent-email-text">{agent.email}</span>
                   </a>
 
@@ -532,13 +535,14 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                         width: '32px',
                         height: '32px',
                         borderRadius: '50%',
-                        backgroundColor: 'transparent',
-                        border: '1px solid rgba(255, 255, 255, 0.25)',
+                        backgroundColor: '#FFFFFF',
+                        border: '1px solid rgba(102, 14, 26, 0.2)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        color: 'rgba(255, 255, 255, 0.85)',
-                        transition: 'all 0.2s'
+                        color: '#660E1A',
+                        transition: 'all 0.2s',
+                        boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
                       }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.backgroundColor = '#E1306C';
@@ -546,9 +550,9 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                         e.currentTarget.style.color = '#FFFFFF';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = 'transparent';
-                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.25)';
-                        e.currentTarget.style.color = 'rgba(255, 255, 255, 0.85)';
+                        e.currentTarget.style.backgroundColor = '#FFFFFF';
+                        e.currentTarget.style.borderColor = 'rgba(102, 14, 26, 0.2)';
+                        e.currentTarget.style.color = '#660E1A';
                       }}
                     >
                       <Instagram size={14} />
@@ -563,13 +567,14 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                         width: '32px',
                         height: '32px',
                         borderRadius: '50%',
-                        backgroundColor: 'transparent',
-                        border: '1px solid rgba(255, 255, 255, 0.25)',
+                        backgroundColor: '#FFFFFF',
+                        border: '1px solid rgba(102, 14, 26, 0.2)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        color: 'rgba(255, 255, 255, 0.85)',
-                        transition: 'all 0.2s'
+                        color: '#660E1A',
+                        transition: 'all 0.2s',
+                        boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
                       }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.backgroundColor = '#1877F2';
@@ -577,9 +582,9 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                         e.currentTarget.style.color = '#FFFFFF';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = 'transparent';
-                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.25)';
-                        e.currentTarget.style.color = 'rgba(255, 255, 255, 0.85)';
+                        e.currentTarget.style.backgroundColor = '#FFFFFF';
+                        e.currentTarget.style.borderColor = 'rgba(102, 14, 26, 0.2)';
+                        e.currentTarget.style.color = '#660E1A';
                       }}
                     >
                       <Facebook size={14} />
@@ -594,13 +599,14 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                         width: '32px',
                         height: '32px',
                         borderRadius: '50%',
-                        backgroundColor: 'transparent',
-                        border: '1px solid rgba(255, 255, 255, 0.25)',
+                        backgroundColor: '#FFFFFF',
+                        border: '1px solid rgba(102, 14, 26, 0.2)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        color: 'rgba(255, 255, 255, 0.85)',
-                        transition: 'all 0.2s'
+                        color: '#660E1A',
+                        transition: 'all 0.2s',
+                        boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
                       }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.backgroundColor = '#0A66C2';
@@ -608,9 +614,9 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                         e.currentTarget.style.color = '#FFFFFF';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = 'transparent';
-                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.25)';
-                        e.currentTarget.style.color = 'rgba(255, 255, 255, 0.85)';
+                        e.currentTarget.style.backgroundColor = '#FFFFFF';
+                        e.currentTarget.style.borderColor = 'rgba(102, 14, 26, 0.2)';
+                        e.currentTarget.style.color = '#660E1A';
                       }}
                     >
                       <Linkedin size={14} />
@@ -738,7 +744,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                 <div
                   style={{
                     backgroundColor: '#FFFFFF',
-                    borderRadius: '16px',
+                    borderRadius: 'var(--radius-md)',
                     border: '1px solid #E5E7EB',
                     padding: 'clamp(2rem, 5vw, 3.5rem)',
                     textAlign: 'center',
@@ -783,8 +789,8 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                     }}
                   >
                     {lang === 'es'
-                      ? `Actualmente ${agent.name} gestiona colocaciones privadas y nuevas oportunidades residenciales en Greater Louisville y Southern Indiana. Contáctale directamente para acceder al portafolio exclusivo antes de su publicación abierta.`
-                      : `Currently, ${agent.name} represents bespoke private listings and off-market residential opportunities across Greater Louisville and Southern Indiana. Inquire directly for exclusive access.`}
+                      ? `Actualmente ${agent.name} gestiona colocaciones privadas y nuevas oportunidades residenciales en Greater Louisville y Kentucky. Contáctale directamente para acceder al portafolio exclusivo antes de su publicación abierta.`
+                      : `Currently, ${agent.name} represents bespoke private listings and off-market residential opportunities across Greater Louisville and Central Kentucky. Inquire directly for exclusive access.`}
                   </p>
 
                   <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
@@ -805,23 +811,24 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '0.5rem',
-                        backgroundColor: '#1E222B',
-                        color: '#FFFFFF',
+                        backgroundColor: '#FFFFFF',
+                        color: '#121418',
                         padding: '0.75rem 1.5rem',
-                        borderRadius: 'var(--radius-xs)',
+                        borderRadius: 'var(--radius-sm)',
                         fontSize: '0.82rem',
                         fontWeight: 600,
                         textDecoration: 'none',
-                        border: '1px solid #374151',
-                        transition: 'all 0.2s ease'
+                        border: '1.5px solid #E5E7EB',
+                        transition: 'all 0.2s ease',
+                        boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#111827';
                         e.currentTarget.style.borderColor = '#25D366';
+                        e.currentTarget.style.transform = 'translateY(-1px)';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = '#1E222B';
-                        e.currentTarget.style.borderColor = '#374151';
+                        e.currentTarget.style.borderColor = '#E5E7EB';
+                        e.currentTarget.style.transform = 'none';
                       }}
                     >
                       <MessageCircle size={15} color="#25D366" />
@@ -871,7 +878,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.9rem', color: '#374151' }}>
                     <CheckCircle2 size={17} color="#660E1A" />
-                    <span>{lang === 'es' ? 'Cobertura bilateral en Kentucky e Indiana' : 'Bilateral market mastery across KY & IN'}</span>
+                    <span>{lang === 'es' ? 'Cobertura integral en Greater Louisville y Kentucky' : 'Market mastery across Greater Louisville & KY'}</span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.9rem', color: '#374151' }}>
                     <CheckCircle2 size={17} color="#660E1A" />
@@ -1042,7 +1049,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                 style={{
                   padding: '2.5rem',
                   backgroundColor: '#ECFDF5',
-                  borderRadius: '12px',
+                  borderRadius: 'var(--radius-md)',
                   border: '1px solid #A7F3D0',
                   textAlign: 'center'
                 }}
@@ -1073,7 +1080,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                       style={{
                         width: '100%',
                         padding: '0.75rem 1rem',
-                        borderRadius: '8px',
+                        borderRadius: 'var(--radius-sm)',
                         border: '1px solid #D1D5DB',
                         fontSize: '0.9rem',
                         backgroundColor: '#FFFFFF',
@@ -1095,7 +1102,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                       style={{
                         width: '100%',
                         padding: '0.75rem 1rem',
-                        borderRadius: '8px',
+                        borderRadius: 'var(--radius-sm)',
                         border: '1px solid #D1D5DB',
                         fontSize: '0.9rem',
                         backgroundColor: '#FFFFFF',
@@ -1119,7 +1126,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                       style={{
                         width: '100%',
                         padding: '0.75rem 1rem',
-                        borderRadius: '8px',
+                        borderRadius: 'var(--radius-sm)',
                         border: '1px solid #D1D5DB',
                         fontSize: '0.9rem',
                         backgroundColor: '#FFFFFF',
@@ -1138,7 +1145,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                       style={{
                         width: '100%',
                         padding: '0.75rem 1rem',
-                        borderRadius: '8px',
+                        borderRadius: 'var(--radius-sm)',
                         border: '1px solid #D1D5DB',
                         fontSize: '0.9rem',
                         backgroundColor: '#FFFFFF',
@@ -1149,7 +1156,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                       <option value="buy">{lang === 'es' ? 'Comprar Propiedad' : 'Buy a Property'}</option>
                       <option value="sell">{lang === 'es' ? 'Vender Mi Propiedad' : 'Sell My Property'}</option>
                       <option value="invest">{lang === 'es' ? 'Inversión Inmobiliaria' : 'Investment Advisory'}</option>
-                      <option value="relocation">{lang === 'es' ? 'Reubicación a Kentucky/Indiana' : 'Relocation Services'}</option>
+                      <option value="relocation">{lang === 'es' ? 'Reubicación a Kentucky' : 'Relocation Services'}</option>
                       <option value="other">{lang === 'es' ? 'Consulta General' : 'General Inquiry'}</option>
                     </select>
                   </div>
@@ -1171,7 +1178,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                     style={{
                       width: '100%',
                       padding: '0.75rem 1rem',
-                      borderRadius: '8px',
+                      borderRadius: 'var(--radius-sm)',
                       border: '1px solid #D1D5DB',
                       fontSize: '0.9rem',
                       backgroundColor: '#FFFFFF',
@@ -1190,7 +1197,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                     justifyContent: 'center',
                     padding: '0.95rem',
                     fontSize: '0.85rem',
-                    borderRadius: '8px',
+                    borderRadius: 'var(--radius-sm)',
                     backgroundColor: '#660E1A'
                   }}
                 >
@@ -1251,7 +1258,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                   onClick={() => onSelectAgent(otherAgent)}
                   style={{
                     backgroundColor: '#FFFFFF',
-                    borderRadius: '12px',
+                    borderRadius: 'var(--radius-md)',
                     border: '1px solid #E5E7EB',
                     padding: '0.9rem 1.1rem',
                     cursor: 'pointer',
@@ -1339,15 +1346,15 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
         .agent-stat-number {
           font-size: clamp(1.4rem, 3.5vw, 1.85rem);
           font-weight: 700;
-          color: #FFFFFF;
+          color: #121418;
           line-height: 1;
         }
         .agent-stat-number.accent {
-          color: #961729;
+          color: #660E1A;
         }
         .agent-stat-label {
           font-size: clamp(0.58rem, 1.6vw, 0.68rem);
-          color: #9CA3AF;
+          color: #5A606D;
           text-transform: uppercase;
           letter-spacing: 0.05em;
           margin-top: 0.35rem;
@@ -1373,27 +1380,43 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
           justify-content: center;
           gap: 0.5rem;
           padding: 0.8rem 1rem;
-          background-color: transparent;
-          color: #FFFFFF;
-          border: 1px solid rgba(255, 255, 255, 0.28);
-          border-radius: 8px;
+          background-color: #FFFFFF;
+          color: #121418;
+          border: 1.5px solid rgba(102, 14, 26, 0.22);
+          border-radius: var(--radius-sm);
           font-size: clamp(0.78rem, 2.2vw, 0.85rem);
-          font-weight: 600;
+          font-weight: 700;
           letter-spacing: 0.02em;
           text-decoration: none;
           white-space: nowrap;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.03);
           transition: all 0.2s ease;
         }
         .agent-btn-outline:hover {
           transform: translateY(-2px);
+          box-shadow: 0 6px 16px rgba(102, 14, 26, 0.1);
+        }
+        .agent-btn-call {
+          color: #660E1A;
+          border-color: #660E1A;
         }
         .agent-btn-call:hover {
-          border-color: #FFFFFF;
-          background-color: rgba(255, 255, 255, 0.08);
+          background-color: #660E1A;
+          color: #FFFFFF;
+        }
+        .agent-btn-call:hover svg {
+          stroke: #FFFFFF;
+        }
+        .agent-btn-wa {
+          color: #0E6E3D;
+          border-color: #25D366;
         }
         .agent-btn-wa:hover {
-          border-color: #25D366;
-          background-color: rgba(37, 211, 102, 0.08);
+          background-color: #25D366;
+          color: #FFFFFF;
+        }
+        .agent-btn-wa:hover svg {
+          stroke: #FFFFFF;
         }
 
         /* Secondary Contact Subrow */
@@ -1408,7 +1431,8 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
           align-items: center;
           gap: 0.45rem;
           font-size: 0.82rem;
-          color: rgba(255, 255, 255, 0.85);
+          color: #121418;
+          font-weight: 600;
           text-decoration: none;
           overflow: hidden;
           white-space: nowrap;
@@ -1421,7 +1445,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
           white-space: nowrap;
         }
         .agent-email-link:hover {
-          color: #FFFFFF;
+          color: #660E1A;
         }
         .agent-socials-group {
           display: flex;

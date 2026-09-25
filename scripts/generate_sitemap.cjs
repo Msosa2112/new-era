@@ -20,7 +20,6 @@ const urls = [
   // 1. Core High-Priority Pages
   { loc: `${SITE_URL}/`, changefreq: 'daily', priority: '1.0' },
   { loc: `${SITE_URL}/#/properties`, changefreq: 'daily', priority: '0.9' },
-  { loc: `${SITE_URL}/#/agents`, changefreq: 'weekly', priority: '0.9' },
   { loc: `${SITE_URL}/#/buy`, changefreq: 'monthly', priority: '0.8' },
   { loc: `${SITE_URL}/#/sell`, changefreq: 'monthly', priority: '0.8' },
   { loc: `${SITE_URL}/#/about`, changefreq: 'monthly', priority: '0.7' },

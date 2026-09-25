@@ -65,11 +65,11 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
         style={{
           width: '100%',
           maxWidth: '560px',
-          backgroundColor: 'var(--color-charcoal-950)',
-          color: '#FFFFFF',
-          borderRadius: 'var(--radius-sm)',
-          border: '1px solid rgba(255, 255, 255, 0.16)',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)',
+          backgroundColor: '#FAF7F2',
+          color: '#121418',
+          borderRadius: 'var(--radius-md)',
+          border: '1px solid #E5E0D8',
+          boxShadow: '0 25px 60px -12px rgba(18, 20, 24, 0.25)',
           position: 'relative',
           padding: '2.5rem',
           maxHeight: '90vh',
@@ -78,7 +78,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
           willChange: 'transform, opacity'
         }}
       >
-        <HexPattern variant="gradient-vibrant" opacity={0.18} />
+        <HexPattern variant="burgundy" opacity={0.06} />
         <button
           onClick={onClose}
           style={{
@@ -88,31 +88,34 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
             width: '36px',
             height: '36px',
             borderRadius: '50%',
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-            color: '#FFFFFF',
+            backgroundColor: '#EBE5DC',
+            color: '#121418',
+            border: 'none',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease'
           }}
           aria-label="Close"
         >
           <X size={18} />
         </button>
 
-        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-          <BrandLogo variant="monogram-white" height={32} />
+        <div style={{ textAlign: 'center', marginBottom: '1.5rem', position: 'relative', zIndex: 1 }}>
+          <BrandLogo variant="full-burgundy" height={34} />
           <h3
             style={{
               fontFamily: 'var(--font-serif)',
               fontSize: '1.85rem',
               marginTop: '0.75rem',
               marginBottom: '0.25rem',
-              color: '#FFFFFF'
+              color: '#121418'
             }}
           >
             {lang === 'es' ? 'Agendar Consulta Privada' : 'Schedule Private Advisory'}
           </h3>
-          <p style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.7)' }}>
+          <p style={{ fontSize: '0.85rem', color: '#5A606D' }}>
             {lang === 'es'
               ? 'Atención personalizada con el equipo ejecutivo de New Era Real Estate.'
               : 'Direct consultation with our principal broker and advisory specialists.'}
@@ -123,17 +126,19 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
           <div
             style={{
               padding: '2rem 1.5rem',
-              backgroundColor: 'rgba(114, 22, 35, 0.35)',
-              border: '1px solid var(--color-orange-accent)',
-              borderRadius: 'var(--radius-xs)',
-              textAlign: 'center'
+              backgroundColor: 'rgba(102, 14, 26, 0.06)',
+              border: '1.5px solid #660E1A',
+              borderRadius: 'var(--radius-md)',
+              textAlign: 'center',
+              position: 'relative',
+              zIndex: 1
             }}
           >
-            <CheckCircle2 className="animate-success-icon" size={40} color="var(--color-orange-accent)" style={{ margin: '0 auto 0.75rem' }} />
-            <h4 style={{ fontSize: '1.25rem', color: '#FFFFFF', marginBottom: '0.5rem' }}>
+            <CheckCircle2 className="animate-success-icon" size={40} color="#660E1A" style={{ margin: '0 auto 0.75rem' }} />
+            <h4 style={{ fontSize: '1.25rem', color: '#121418', marginBottom: '0.5rem' }}>
               {lang === 'es' ? 'Consulta Agendada' : 'Advisory Request Received'}
             </h4>
-            <p style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.8)', marginBottom: '1.5rem' }}>
+            <p style={{ fontSize: '0.85rem', color: '#5A606D', marginBottom: '1.5rem' }}>
               {lang === 'es'
                 ? 'Nos pondremos en contacto contigo para confirmar el horario de tu cita.'
                 : 'A New Era representative will confirm your consultation details promptly.'}
@@ -147,9 +152,9 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
             </button>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', position: 'relative', zIndex: 1 }}>
             <div>
-              <label style={{ fontSize: '0.75rem', fontWeight: 600, color: 'rgba(255,255,255,0.7)', display: 'block', marginBottom: '0.3rem' }}>
+              <label style={{ fontSize: '0.75rem', fontWeight: 600, color: '#5A606D', display: 'block', marginBottom: '0.3rem' }}>
                 {lang === 'es' ? 'Servicio de Interés' : 'Area of Advisory'}
               </label>
               <select
@@ -158,17 +163,17 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 style={{
                   width: '100%',
                   padding: '0.8rem',
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  color: '#FFFFFF',
-                  borderRadius: 'var(--radius-xs)',
+                  backgroundColor: '#FFFFFF',
+                  border: '1.5px solid #DCD5C9',
+                  color: '#121418',
+                  borderRadius: 'var(--radius-sm)',
                   fontSize: '0.85rem'
                 }}
               >
-                <option value="Buying a Home" style={{ background: '#121418' }}>Buying a Home / Relocation</option>
-                <option value="Selling a Property" style={{ background: '#121418' }}>Selling a Property / Valuation</option>
-                <option value="Down Payment Assistance" style={{ background: '#121418' }}>Down Payment Assistance / ITIN</option>
-                <option value="Commercial / Investment" style={{ background: '#121418' }}>Commercial / Investment Portfolios</option>
+                <option value="Buying a Home" style={{ background: '#FFFFFF', color: '#121418' }}>Buying a Home / Relocation</option>
+                <option value="Selling a Property" style={{ background: '#FFFFFF', color: '#121418' }}>Selling a Property / Valuation</option>
+                <option value="Down Payment Assistance" style={{ background: '#FFFFFF', color: '#121418' }}>Down Payment Assistance / ITIN</option>
+                <option value="Commercial / Investment" style={{ background: '#FFFFFF', color: '#121418' }}>Commercial / Investment Portfolios</option>
               </select>
             </div>
 
@@ -182,10 +187,10 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 style={{
                   width: '100%',
                   padding: '0.8rem',
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  color: '#FFFFFF',
-                  borderRadius: 'var(--radius-xs)',
+                  backgroundColor: '#FFFFFF',
+                  border: '1.5px solid #DCD5C9',
+                  color: '#121418',
+                  borderRadius: 'var(--radius-sm)',
                   fontSize: '0.85rem'
                 }}
               />
@@ -201,10 +206,10 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 style={{
                   width: '100%',
                   padding: '0.8rem',
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  color: '#FFFFFF',
-                  borderRadius: 'var(--radius-xs)',
+                  backgroundColor: '#FFFFFF',
+                  border: '1.5px solid #DCD5C9',
+                  color: '#121418',
+                  borderRadius: 'var(--radius-sm)',
                   fontSize: '0.85rem'
                 }}
               />
@@ -217,10 +222,10 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 style={{
                   width: '100%',
                   padding: '0.8rem',
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  color: '#FFFFFF',
-                  borderRadius: 'var(--radius-xs)',
+                  backgroundColor: '#FFFFFF',
+                  border: '1.5px solid #DCD5C9',
+                  color: '#121418',
+                  borderRadius: 'var(--radius-sm)',
                   fontSize: '0.85rem'
                 }}
               />
@@ -228,7 +233,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
               <div>
-                <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.6)', display: 'block', marginBottom: '0.2rem' }}>
+                <label style={{ fontSize: '0.7rem', color: '#5A606D', display: 'block', marginBottom: '0.2rem', fontWeight: 600 }}>
                   Preferred Date
                 </label>
                 <input
@@ -238,17 +243,17 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                   style={{
                     width: '100%',
                     padding: '0.75rem',
-                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    color: '#FFFFFF',
-                    borderRadius: 'var(--radius-xs)',
+                    backgroundColor: '#FFFFFF',
+                    border: '1.5px solid #DCD5C9',
+                    color: '#121418',
+                    borderRadius: 'var(--radius-sm)',
                     fontSize: '0.85rem'
                   }}
                 />
               </div>
 
               <div>
-                <label style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.6)', display: 'block', marginBottom: '0.2rem' }}>
+                <label style={{ fontSize: '0.7rem', color: '#5A606D', display: 'block', marginBottom: '0.2rem', fontWeight: 600 }}>
                   Preferred Time
                 </label>
                 <select
@@ -257,17 +262,17 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                   style={{
                     width: '100%',
                     padding: '0.75rem',
-                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    color: '#FFFFFF',
-                    borderRadius: 'var(--radius-xs)',
+                    backgroundColor: '#FFFFFF',
+                    border: '1.5px solid #DCD5C9',
+                    color: '#121418',
+                    borderRadius: 'var(--radius-sm)',
                     fontSize: '0.85rem'
                   }}
                 >
-                  <option value="9:00 AM" style={{ background: '#121418' }}>9:00 AM</option>
-                  <option value="11:00 AM" style={{ background: '#121418' }}>11:00 AM</option>
-                  <option value="2:00 PM" style={{ background: '#121418' }}>2:00 PM</option>
-                  <option value="4:30 PM" style={{ background: '#121418' }}>4:30 PM</option>
+                  <option value="9:00 AM" style={{ background: '#FFFFFF', color: '#121418' }}>9:00 AM</option>
+                  <option value="11:00 AM" style={{ background: '#FFFFFF', color: '#121418' }}>11:00 AM</option>
+                  <option value="2:00 PM" style={{ background: '#FFFFFF', color: '#121418' }}>2:00 PM</option>
+                  <option value="4:30 PM" style={{ background: '#FFFFFF', color: '#121418' }}>4:30 PM</option>
                 </select>
               </div>
             </div>
@@ -278,7 +283,6 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
               style={{
                 width: '100%',
                 justifyContent: 'center',
-                backgroundColor: 'var(--color-orange-accent)',
                 marginTop: '0.5rem',
                 padding: '0.9rem'
               }}

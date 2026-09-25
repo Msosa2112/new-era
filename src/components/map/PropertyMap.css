@@ -85,7 +85,7 @@
 .leaflet-popup-content-wrapper {
   padding: 0 !important;
   background: #FFFFFF !important;
-  border-radius: 14px !important;
+  border-radius: var(--radius-md) !important;
   box-shadow: 0 20px 45px -8px rgba(17, 24, 39, 0.32), 0 0 0 1px rgba(0, 0, 0, 0.08) !important;
   overflow: hidden !important;
 }
@@ -130,7 +130,7 @@
   -webkit-backdrop-filter: blur(16px);
   color: var(--color-charcoal-900, #121418);
   border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 12px;
   font-weight: 600;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -158,7 +158,7 @@
   display: flex;
   flex-direction: column;
   background: #FFFFFF;
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   cursor: pointer;
   width: 310px;
@@ -392,7 +392,7 @@
 /* Google Maps InfoWindow Luxury Polish */
 .gm-style-iw.gm-style-iw-c {
   padding: 0 !important;
-  border-radius: 14px !important;
+  border-radius: var(--radius-md) !important;
   box-shadow: 0 20px 45px -8px rgba(10, 11, 14, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.08) !important;
   background: #FFFFFF !important;
   max-width: 320px !important;
@@ -489,7 +489,7 @@ button.gm-ui-hover-effect {
   left: 0;
   z-index: 950;
   background: #FFFFFF;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   box-shadow: 0 16px 36px rgba(10, 11, 14, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
   padding: 12px;
   min-width: 230px;
@@ -522,7 +522,7 @@ button.gm-ui-hover-effect {
   background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   border: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: 0 10px 30px rgba(12, 13, 16, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04);
   transition: box-shadow 200ms ease;
@@ -538,7 +538,7 @@ button.gm-ui-hover-effect {
   flex: 1 1 240px;
   min-width: 170px;
   background: #F8F6F2;
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   padding: 7px 14px;
   border: 1px solid rgba(0, 0, 0, 0.06);
   transition: all 180ms ease;
@@ -569,7 +569,7 @@ button.gm-ui-hover-effect {
   align-items: center;
   gap: 5px;
   padding: 7px 13px;
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   font-size: 0.8rem;
   font-weight: 600;
   border: 1px solid rgba(0, 0, 0, 0.09);
@@ -600,7 +600,7 @@ button.gm-ui-hover-effect {
   align-items: center;
   gap: 6px;
   padding: 8px 16px;
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   font-size: 0.82rem;
   font-weight: 700;
   background: var(--color-burgundy-primary, #660E1A);
@@ -659,7 +659,7 @@ button.gm-ui-hover-effect {
     left: 10px;
     right: 10px;
     padding: 6px 10px;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     flex-wrap: nowrap;
     overflow-x: auto;
     scrollbar-width: none;

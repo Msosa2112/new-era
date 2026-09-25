@@ -36,7 +36,7 @@ export const BROKERAGE_DATA: BrokerageInfo = {
     fullFormatted: '6501 Shepherdsville Road, Suite 119, Louisville, KY 40219'
   },
   officeHours: 'Monday - Friday: 9:00 AM - 5:30 PM | Saturday & Sunday: By Appointment',
-  licenseNote: 'Licensed Real Estate Brokerage in Kentucky and Indiana. Equal Housing Opportunity.'
+  licenseNote: 'Licensed Real Estate Brokerage in Kentucky. Equal Housing Opportunity.'
 };
 
 export const AGENTS_DATA: Agent[] = ${JSON.stringify(activeAgents, null, 2)};

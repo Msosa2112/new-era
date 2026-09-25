@@ -21,6 +21,7 @@ interface HomePageProps {
   onSelectAgent: (agent: Agent) => void;
   onNavigate: (page: string) => void;
   onOpenConsultation: () => void;
+  onOpenJoinModal?: () => void;
   lang: 'en' | 'es';
 }
 
@@ -29,6 +30,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   onSelectAgent,
   onNavigate,
   onOpenConsultation,
+  onOpenJoinModal,
   lang
 }) => {
   const mainRef = useScrollReveal<HTMLElement>();
@@ -55,6 +57,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           const searchSection = document.getElementById('search-chapter');
           searchSection?.scrollIntoView({ behavior: 'smooth' });
         }}
+        onOpenJoinModal={onOpenJoinModal}
         lang={lang}
       />
 
@@ -140,15 +143,15 @@ export const HomePage: React.FC<HomePageProps> = ({
       <section
         style={{
           position: 'relative',
-          backgroundColor: 'var(--color-charcoal-950)',
-          color: '#FFFFFF',
+          backgroundColor: 'var(--bg-secondary)',
+          color: 'var(--text-primary)',
           padding: '4.5rem 0',
           overflow: 'hidden',
-          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
+          borderTop: '1px solid var(--border-subtle)',
+          borderBottom: '1px solid var(--border-subtle)'
         }}
       >
-        <HexPattern variant="gradient-burgundy" opacity={0.16} maskFade="radial-center" />
+        <HexPattern variant="burgundy" opacity={0.06} maskFade="radial-center" />
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <div
             style={{

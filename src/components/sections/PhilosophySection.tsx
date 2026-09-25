@@ -87,25 +87,27 @@ export const PhilosophySection: React.FC<PhilosophySectionProps> = ({ lang, onEx
     <section
       className="section-padding"
       style={{
-        backgroundColor: 'var(--color-charcoal-950)',
-        color: '#FFFFFF',
+        backgroundColor: 'var(--bg-primary)',
+        color: 'var(--text-primary)',
         position: 'relative',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        borderTop: '1px solid var(--border-subtle)',
+        borderBottom: '1px solid var(--border-subtle)'
       }}
     >
       {/* Official Brand Vector Pattern Background */}
-      <HexPattern variant="gradient-burgundy" opacity={0.22} maskFade="none" />
+      <HexPattern variant="burgundy" opacity={0.07} maskFade="none" />
 
       <div className="container" style={{ position: 'relative', zIndex: 10 }}>
         {/* Section Header */}
         <div style={{ maxWidth: '800px', marginBottom: '4rem' }}>
-          <span className="display-subtitle">
+          <span className="display-subtitle" style={{ color: '#660E1A' }}>
             {lang === 'es' ? 'LA FILOSOFÍA NEW ERA' : 'THE PHILOSOPHY'}
           </span>
           <h2
             className="display-title"
             style={{
-              color: '#FFFFFF',
+              color: '#121418',
               marginTop: '0.75rem',
               marginBottom: '1.25rem'
             }}
@@ -113,14 +115,14 @@ export const PhilosophySection: React.FC<PhilosophySectionProps> = ({ lang, onEx
             {lang === 'es' ? (
               <>
                 BIENES RAÍCES, <br />
-                <span style={{ color: 'var(--color-orange-accent)', fontStyle: 'italic' }}>
+                <span style={{ color: '#660E1A', fontStyle: 'italic' }}>
                   REIMAGINADOS.
                 </span>
               </>
             ) : (
               <>
                 REAL ESTATE, <br />
-                <span style={{ color: 'var(--color-orange-accent)', fontStyle: 'italic' }}>
+                <span style={{ color: '#660E1A', fontStyle: 'italic' }}>
                   REIMAGINED.
                 </span>
               </>
@@ -128,7 +130,7 @@ export const PhilosophySection: React.FC<PhilosophySectionProps> = ({ lang, onEx
           </h2>
           <p
             className="editorial-lead"
-            style={{ color: 'rgba(255, 255, 255, 0.75)' }}
+            style={{ color: '#5A606D' }}
           >
             {lang === 'es'
               ? 'No vendemos metros cuadrados con discursos convencionales. Construimos una trayectoria estructurada de transformación que conecta la arquitectura y los datos con decisiones que trascienden.'
@@ -155,16 +157,20 @@ export const PhilosophySection: React.FC<PhilosophySectionProps> = ({ lang, onEx
                 style={{
                   padding: '1.25rem 1rem',
                   backgroundColor: isActive
-                    ? 'rgba(114, 22, 35, 0.4)'
-                    : 'rgba(255, 255, 255, 0.03)',
+                    ? '#660E1A'
+                    : '#FFFFFF',
                   border: isActive
-                    ? '1px solid var(--color-orange-accent)'
-                    : '1px solid rgba(255, 255, 255, 0.08)',
-                  borderRadius: 'var(--radius-xs)',
+                    ? '1px solid #660E1A'
+                    : '1px solid rgba(102, 14, 26, 0.15)',
+                  borderRadius: 'var(--radius-sm)',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '0.75rem',
                   textAlign: 'left',
+                  cursor: 'pointer',
+                  boxShadow: isActive
+                    ? '0 8px 24px rgba(102, 14, 26, 0.22)'
+                    : '0 2px 8px rgba(0, 0, 0, 0.03)',
                   transition: 'all var(--transition-normal)'
                 }}
               >
@@ -180,14 +186,14 @@ export const PhilosophySection: React.FC<PhilosophySectionProps> = ({ lang, onEx
                       fontFamily: 'monospace',
                       fontSize: '0.75rem',
                       fontWeight: 700,
-                      color: isActive ? 'var(--color-orange-accent)' : 'rgba(255, 255, 255, 0.4)'
+                      color: isActive ? '#FFFFFF' : '#660E1A'
                     }}
                   >
                     {s.num}
                   </span>
                   <Icon
                     size={18}
-                    color={isActive ? 'var(--color-orange-accent)' : 'rgba(255, 255, 255, 0.4)'}
+                    color={isActive ? '#FFFFFF' : '#660E1A'}
                   />
                 </div>
 
@@ -195,9 +201,9 @@ export const PhilosophySection: React.FC<PhilosophySectionProps> = ({ lang, onEx
                   <h4
                     style={{
                       fontSize: '0.95rem',
-                      fontWeight: 600,
-                      color: isActive ? '#FFFFFF' : 'rgba(255, 255, 255, 0.8)',
-                      letterSpacing: '0.04em'
+                      fontWeight: 700,
+                      color: isActive ? '#FFFFFF' : '#121418',
+                      letterSpacing: '0.02em'
                     }}
                   >
                     {lang === 'es' ? s.titleEs : s.titleEn}
@@ -205,7 +211,7 @@ export const PhilosophySection: React.FC<PhilosophySectionProps> = ({ lang, onEx
                   <span
                     style={{
                       fontSize: '0.7rem',
-                      color: isActive ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.4)',
+                      color: isActive ? 'rgba(255, 255, 255, 0.9)' : '#5A606D',
                       display: 'block',
                       marginTop: '0.2rem'
                     }}
@@ -221,10 +227,10 @@ export const PhilosophySection: React.FC<PhilosophySectionProps> = ({ lang, onEx
         {/* Detailed Active Step Focus Card */}
         <div
           style={{
-            backgroundColor: 'rgba(27, 30, 36, 0.7)',
-            backdropFilter: 'blur(16px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            borderRadius: 'var(--radius-xs)',
+            backgroundColor: '#FFFFFF',
+            border: '1px solid rgba(102, 14, 26, 0.15)',
+            borderRadius: 'var(--radius-md)',
+            boxShadow: '0 12px 36px rgba(102, 14, 26, 0.08)',
             padding: 'clamp(2rem, 4vw, 3.5rem)',
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
@@ -234,10 +240,10 @@ export const PhilosophySection: React.FC<PhilosophySectionProps> = ({ lang, onEx
             overflow: 'hidden'
           }}
         >
-          <HexPattern variant="gradient-gold" opacity={0.18} maskFade="radial-center" />
+          <HexPattern variant="burgundy" opacity={0.05} maskFade="radial-center" />
           <div style={{ position: 'relative', zIndex: 1 }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-              <span className="tag-badge tag-badge-accent">
+              <span className="tag-badge tag-badge-accent" style={{ backgroundColor: 'rgba(102, 14, 26, 0.08)', color: '#660E1A', border: '1px solid rgba(102, 14, 26, 0.2)' }}>
                 STAGE {steps[activeStep].num} // {lang === 'es' ? 'TRANSFORMACIÓN' : 'TRANSFORMATION'}
               </span>
             </div>
@@ -246,21 +252,21 @@ export const PhilosophySection: React.FC<PhilosophySectionProps> = ({ lang, onEx
               style={{
                 fontFamily: 'var(--font-serif)',
                 fontSize: '2.25rem',
-                color: '#FFFFFF',
+                color: '#121418',
                 marginBottom: '1rem'
               }}
             >
               {lang === 'es' ? steps[activeStep].titleEs : steps[activeStep].titleEn} —{' '}
-              <span style={{ color: 'var(--color-orange-accent)', fontStyle: 'italic' }}>
+              <span style={{ color: '#660E1A', fontStyle: 'italic' }}>
                 {lang === 'es' ? steps[activeStep].subEs : steps[activeStep].subEn}
               </span>
             </h3>
 
             <p
               style={{
-                fontSize: '1.15rem',
+                fontSize: '1.1rem',
                 lineHeight: 1.7,
-                color: 'rgba(255, 255, 255, 0.85)',
+                color: '#5A606D',
                 marginBottom: '2rem'
               }}
             >
@@ -270,7 +276,17 @@ export const PhilosophySection: React.FC<PhilosophySectionProps> = ({ lang, onEx
             <button
               onClick={onExplore}
               className="btn-primary"
-              style={{ padding: '0.9rem 1.8rem', fontSize: '0.8rem' }}
+              style={{
+                padding: '0.9rem 1.8rem',
+                fontSize: '0.8rem',
+                backgroundColor: '#660E1A',
+                color: '#FFFFFF',
+                borderRadius: 'var(--radius-sm)',
+                border: '1px solid #660E1A',
+                boxShadow: '0 4px 14px rgba(102, 14, 26, 0.2)',
+                cursor: 'pointer',
+                fontWeight: 700
+              }}
             >
               <span>{lang === 'es' ? 'Comenzar Tu Proceso' : 'Begin Your Transformation'}</span>
               <ArrowRight size={15} />
@@ -280,16 +296,17 @@ export const PhilosophySection: React.FC<PhilosophySectionProps> = ({ lang, onEx
           <div
             style={{
               padding: '2rem',
-              backgroundColor: 'rgba(12, 13, 16, 0.6)',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              borderRadius: 'var(--radius-xs)'
+              backgroundColor: '#FAF7F2',
+              border: '1px solid rgba(102, 14, 26, 0.12)',
+              borderRadius: 'var(--radius-md)'
             }}
           >
             <span
               style={{
                 fontFamily: 'monospace',
                 fontSize: '0.75rem',
-                color: 'var(--color-orange-accent)',
+                color: '#660E1A',
+                fontWeight: 700,
                 letterSpacing: '0.15em',
                 display: 'block',
                 marginBottom: '0.75rem'
@@ -298,21 +315,21 @@ export const PhilosophySection: React.FC<PhilosophySectionProps> = ({ lang, onEx
               NEW ERA SYSTEM ARCHITECTURE
             </span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '0.5rem' }}>
-                <span style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)' }}>Market Region</span>
-                <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#FFFFFF' }}>Greater Louisville & Southern Indiana</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(102, 14, 26, 0.08)', paddingBottom: '0.5rem' }}>
+                <span style={{ fontSize: '0.85rem', color: '#5A606D' }}>Market Region</span>
+                <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#121418' }}>Greater Louisville & Kentucky</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '0.5rem' }}>
-                <span style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)' }}>Representation</span>
-                <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#FFFFFF' }}>Bespoke Buyer & Seller Advocacy</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(102, 14, 26, 0.08)', paddingBottom: '0.5rem' }}>
+                <span style={{ fontSize: '0.85rem', color: '#5A606D' }}>Representation</span>
+                <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#121418' }}>Bespoke Buyer & Seller Advocacy</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '0.5rem' }}>
-                <span style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)' }}>Financing Pathways</span>
-                <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#FFFFFF' }}>Conventional, FHA, VA, Down Payment Assist & ITIN</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(102, 14, 26, 0.08)', paddingBottom: '0.5rem' }}>
+                <span style={{ fontSize: '0.85rem', color: '#5A606D' }}>Financing Pathways</span>
+                <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#121418' }}>Conventional, FHA, VA, Down Payment Assist & ITIN</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)' }}>Executive Direction</span>
-                <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#FFFFFF' }}>Yeilen Contreras, Principal Broker</span>
+                <span style={{ fontSize: '0.85rem', color: '#5A606D' }}>Executive Direction</span>
+                <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#121418' }}>Yeilen Contreras, Principal Broker</span>
               </div>
             </div>
           </div>

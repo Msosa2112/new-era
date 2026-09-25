@@ -126,7 +126,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
           width: '100%',
           maxWidth: '1240px',
           backgroundColor: 'var(--bg-surface)',
-          borderRadius: 'var(--radius-sm)',
+          borderRadius: 'var(--radius-md)',
           overflow: 'hidden',
           boxShadow: 'var(--shadow-dark)',
           position: 'relative',
@@ -164,7 +164,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
               alignItems: 'center',
               backgroundColor: 'var(--bg-secondary)',
               padding: '3px',
-              borderRadius: '8px',
+              borderRadius: 'var(--radius-md)',
               border: '1px solid var(--border-subtle)',
               gap: '4px'
             }}
@@ -177,7 +177,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                 alignItems: 'center',
                 gap: '5px',
                 padding: '6px 12px',
-                borderRadius: '6px',
+                borderRadius: 'var(--radius-sm)',
                 border: 'none',
                 fontSize: '0.8rem',
                 fontWeight: 700,
@@ -199,7 +199,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                 alignItems: 'center',
                 gap: '5px',
                 padding: '6px 12px',
-                borderRadius: '6px',
+                borderRadius: 'var(--radius-sm)',
                 border: 'none',
                 fontSize: '0.8rem',
                 fontWeight: 700,
@@ -268,7 +268,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                   backdropFilter: 'blur(8px)',
                   color: '#FFFFFF',
                   padding: '6px 12px',
-                  borderRadius: '6px',
+                  borderRadius: 'var(--radius-sm)',
                   fontSize: '0.78rem',
                   fontWeight: 600,
                   display: 'flex',
@@ -460,7 +460,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                   gap: '1rem',
                   padding: '1.5rem',
                   backgroundColor: 'var(--bg-secondary)',
-                  borderRadius: 'var(--radius-xs)',
+                  borderRadius: 'var(--radius-md)',
                   border: '1px solid var(--border-subtle)'
                 }}
               >
@@ -557,7 +557,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                 style={{
                   padding: '1.75rem',
                   backgroundColor: 'var(--bg-secondary)',
-                  borderRadius: 'var(--radius-xs)',
+                  borderRadius: 'var(--radius-md)',
                   border: '1px solid var(--border-subtle)'
                 }}
               >
@@ -621,7 +621,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                   style={{
                     padding: '2rem',
                     border: '1px solid var(--border-subtle)',
-                    borderRadius: 'var(--radius-xs)',
+                    borderRadius: 'var(--radius-md)',
                     backgroundColor: 'var(--bg-surface)',
                     boxShadow: 'var(--shadow-sm)'
                   }}
@@ -690,24 +690,25 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
               <div
                 style={{
                   padding: '2rem',
-                  backgroundColor: 'var(--color-charcoal-950)',
-                  color: '#FFFFFF',
-                  borderRadius: 'var(--radius-xs)',
-                  boxShadow: 'var(--shadow-lg)',
+                  backgroundColor: 'var(--bg-surface)',
+                  color: 'var(--text-primary)',
+                  borderRadius: 'var(--radius-md)',
+                  border: '1px solid var(--border-subtle)',
+                  boxShadow: 'var(--shadow-sm)',
                   position: 'relative',
                   overflow: 'hidden'
                 }}
               >
-                <HexPattern variant="gradient-burgundy" opacity={0.16} />
+                <HexPattern variant="burgundy" opacity={0.05} />
                 <div style={{ position: 'relative', zIndex: 1 }}>
                   <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                    <Calendar size={16} color="var(--color-orange-accent)" />
-                    <span className="display-subtitle" style={{ color: 'var(--color-orange-accent)', margin: 0 }}>
+                    <Calendar size={16} color="var(--color-burgundy-primary)" />
+                    <span className="display-subtitle" style={{ color: 'var(--color-burgundy-primary)', margin: 0 }}>
                       {lang === 'es' ? 'RECORRIDO PRIVADO' : 'SCHEDULE PRIVATE TOUR'}
                     </span>
                   </div>
 
-                <p style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '1.5rem' }}>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
                   {lang === 'es'
                     ? 'Coordina una visita confidencial con el equipo de New Era Real Estate.'
                     : 'Experience this residence with an architectural preview tour.'}
@@ -717,17 +718,17 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                   <div
                     style={{
                       padding: '1.5rem',
-                      backgroundColor: 'rgba(114, 22, 35, 0.3)',
-                      border: '1px solid var(--color-orange-accent)',
-                      borderRadius: 'var(--radius-xs)',
+                      backgroundColor: 'rgba(102, 14, 26, 0.06)',
+                      border: '1.5px solid var(--color-burgundy-primary)',
+                      borderRadius: 'var(--radius-md)',
                       textAlign: 'center'
                     }}
                   >
-                    <CheckCircle2 className="animate-success-icon" size={38} color="var(--color-orange-accent)" style={{ margin: '0 auto 0.75rem' }} />
-                    <h4 style={{ color: '#FFFFFF', marginBottom: '0.35rem' }}>
+                    <CheckCircle2 className="animate-success-icon" size={38} color="var(--color-burgundy-primary)" style={{ margin: '0 auto 0.75rem' }} />
+                    <h4 style={{ color: 'var(--text-primary)', marginBottom: '0.35rem' }}>
                       {lang === 'es' ? 'Visita Solicitada' : 'Tour Requested'}
                     </h4>
-                    <p style={{ fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.8)' }}>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
                       {lang === 'es'
                         ? 'Un asesor de New Era confirmará tu cita en los próximos 15 minutos.'
                         : 'A New Era advisor will confirm your private itinerary shortly.'}
@@ -747,10 +748,12 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                             padding: '0.6rem',
                             fontSize: '0.75rem',
                             fontWeight: 600,
-                            borderRadius: 'var(--radius-xs)',
-                            border: tourType === type ? '1px solid var(--color-orange-accent)' : '1px solid rgba(255, 255, 255, 0.15)',
-                            backgroundColor: tourType === type ? 'rgba(230, 74, 42, 0.15)' : 'transparent',
-                            color: '#FFFFFF'
+                            borderRadius: 'var(--radius-sm)',
+                            border: tourType === type ? '1.5px solid var(--color-burgundy-primary)' : '1px solid var(--border-subtle)',
+                            backgroundColor: tourType === type ? 'rgba(102, 14, 26, 0.08)' : '#FFFFFF',
+                            color: tourType === type ? 'var(--color-burgundy-primary)' : 'var(--text-secondary)',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease'
                           }}
                         >
                           {type}
@@ -759,7 +762,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                     </div>
 
                     <div>
-                      <label style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.7)', display: 'block', marginBottom: '0.3rem' }}>
+                      <label style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '0.3rem', fontWeight: 600 }}>
                         Preferred Date
                       </label>
                       <input
@@ -770,10 +773,11 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                         style={{
                           width: '100%',
                           padding: '0.75rem',
-                          backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                          border: '1px solid rgba(255, 255, 255, 0.2)',
-                          color: '#FFFFFF',
-                          borderRadius: 'var(--radius-xs)'
+                          backgroundColor: 'var(--bg-primary)',
+                          border: '1px solid var(--border-subtle)',
+                          color: 'var(--text-primary)',
+                          borderRadius: 'var(--radius-sm)',
+                          fontSize: '0.85rem'
                         }}
                       />
                     </div>
@@ -788,10 +792,11 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                         style={{
                           width: '100%',
                           padding: '0.75rem',
-                          backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                          border: '1px solid rgba(255, 255, 255, 0.2)',
-                          color: '#FFFFFF',
-                          borderRadius: 'var(--radius-xs)'
+                          backgroundColor: 'var(--bg-primary)',
+                          border: '1px solid var(--border-subtle)',
+                          color: 'var(--text-primary)',
+                          borderRadius: 'var(--radius-sm)',
+                          fontSize: '0.85rem'
                         }}
                       />
                     </div>
@@ -806,10 +811,11 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                         style={{
                           width: '100%',
                           padding: '0.75rem',
-                          backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                          border: '1px solid rgba(255, 255, 255, 0.2)',
-                          color: '#FFFFFF',
-                          borderRadius: 'var(--radius-xs)'
+                          backgroundColor: 'var(--bg-primary)',
+                          border: '1px solid var(--border-subtle)',
+                          color: 'var(--text-primary)',
+                          borderRadius: 'var(--radius-sm)',
+                          fontSize: '0.85rem'
                         }}
                       />
                     </div>
@@ -824,10 +830,11 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                         style={{
                           width: '100%',
                           padding: '0.75rem',
-                          backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                          border: '1px solid rgba(255, 255, 255, 0.2)',
-                          color: '#FFFFFF',
-                          borderRadius: 'var(--radius-xs)'
+                          backgroundColor: 'var(--bg-primary)',
+                          border: '1px solid var(--border-subtle)',
+                          color: 'var(--text-primary)',
+                          borderRadius: 'var(--radius-sm)',
+                          fontSize: '0.85rem'
                         }}
                       />
                     </div>
@@ -838,8 +845,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                       style={{
                         width: '100%',
                         justifyContent: 'center',
-                        marginTop: '0.5rem',
-                        backgroundColor: 'var(--color-orange-accent)'
+                        marginTop: '0.5rem'
                       }}
                     >
                       <span>CONFIRM TOUR REQUEST</span>

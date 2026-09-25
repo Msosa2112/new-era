@@ -5,6 +5,7 @@ import { LivePatternOverlay } from './LivePatternOverlay';
 
 interface VectorHeroProps {
   onExploreProperties: () => void;
+  onOpenJoinModal?: () => void;
   lang: 'en' | 'es';
   className?: string;
   style?: React.CSSProperties;
@@ -12,6 +13,7 @@ interface VectorHeroProps {
 
 export const VectorHero: React.FC<VectorHeroProps> = ({
   onExploreProperties,
+  onOpenJoinModal,
   lang,
   className = '',
   style = {}
@@ -33,10 +35,10 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
     },
     {
       num: '03',
-      titleEn: 'Bipartite Licensure',
-      titleEs: 'Licencia Bipartita',
-      descEn: 'Kentucky & Southern Indiana',
-      descEs: 'Kentucky y Sur de Indiana'
+      titleEn: 'Kentucky Licensed',
+      titleEs: 'Licencia en Kentucky',
+      descEn: 'Greater Louisville & Regional Markets',
+      descEs: 'Greater Louisville y Mercados Regionales'
     },
     {
       num: '04',
@@ -57,25 +59,25 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
         flexDirection: 'column',
         justifyContent: 'space-between',
         overflow: 'hidden',
-        // LAYER 1: Deep luxurious burgundy / wine background
-        background: 'radial-gradient(ellipse at 50% 38%, #280c14 0%, #1a060b 55%, #0d0204 100%)',
-        color: '#FFFFFF',
+        // LAYER 1: Rich warm luxury cream background
+        background: 'radial-gradient(ellipse at 50% 38%, #FAF7F2 0%, #F5EEE2 55%, #EBE0D0 100%)',
+        color: '#121418',
         ...style
       }}
       className={`vector-hero-root ${className}`}
       aria-label="New Era Real Estate Brand Hero"
     >
-      {/* LAYER 2: FULL-FRAME MASTER GEOMETRIC PATTERN (100% CorelDRAW 8-quadrant vector master) */}
+      {/* LAYER 2: FULL-FRAME MASTER GEOMETRIC PATTERN (Brand Red / Burgundy Vector Pattern) */}
       <div className="hero-pattern-layer" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1 }}>
         <HexPattern
-          variant="gradient-gold"
-          opacity={0.24}
+          variant="burgundy"
+          opacity={0.16}
           mode="cover"
           maskFade="none"
         />
       </div>
 
-      {/* LAYER 4: SUBTLE LIVE PATTERN ILLUMINATION (Ambient isolated lines catching champagne-gold light) */}
+      {/* LAYER 4: SUBTLE LIVE PATTERN ILLUMINATION (Ambient isolated lines catching burgundy light) */}
       <div className="hero-live-overlay" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2 }}>
         <LivePatternOverlay />
       </div>
@@ -95,7 +97,7 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
           pointerEvents: 'none'
         }}
       >
-        {/* Official Brokerage Monogram (Zero Box / Floating Cleanly) */}
+        {/* Official Brokerage Monogram (Brand Burgundy) */}
         <div
           style={{
             display: 'inline-flex',
@@ -106,7 +108,7 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
             pointerEvents: 'auto'
           }}
         >
-          <BrandLogo variant="monogram-champagne" height={21} />
+          <BrandLogo variant="monogram-burgundy" height={21} />
           <span
             style={{
               fontFamily: 'var(--font-sans)',
@@ -114,8 +116,7 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
               fontWeight: 700,
               letterSpacing: '0.18em',
               textTransform: 'uppercase',
-              color: '#FFFFFF',
-              textShadow: '0 2px 8px rgba(0, 0, 0, 0.95)'
+              color: '#660E1A'
             }}
           >
             Official Brokerage
@@ -124,7 +125,7 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
       </div>
 
       {/* ========================================================================= */}
-      {/* CENTER STAGE: Commanding Champagne-Gold Brand Logo + Hero CTAs */}
+      {/* CENTER STAGE: Commanding Brand Burgundy Logo + Hero CTAs */}
       {/* ========================================================================= */}
       <div
         className="hero-center-stage container"
@@ -154,11 +155,11 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
           }}
         >
           {lang === 'es'
-            ? 'New Era Real Estate | Bienes Raíces y Asesoría Inmobiliaria en Louisville KY y Southern Indiana'
-            : 'New Era Real Estate | Premier Real Estate Brokerage in Louisville KY & Southern Indiana'}
+            ? 'New Era Real Estate | Bienes Raíces y Asesoría Inmobiliaria en Louisville y Kentucky'
+            : 'New Era Real Estate | Premier Real Estate Brokerage in Louisville & Greater Kentucky'}
         </h1>
 
-        {/* Large Commanding Champagne-Gold Brand Logo with Dark Backdrop */}
+        {/* Large Commanding Brand Burgundy Logo with Warm Light Halo */}
         <div
           className="hero-logo-stage"
           style={{
@@ -170,7 +171,7 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
             marginBottom: '2.5rem'
           }}
         >
-          {/* Soft Dark Radial Vignette to soften pattern behind logo */}
+          {/* Soft Warm Radial Vignette to soften pattern behind logo */}
           <div
             style={{
               position: 'absolute',
@@ -179,10 +180,10 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
               transform: 'translate(-50%, -50%)',
               width: 'min(880px, 96vw)',
               height: 'clamp(280px, 35vw, 420px)',
-              background: 'radial-gradient(ellipse at center, rgba(8, 2, 4, 0.92) 0%, rgba(18, 4, 8, 0.72) 48%, rgba(26, 6, 12, 0) 78%)',
+              background: 'radial-gradient(ellipse at center, rgba(255, 255, 255, 0.95) 0%, rgba(250, 247, 242, 0.7) 48%, rgba(245, 238, 226, 0) 78%)',
               pointerEvents: 'none',
               zIndex: 1,
-              filter: 'blur(24px)'
+              filter: 'blur(20px)'
             }}
           />
 
@@ -190,14 +191,14 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
             style={{
               position: 'relative',
               zIndex: 2,
-              filter: 'drop-shadow(0 18px 60px rgba(0, 0, 0, 0.98))',
+              filter: 'drop-shadow(0 12px 36px rgba(102, 14, 26, 0.12))',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center'
             }}
           >
             <BrandLogo
-              variant="full-champagne"
+              variant="full-burgundy"
               height="clamp(165px, 21vw, 245px)"
               style={{
                 maxWidth: '92vw'
@@ -220,15 +221,22 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
           }}
         >
           <button
-            onClick={onExploreProperties}
+            onClick={onOpenJoinModal || onExploreProperties}
             className="btn-primary"
             style={{
-              padding: '1rem 2rem',
+              padding: '1rem 2.2rem',
               fontSize: '0.84rem',
-              letterSpacing: '0.12em'
+              letterSpacing: '0.12em',
+              backgroundColor: '#660E1A',
+              color: '#FFFFFF',
+              borderRadius: '6px',
+              border: '1px solid #660E1A',
+              boxShadow: '0 8px 24px rgba(102, 14, 26, 0.22)',
+              cursor: 'pointer',
+              fontWeight: 700
             }}
           >
-            <span>{lang === 'es' ? 'EXPLORAR PROPIEDADES' : 'FIND YOUR NEXT ERA'}</span>
+            <span>{lang === 'es' ? 'UNIRSE A NEW ERA' : 'JOIN TO NEW ERA'}</span>
           </button>
 
           <button
@@ -236,11 +244,26 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
               const searchSection = document.getElementById('search-chapter');
               searchSection?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="btn-outline btn-outline-white"
             style={{
-              padding: '1rem 1.75rem',
+              padding: '1rem 1.9rem',
               fontSize: '0.8rem',
-              letterSpacing: '0.1em'
+              letterSpacing: '0.1em',
+              backgroundColor: '#FFFFFF',
+              color: '#660E1A',
+              border: 'none',
+              borderRadius: '6px',
+              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.06)',
+              cursor: 'pointer',
+              fontWeight: 700,
+              transition: 'all 0.2s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#F5EFE6';
+              e.currentTarget.style.transform = 'translateY(-1px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#FFFFFF';
+              e.currentTarget.style.transform = 'none';
             }}
           >
             <span>{lang === 'es' ? 'BÚSQUEDA AVANZADA' : 'ADVANCED SEARCH'}</span>
@@ -271,8 +294,7 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
                     fontFamily: 'monospace',
                     fontSize: '0.78rem',
                     fontWeight: 800,
-                    color: 'var(--color-orange-accent)',
-                    textShadow: '0 0 10px rgba(102, 14, 26, 0.4)'
+                    color: '#660E1A'
                   }}
                 >
                   {pillar.num}
@@ -283,9 +305,8 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
                     fontFamily: 'var(--font-sans)',
                     fontSize: '0.84rem',
                     fontWeight: 700,
-                    color: '#FFFFFF',
-                    letterSpacing: '0.02em',
-                    textShadow: '0 2px 8px rgba(0, 0, 0, 0.95)'
+                    color: '#121418',
+                    letterSpacing: '0.02em'
                   }}
                 >
                   {lang === 'es' ? pillar.titleEs : pillar.titleEn}
@@ -295,9 +316,8 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
                 className="hero-pillar-desc"
                 style={{
                   fontSize: '0.72rem',
-                  color: 'rgba(255, 255, 255, 0.85)',
-                  lineHeight: 1.35,
-                  textShadow: '0 2px 6px rgba(0, 0, 0, 0.9)'
+                  color: '#5A606D',
+                  lineHeight: 1.35
                 }}
               >
                 {lang === 'es' ? pillar.descEs : pillar.descEn}
@@ -338,7 +358,7 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
           display: flex;
           flex-direction: column;
           gap: 0.2rem;
-          border-left: 3px solid var(--color-orange-accent);
+          border-left: 3px solid #660E1A;
           padding-left: 0.85rem;
           animation: heroElementSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
@@ -350,7 +370,7 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
         @keyframes heroBackgroundFade {
           0% {
             opacity: 0.65;
-            filter: brightness(0.7);
+            filter: brightness(0.95);
           }
           100% {
             opacity: 1;
@@ -384,15 +404,15 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
           0% {
             opacity: 0;
             transform: translateY(18px) scale(0.96);
-            filter: blur(6px) drop-shadow(0 0 0 rgba(222, 192, 161, 0));
+            filter: blur(6px) drop-shadow(0 0 0 rgba(102, 14, 26, 0));
           }
           50% {
-            filter: blur(0px) drop-shadow(0 0 28px rgba(222, 192, 161, 0.28));
+            filter: blur(0px) drop-shadow(0 8px 24px rgba(102, 14, 26, 0.18));
           }
           100% {
             opacity: 1;
             transform: translateY(0) scale(1);
-            filter: blur(0px) drop-shadow(0 18px 60px rgba(0, 0, 0, 0.98));
+            filter: blur(0px) drop-shadow(0 12px 36px rgba(102, 14, 26, 0.12));
           }
         }
 
@@ -426,7 +446,7 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
           }
           .hero-pillar-item {
             padding-left: 0.65rem !important;
-            border-left: 2px solid var(--color-orange-accent) !important;
+            border-left: 2px solid #660E1A !important;
           }
           .hero-pillar-desc {
             font-size: 0.68rem !important;

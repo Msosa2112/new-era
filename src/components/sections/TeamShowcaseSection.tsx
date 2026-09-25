@@ -145,36 +145,6 @@ export const TeamShowcaseSection: React.FC<TeamShowcaseSectionProps> = ({
               {lang === 'es' ? 'Las personas detrás de cada propiedad' : 'The people behind the property'}
             </h2>
           </div>
-
-          <button
-            onClick={() => onNavigate('agents')}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              fontSize: '0.8rem',
-              fontWeight: 600,
-              letterSpacing: '0.04em',
-              color: '#660E1A',
-              backgroundColor: 'transparent',
-              border: '1px solid rgba(102, 14, 26, 0.25)',
-              padding: '0.5rem 1.15rem',
-              borderRadius: '9999px',
-              cursor: 'pointer',
-              transition: 'all 0.25s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(102, 14, 26, 0.08)';
-              e.currentTarget.style.borderColor = '#660E1A';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
-              e.currentTarget.style.borderColor = 'rgba(102, 14, 26, 0.25)';
-            }}
-          >
-            <span>{lang === 'es' ? 'Ver todo el equipo' : 'View all roster'}</span>
-            <ArrowUpRight size={15} />
-          </button>
         </div>
       </div>
 
@@ -388,7 +358,7 @@ export const TeamShowcaseSection: React.FC<TeamShowcaseSectionProps> = ({
               width: '100%',
               maxWidth: '410px',
               backgroundColor: '#FFFFFF',
-              borderRadius: '16px',
+              borderRadius: 'var(--radius-md)',
               border: '1px solid rgba(0, 0, 0, 0.08)',
               boxShadow: '0 24px 50px -12px rgba(17, 24, 39, 0.1), 0 4px 16px rgba(0, 0, 0, 0.03)',
               padding: 'clamp(1.75rem, 3vw, 2.25rem)',
@@ -492,7 +462,7 @@ export const TeamShowcaseSection: React.FC<TeamShowcaseSectionProps> = ({
                 backgroundColor: '#660E1A',
                 color: '#FFFFFF',
                 padding: '0.65rem 1.15rem',
-                borderRadius: '8px',
+                borderRadius: 'var(--radius-sm)',
                 fontSize: '0.82rem',
                 fontWeight: 700,
                 letterSpacing: '0.03em',
@@ -913,7 +883,7 @@ export const TeamShowcaseSection: React.FC<TeamShowcaseSectionProps> = ({
           .team-active-card {
             max-width: clamp(200px, 50vw, 270px) !important;
             padding: 0.85rem 0.95rem !important;
-            border-radius: 12px !important;
+            border-radius: var(--radius-md) !important;
             box-shadow: 0 16px 36px -10px rgba(17, 24, 39, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
           }
           .team-card-name {
@@ -943,7 +913,7 @@ export const TeamShowcaseSection: React.FC<TeamShowcaseSectionProps> = ({
           .team-card-profile-btn {
             padding: 0.38rem 0.6rem !important;
             font-size: 0.72rem !important;
-            border-radius: 6px !important;
+            border-radius: var(--radius-sm) !important;
             margin-bottom: 0.55rem !important;
             box-shadow: 0 2px 8px rgba(102, 14, 26, 0.2) !important;
             gap: 0.3rem !important;

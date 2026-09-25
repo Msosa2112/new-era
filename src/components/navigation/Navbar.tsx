@@ -35,7 +35,6 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'map', labelEn: 'Map', labelEs: 'Mapa' },
     { id: 'buy', labelEn: 'Buy', labelEs: 'Comprar' },
     { id: 'sell', labelEn: 'Sell', labelEs: 'Vender' },
-    { id: 'agents', labelEn: 'Agents', labelEs: 'Agentes' },
     { id: 'about', labelEn: 'About', labelEs: 'Nosotros' },
     { id: 'contact', labelEn: 'Contact', labelEs: 'Contacto' },
   ];
@@ -60,15 +59,15 @@ export const Navbar: React.FC<NavbarProps> = ({
           zIndex: 1000,
           transition: 'padding 320ms var(--ease-out-fluid), background-color 320ms var(--ease-out-fluid), box-shadow 320ms var(--ease-out-fluid), border-color 320ms var(--ease-out-fluid)',
           backgroundColor: scrolled
-            ? 'rgba(10, 11, 14, 0.84)'
-            : 'rgba(10, 11, 14, 0.38)',
+            ? 'rgba(255, 255, 255, 0.94)'
+            : 'rgba(250, 247, 242, 0.84)',
           backdropFilter: 'blur(24px) saturate(180%)',
           WebkitBackdropFilter: 'blur(24px) saturate(180%)',
           borderBottom: scrolled
-            ? '1px solid rgba(255, 255, 255, 0.09)'
-            : '1px solid rgba(255, 255, 255, 0.05)',
+            ? '1px solid rgba(102, 14, 26, 0.12)'
+            : '1px solid rgba(102, 14, 26, 0.08)',
           boxShadow: scrolled
-            ? '0 12px 36px rgba(0, 0, 0, 0.45)'
+            ? '0 10px 30px rgba(102, 14, 26, 0.07)'
             : 'none',
           padding: scrolled ? '0.68rem 0' : '0.95rem 0'
         }}
@@ -89,7 +88,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             }}
             aria-label="New Era Real Estate Home"
           >
-            <BrandLogo variant="full-white" height={scrolled ? 34 : 38} />
+            <BrandLogo variant="full-burgundy" height={scrolled ? 34 : 38} />
           </button>
 
           {/* Desktop Navigation Links */}
@@ -109,10 +108,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onClick={() => handleLinkClick(link.id)}
                   style={{
                     fontSize: '0.82rem',
-                    fontWeight: 600,
+                    fontWeight: 700,
                     letterSpacing: '0.12em',
                     textTransform: 'uppercase',
-                    color: isActive ? 'var(--color-orange-accent)' : 'rgba(255, 255, 255, 0.9)',
+                    color: isActive ? '#660E1A' : '#121418',
                     position: 'relative',
                     padding: '0.4rem 0',
                     background: 'none',
@@ -120,11 +119,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                     cursor: 'pointer',
                     transition: 'color var(--transition-fast)'
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = '#FFFFFF')}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = '#660E1A')}
                   onMouseLeave={(e) =>
                     (e.currentTarget.style.color = isActive
-                      ? 'var(--color-orange-accent)'
-                      : 'rgba(255, 255, 255, 0.9)')
+                      ? '#660E1A'
+                      : '#121418')
                   }
                 >
                   {lang === 'es' ? link.labelEs : link.labelEn}
@@ -136,8 +135,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                         left: '50%',
                         transform: 'translateX(-50%)',
                         width: '20px',
-                        height: '2px',
-                        backgroundColor: 'var(--color-orange-accent)',
+                        height: '2.5px',
+                        backgroundColor: '#660E1A',
                         borderRadius: '2px'
                       }}
                     />
@@ -166,25 +165,25 @@ export const Navbar: React.FC<NavbarProps> = ({
                 fontSize: '0.75rem',
                 fontWeight: 700,
                 letterSpacing: '0.1em',
-                color: '#FFFFFF',
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                border: '1px solid rgba(255, 255, 255, 0.22)',
+                color: '#660E1A',
+                backgroundColor: 'rgba(102, 14, 26, 0.06)',
+                border: '1px solid rgba(102, 14, 26, 0.18)',
                 padding: '0.4rem 0.75rem',
-                borderRadius: '6px',
+                borderRadius: 'var(--radius-sm)',
                 cursor: 'pointer',
                 transition: 'all var(--transition-fast)'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.16)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.4)';
+                e.currentTarget.style.backgroundColor = 'rgba(102, 14, 26, 0.12)';
+                e.currentTarget.style.borderColor = '#660E1A';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.22)';
+                e.currentTarget.style.backgroundColor = 'rgba(102, 14, 26, 0.06)';
+                e.currentTarget.style.borderColor = 'rgba(102, 14, 26, 0.18)';
               }}
               aria-label="Toggle language"
             >
-              <Globe size={13} color="var(--color-orange-accent)" />
+              <Globe size={13} color="#660E1A" />
               <span>{lang === 'en' ? 'ES' : 'EN'}</span>
             </button>
 
@@ -196,16 +195,16 @@ export const Navbar: React.FC<NavbarProps> = ({
                 alignItems: 'center',
                 gap: '0.45rem',
                 fontSize: '0.82rem',
-                fontWeight: 600,
-                color: '#FFFFFF',
+                fontWeight: 700,
+                color: '#121418',
                 letterSpacing: '0.04em',
                 textDecoration: 'none',
-                transition: 'opacity 0.2s'
+                transition: 'color 0.2s'
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.85')}
-              onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#660E1A')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#121418')}
             >
-              <Phone size={14} color="var(--color-orange-accent)" />
+              <Phone size={14} color="#660E1A" />
               <span>(502) 500-0409</span>
             </a>
 
@@ -219,8 +218,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                 letterSpacing: '0.1em',
                 backgroundColor: '#660E1A',
                 color: '#FFFFFF',
-                borderRadius: '6px',
-                border: '1px solid rgba(255, 255, 255, 0.15)'
+                borderRadius: 'var(--radius-sm)',
+                border: '1px solid #660E1A',
+                boxShadow: '0 4px 14px rgba(102, 14, 26, 0.2)',
+                cursor: 'pointer',
+                fontWeight: 700
               }}
             >
               <span>{lang === 'es' ? 'Agendar Cita' : 'Book Advisory'}</span>
@@ -245,11 +247,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                 gap: '0.25rem',
                 fontSize: '0.72rem',
                 fontWeight: 700,
-                color: '#FFFFFF',
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                border: '1px solid rgba(255, 255, 255, 0.22)',
+                color: '#660E1A',
+                backgroundColor: 'rgba(102, 14, 26, 0.06)',
+                border: '1px solid rgba(102, 14, 26, 0.18)',
                 padding: '0.35rem 0.65rem',
-                borderRadius: '6px',
+                borderRadius: 'var(--radius-sm)',
                 cursor: 'pointer'
               }}
             >
@@ -264,10 +266,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                 justifyContent: 'center',
                 width: '40px',
                 height: '40px',
-                color: '#FFFFFF',
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                border: '1px solid rgba(255, 255, 255, 0.22)',
-                borderRadius: '6px',
+                color: '#660E1A',
+                backgroundColor: 'rgba(102, 14, 26, 0.06)',
+                border: '1px solid rgba(102, 14, 26, 0.18)',
+                borderRadius: 'var(--radius-sm)',
                 cursor: 'pointer'
               }}
               aria-label="Toggle navigation menu"
@@ -285,7 +287,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             position: 'fixed',
             inset: 0,
             zIndex: 999,
-            backgroundColor: 'var(--color-charcoal-950)',
+            backgroundColor: '#FAF7F2',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
@@ -294,9 +296,9 @@ export const Navbar: React.FC<NavbarProps> = ({
             overflow: 'hidden'
           }}
         >
-          <HexPattern variant="gradient-vibrant" opacity={0.16} />
+          <HexPattern variant="burgundy" opacity={0.07} />
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem', position: 'relative', zIndex: 1 }}>
-            <span className="display-subtitle">
+            <span className="display-subtitle" style={{ color: '#660E1A' }}>
               {lang === 'es' ? 'Menú Principal' : 'Navigation'}
             </span>
 
@@ -312,9 +314,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                   fontFamily: 'var(--font-serif)',
                   fontSize: '2rem',
                   fontWeight: 400,
-                  color: activePage === link.id ? 'var(--color-orange-accent)' : '#FFFFFF',
+                  color: activePage === link.id ? '#660E1A' : '#121418',
                   textAlign: 'left',
-                  borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderBottom: '1px solid rgba(102, 14, 26, 0.12)',
                   paddingBottom: '0.75rem',
                   animation: 'mobileLinkStagger 360ms var(--ease-out-fluid) both',
                   animationDelay: `${idx * 40 + 60}ms`
@@ -325,7 +327,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   style={{
                     fontSize: '0.8rem',
                     fontFamily: 'var(--font-sans)',
-                    color: 'rgba(255, 255, 255, 0.3)'
+                    color: 'rgba(18, 20, 24, 0.4)'
                   }}
                 >
                   0{idx + 1}
@@ -341,12 +343,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.75rem',
-                color: '#FFFFFF',
+                color: '#121418',
                 fontSize: '1.1rem',
                 fontFamily: 'var(--font-serif)'
               }}
             >
-              <Phone size={18} color="var(--color-orange-accent)" />
+              <Phone size={18} color="#660E1A" />
               (502) 500-0409
             </a>
 

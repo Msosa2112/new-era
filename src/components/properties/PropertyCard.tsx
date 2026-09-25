@@ -76,7 +76,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
         flexDirection: 'column',
         backgroundColor: '#FFFFFF',
         border: '1px solid rgba(0, 0, 0, 0.08)',
-        borderRadius: '12px',
+        borderRadius: 'var(--radius-md)',
         overflow: 'hidden',
         transition: 'transform 320ms var(--ease-out-fluid), box-shadow 320ms var(--ease-out-fluid), border-color 260ms ease, opacity 600ms var(--ease-out-fluid)',
         transform: isHovered
@@ -96,7 +96,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
             pointerEvents: 'none',
             background: `radial-gradient(circle at ${tilt.glareX}% ${tilt.glareY}%, rgba(255, 255, 255, 0.16) 0%, transparent 65%)`,
             zIndex: 10,
-            borderRadius: '12px'
+            borderRadius: 'var(--radius-md)'
           }}
         />
       )}

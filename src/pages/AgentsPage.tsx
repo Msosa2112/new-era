@@ -47,23 +47,24 @@ export const AgentsPage: React.FC<AgentsPageProps> = ({ onSelectProperty, onSele
       {/* Page Header */}
       <section
         style={{
-          backgroundColor: 'var(--color-charcoal-950)',
-          color: '#FFFFFF',
+          backgroundColor: 'var(--bg-primary)',
+          color: 'var(--text-primary)',
           padding: '5rem 0 4rem 0',
-          position: 'relative'
+          position: 'relative',
+          borderBottom: '1px solid var(--border-subtle)'
         }}
       >
-        <HexPattern variant="gradient-burgundy" opacity={0.16} maskFade="radial-top-right" />
+        <HexPattern variant="burgundy" opacity={0.08} maskFade="radial-top-right" />
         <div className="container" style={{ position: 'relative', zIndex: 1, maxWidth: '880px' }}>
-          <span className="display-subtitle" style={{ color: 'var(--color-orange-accent)' }}>
+          <span className="display-subtitle" style={{ color: '#660E1A' }}>
             {lang === 'es' ? 'DIRECTORIO DE ASESORES' : 'ADVISORY ROSTER'}
           </span>
-          <h1 className="display-title" style={{ color: '#FFFFFF', marginTop: '0.5rem', marginBottom: '1.25rem' }}>
+          <h1 className="display-title" style={{ color: 'var(--text-primary)', marginTop: '0.5rem', marginBottom: '1.25rem' }}>
             {lang === 'es' ? 'LAS PERSONAS DETRÁS DE LA PROPIEDAD' : 'THE PEOPLE BEHIND THE PROPERTY'}
           </h1>
-          <p className="editorial-lead" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+          <p className="editorial-lead" style={{ color: 'var(--text-secondary)' }}>
             {lang === 'es'
-              ? 'Un equipo bilingüe de líderes inmobiliarios dedicados a transformar transacciones en legados familiares en Kentucky e Indiana.'
+              ? 'Un equipo bilingüe de líderes inmobiliarios dedicados a transformar transacciones en legados familiares en Greater Louisville y Kentucky.'
               : 'A dedicated team of licensed real estate professionals delivering precision, local mastery, and unwavering advocacy.'}
           </p>
 
@@ -77,11 +78,12 @@ export const AgentsPage: React.FC<AgentsPageProps> = ({ onSelectProperty, onSele
               style={{
                 flex: '1 1 280px',
                 padding: '0.65rem 1rem',
-                borderRadius: 'var(--radius-xs)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                color: '#FFFFFF',
-                fontSize: '0.85rem'
+                borderRadius: '6px',
+                border: '1px solid rgba(102, 14, 26, 0.2)',
+                backgroundColor: '#FFFFFF',
+                color: '#121418',
+                fontSize: '0.85rem',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)'
               }}
             />
 
@@ -96,12 +98,13 @@ export const AgentsPage: React.FC<AgentsPageProps> = ({ onSelectProperty, onSele
                     fontWeight: 700,
                     letterSpacing: '0.1em',
                     textTransform: 'uppercase',
-                    borderRadius: 'var(--radius-xs)',
-                    border: filterLang === l ? '1px solid var(--color-orange-accent)' : '1px solid rgba(255, 255, 255, 0.2)',
-                    backgroundColor: filterLang === l ? 'var(--color-orange-accent)' : 'transparent',
-                    color: '#FFFFFF',
+                    borderRadius: '6px',
+                    border: filterLang === l ? '1px solid #660E1A' : '1px solid rgba(102, 14, 26, 0.18)',
+                    backgroundColor: filterLang === l ? '#660E1A' : '#FFFFFF',
+                    color: filterLang === l ? '#FFFFFF' : '#660E1A',
                     transition: 'all var(--transition-fast)',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
                   }}
                 >
                   {l === 'All' ? (lang === 'es' ? 'Todos' : 'All') : l}

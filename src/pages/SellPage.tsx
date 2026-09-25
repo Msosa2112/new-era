@@ -52,8 +52,8 @@ export const SellPage: React.FC<SellPageProps> = ({ onOpenConsultation, lang }) 
       icon: Share2,
       titleEn: 'Targeted Multi-Channel Exposure',
       titleEs: 'Exposición Digital y Red MLS',
-      descEn: 'Syndicated instantly across SPARK MLS, GLAR, luxury portals, and hyper-targeted digital advertising campaigns across Kentucky & Indiana.',
-      descEs: 'Publicación inmediata en MLS, portales inmobiliarios y campañas dirigidas a compradores calificados en KY e IN.'
+      descEn: 'Syndicated instantly across SPARK MLS, GLAR, luxury portals, and hyper-targeted digital advertising campaigns across Greater Louisville and Kentucky.',
+      descEs: 'Publicación inmediata en MLS, portales inmobiliarios y campañas dirigidas a compradores calificados en Greater Louisville y Kentucky.'
     },
     {
       icon: TrendingUp,
@@ -76,22 +76,23 @@ export const SellPage: React.FC<SellPageProps> = ({ onOpenConsultation, lang }) 
       {/* Hero Header */}
       <section
         style={{
-          backgroundColor: 'var(--color-charcoal-950)',
-          color: '#FFFFFF',
+          backgroundColor: 'var(--bg-primary)',
+          color: 'var(--text-primary)',
           padding: '5rem 0 4rem 0',
           position: 'relative',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          borderBottom: '1px solid var(--border-subtle)'
         }}
       >
-        <HexPattern variant="gradient-burgundy" opacity={0.16} maskFade="radial-top-right" />
+        <HexPattern variant="burgundy" opacity={0.08} maskFade="radial-top-right" />
         <div className="container" style={{ position: 'relative', zIndex: 1, maxWidth: '880px' }}>
-          <span className="display-subtitle" style={{ color: 'var(--color-orange-accent)' }}>
+          <span className="display-subtitle" style={{ color: 'var(--color-burgundy-primary)' }}>
             {lang === 'es' ? 'ESTRATEGIA PARA VENDEDORES' : 'SELLER EXPERIENCE'}
           </span>
-          <h1 className="display-title" style={{ color: '#FFFFFF', marginTop: '0.5rem', marginBottom: '1.25rem' }}>
+          <h1 className="display-title" style={{ color: 'var(--text-primary)', marginTop: '0.5rem', marginBottom: '1.25rem' }}>
             {lang === 'es' ? 'TU PROPIEDAD. TU SIGUIENTE MOVIMIENTO.' : 'YOUR PROPERTY. YOUR NEXT MOVE.'}
           </h1>
-          <p className="editorial-lead" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+          <p className="editorial-lead" style={{ color: 'var(--text-secondary)' }}>
             {lang === 'es'
               ? 'Maximizamos el valor neto de tu casa mediante preparación arquitectónica, fijación de precios basada en datos y marketing de alto impacto en Louisville.'
               : 'Positioning your residence for maximum market leverage through architectural presentation, predictive pricing, and bespoke buyer exposure.'}
@@ -117,7 +118,7 @@ export const SellPage: React.FC<SellPageProps> = ({ onOpenConsultation, lang }) 
                 padding: 'clamp(2rem, 4vw, 3rem)',
                 backgroundColor: 'var(--bg-surface)',
                 border: '1px solid var(--border-subtle)',
-                borderRadius: 'var(--radius-xs)',
+                borderRadius: 'var(--radius-md)',
                 boxShadow: 'var(--shadow-md)'
               }}
             >
@@ -134,7 +135,7 @@ export const SellPage: React.FC<SellPageProps> = ({ onOpenConsultation, lang }) 
                     padding: '2.5rem 1.5rem',
                     backgroundColor: 'rgba(114, 22, 35, 0.08)',
                     border: '1px solid var(--color-burgundy-primary)',
-                    borderRadius: 'var(--radius-xs)',
+                    borderRadius: 'var(--radius-md)',
                     textAlign: 'center'
                   }}
                 >
@@ -164,7 +165,7 @@ export const SellPage: React.FC<SellPageProps> = ({ onOpenConsultation, lang }) 
                         width: '100%',
                         padding: '0.85rem',
                         border: '1px solid var(--border-subtle)',
-                        borderRadius: 'var(--radius-xs)',
+                        borderRadius: 'var(--radius-sm)',
                         marginTop: '0.25rem',
                         fontSize: '0.9rem'
                       }}
@@ -183,7 +184,7 @@ export const SellPage: React.FC<SellPageProps> = ({ onOpenConsultation, lang }) 
                           width: '100%',
                           padding: '0.85rem',
                           border: '1px solid var(--border-subtle)',
-                          borderRadius: 'var(--radius-xs)',
+                          borderRadius: 'var(--radius-sm)',
                           marginTop: '0.25rem'
                         }}
                       >
@@ -206,7 +207,7 @@ export const SellPage: React.FC<SellPageProps> = ({ onOpenConsultation, lang }) 
                           width: '100%',
                           padding: '0.85rem',
                           border: '1px solid var(--border-subtle)',
-                          borderRadius: 'var(--radius-xs)',
+                          borderRadius: 'var(--radius-sm)',
                           marginTop: '0.25rem'
                         }}
                       >
@@ -229,7 +230,7 @@ export const SellPage: React.FC<SellPageProps> = ({ onOpenConsultation, lang }) 
                         width: '100%',
                         padding: '0.85rem',
                         border: '1px solid var(--border-subtle)',
-                        borderRadius: 'var(--radius-xs)',
+                        borderRadius: 'var(--radius-sm)',
                         marginTop: '0.25rem'
                       }}
                     >
@@ -251,7 +252,7 @@ export const SellPage: React.FC<SellPageProps> = ({ onOpenConsultation, lang }) 
                         width: '100%',
                         padding: '0.85rem',
                         border: '1px solid var(--border-subtle)',
-                        borderRadius: 'var(--radius-xs)',
+                        borderRadius: 'var(--radius-sm)',
                         fontSize: '0.9rem'
                       }}
                     />
@@ -265,7 +266,7 @@ export const SellPage: React.FC<SellPageProps> = ({ onOpenConsultation, lang }) 
                         width: '100%',
                         padding: '0.85rem',
                         border: '1px solid var(--border-subtle)',
-                        borderRadius: 'var(--radius-xs)',
+                        borderRadius: 'var(--radius-sm)',
                         fontSize: '0.9rem'
                       }}
                     />
@@ -282,7 +283,7 @@ export const SellPage: React.FC<SellPageProps> = ({ onOpenConsultation, lang }) 
                         width: '100%',
                         padding: '0.85rem',
                         border: '1px solid var(--border-subtle)',
-                        borderRadius: 'var(--radius-xs)',
+                        borderRadius: 'var(--radius-sm)',
                         fontSize: '0.9rem'
                       }}
                     />
@@ -326,7 +327,7 @@ export const SellPage: React.FC<SellPageProps> = ({ onOpenConsultation, lang }) 
                         padding: '1.5rem',
                         backgroundColor: 'var(--bg-surface)',
                         border: '1px solid var(--border-subtle)',
-                        borderRadius: 'var(--radius-xs)',
+                        borderRadius: 'var(--radius-md)',
                         display: 'flex',
                         alignItems: 'flex-start',
                         gap: '1.25rem'
@@ -336,7 +337,7 @@ export const SellPage: React.FC<SellPageProps> = ({ onOpenConsultation, lang }) 
                         style={{
                           width: '40px',
                           height: '40px',
-                          borderRadius: 'var(--radius-xs)',
+                          borderRadius: 'var(--radius-sm)',
                           backgroundColor: 'rgba(114, 22, 35, 0.08)',
                           display: 'flex',
                           alignItems: 'center',

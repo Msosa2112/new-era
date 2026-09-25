@@ -48,24 +48,25 @@ export const PropertiesPage: React.FC<PropertiesPageProps> = ({
       {/* Page Header */}
       <section
         style={{
-          backgroundColor: 'var(--color-charcoal-950)',
-          color: '#FFFFFF',
+          backgroundColor: 'var(--bg-primary)',
+          color: 'var(--text-primary)',
           padding: '4.5rem 0 3.5rem 0',
           position: 'relative',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          borderBottom: '1px solid var(--border-subtle)'
         }}
       >
-        <HexPattern variant="gradient-burgundy" opacity={0.16} maskFade="radial-top-right" />
+        <HexPattern variant="burgundy" opacity={0.08} maskFade="radial-top-right" />
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <span className="display-subtitle" style={{ color: 'var(--color-orange-accent)' }}>
+          <span className="display-subtitle" style={{ color: 'var(--color-burgundy-primary)' }}>
             {lang === 'es' ? 'PORTAFOLIO DE PROPIEDADES' : 'EXCLUSIVE INVENTORY'}
           </span>
-          <h1 className="display-title" style={{ color: '#FFFFFF', marginTop: '0.5rem', marginBottom: '1rem' }}>
+          <h1 className="display-title" style={{ color: 'var(--text-primary)', marginTop: '0.5rem', marginBottom: '1rem' }}>
             {lang === 'es' ? 'ENCUENTRA TU SIGUIENTE ERA' : 'FIND YOUR NEXT ERA'}
           </h1>
-          <p className="editorial-lead" style={{ color: 'rgba(255, 255, 255, 0.75)', maxWidth: '680px' }}>
+          <p className="editorial-lead" style={{ color: 'var(--text-secondary)', maxWidth: '680px' }}>
             {lang === 'es'
-              ? 'Explora residencias unifamiliares, fincas de lujo y condominios contemporáneos en los vecindarios más cotizados de Louisville, Prospect y Southern Indiana.'
+              ? 'Explora residencias unifamiliares, fincas de lujo y condominios contemporáneos en los vecindarios más cotizados de Louisville, Prospect, Norton Commons y Greater Louisville.'
               : 'Browse architectural residences, luxury estates, and contemporary urban spaces across Greater Louisville.'}
           </p>
         </div>
@@ -120,30 +121,32 @@ export const PropertiesPage: React.FC<PropertiesPageProps> = ({
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '0.45rem',
-                    padding: '0.55rem 1rem',
-                    backgroundColor: 'var(--color-charcoal-900, #121418)',
-                    color: '#FFFFFF',
-                    borderRadius: 'var(--radius-sm, 4px)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    padding: '0.55rem 1.1rem',
+                    backgroundColor: '#FFFFFF',
+                    color: '#660E1A',
+                    borderRadius: 'var(--radius-sm)',
+                    border: '1.5px solid rgba(102, 14, 26, 0.3)',
                     fontSize: '0.82rem',
                     fontWeight: 700,
                     letterSpacing: '0.02em',
                     cursor: 'pointer',
                     transition: 'all 200ms ease',
-                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.12)'
+                    boxShadow: 'var(--shadow-sm)'
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'var(--color-burgundy-primary, #660E1A)';
-                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                    e.currentTarget.style.backgroundColor = '#660E1A';
+                    e.currentTarget.style.color = '#FFFFFF';
+                    e.currentTarget.style.borderColor = '#660E1A';
                     e.currentTarget.style.transform = 'translateY(-1px)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'var(--color-charcoal-900, #121418)';
-                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+                    e.currentTarget.style.backgroundColor = '#FFFFFF';
+                    e.currentTarget.style.color = '#660E1A';
+                    e.currentTarget.style.borderColor = 'rgba(102, 14, 26, 0.3)';
                     e.currentTarget.style.transform = 'none';
                   }}
                 >
-                  <MapIcon size={14} color="var(--color-orange-accent, #8B1D2C)" />
+                  <MapIcon size={14} />
                   <span>{lang === 'es' ? 'Ver en Mapa' : 'Map View'}</span>
                 </button>
               )}
@@ -172,7 +175,7 @@ export const PropertiesPage: React.FC<PropertiesPageProps> = ({
                 padding: '4rem 2rem',
                 textAlign: 'center',
                 backgroundColor: 'var(--bg-surface)',
-                borderRadius: 'var(--radius-xs)',
+                borderRadius: 'var(--radius-md)',
                 border: '1px solid var(--border-subtle)'
               }}
             >

@@ -49,11 +49,11 @@ export const PropertySearchEngine: React.FC<PropertySearchEngineProps> = ({
   );
 
   const cityOptions: SelectOption[] = [
-    { value: 'All', label: lang === 'es' ? 'Todas las Zonas (KY / IN)' : 'All Areas (KY & IN)' },
+    { value: 'All', label: lang === 'es' ? 'Todas las Zonas (Kentucky)' : 'All Areas (Kentucky)' },
     { value: 'Louisville', label: 'Louisville, KY' },
     { value: 'Prospect', label: 'Prospect / Harrods Creek, KY' },
     { value: 'Anchorage', label: 'Anchorage, KY' },
-    { value: 'Jeffersonville', label: 'Jeffersonville, IN' },
+    { value: 'Crestwood', label: 'Crestwood / Oldham, KY' },
   ];
 
   const propertyTypeOptions: SelectOption[] = [
@@ -141,7 +141,7 @@ export const PropertySearchEngine: React.FC<PropertySearchEngineProps> = ({
         backdropFilter: isGlass ? 'blur(20px)' : 'none',
         WebkitBackdropFilter: isGlass ? 'blur(20px)' : 'none',
         border: isGlass ? '1px solid rgba(255, 255, 255, 0.14)' : '1px solid var(--border-subtle)',
-        borderRadius: 'var(--radius-sm)',
+        borderRadius: 'var(--radius-md)',
         boxShadow: isGlass
           ? '0 25px 60px rgba(0, 0, 0, 0.75), 0 0 30px rgba(253, 230, 138, 0.05)'
           : 'var(--shadow-md)',
@@ -175,7 +175,7 @@ export const PropertySearchEngine: React.FC<PropertySearchEngineProps> = ({
                 fontWeight: 700,
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
-                borderRadius: 'var(--radius-xs)',
+                borderRadius: 'var(--radius-sm)',
                 backgroundColor:
                   transactionType === t
                     ? 'var(--color-burgundy-primary)'
@@ -277,7 +277,7 @@ export const PropertySearchEngine: React.FC<PropertySearchEngineProps> = ({
               style={{
                 width: '100%',
                 border: inputBorder,
-                borderRadius: 'var(--radius-xs)',
+                borderRadius: 'var(--radius-sm)',
                 fontFamily: 'inherit',
                 backgroundColor: inputBg,
                 color: inputColor
@@ -485,7 +485,7 @@ export const PropertySearchEngine: React.FC<PropertySearchEngineProps> = ({
           .search-engine-card,
           .search-engine-card.is-compact {
             padding: 1.15rem 1rem !important;
-            border-radius: var(--radius-xs) !important;
+            border-radius: var(--radius-md) !important;
           }
           .search-engine-header {
             padding-bottom: 0.65rem !important;

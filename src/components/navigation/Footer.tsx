@@ -15,14 +15,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, lang }) => {
   return (
     <footer
       style={{
-        backgroundColor: 'var(--color-charcoal-950)',
-        color: '#FFFFFF',
-        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+        backgroundColor: '#FAF7F2',
+        color: '#121418',
+        borderTop: '1px solid var(--border-subtle)',
         position: 'relative',
         overflow: 'hidden'
       }}
     >
-      <HexPattern variant="gradient-burgundy" opacity={0.12} maskFade="top-to-bottom" />
+      <HexPattern variant="burgundy" opacity={0.06} maskFade="top-to-bottom" />
 
       {/* Huge Background Architectural Monogram Return */}
       <div
@@ -30,13 +30,13 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, lang }) => {
           position: 'absolute',
           bottom: '-40px',
           right: '-20px',
-          opacity: 0.03,
+          opacity: 0.04,
           pointerEvents: 'none',
           zIndex: 0
         }}
         aria-hidden="true"
       >
-        <BrandLogo variant="monogram-white" height={420} />
+        <BrandLogo variant="monogram-burgundy" height={420} />
       </div>
 
       <div className="container" style={{ position: 'relative', zIndex: 1, paddingTop: '5rem', paddingBottom: '3rem' }}>
@@ -47,27 +47,31 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, lang }) => {
             gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
             gap: '3rem',
             paddingBottom: '4rem',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
+            borderBottom: '1px solid rgba(102, 14, 26, 0.1)'
           }}
         >
           {/* Brand Col */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', alignItems: 'flex-start' }}>
-            <BrandLogo variant="full-white" height={52} />
+            <BrandLogo variant="full-burgundy" height={52} />
             <p
               style={{
                 fontSize: '0.9rem',
-                color: 'rgba(255, 255, 255, 0.65)',
+                color: '#5A606D',
                 lineHeight: 1.6,
                 maxWidth: '320px'
               }}
             >
               {lang === 'es'
-                ? 'Una Nueva Era de Bienes Raíces. Elevando la representación residencial y comercial en Greater Louisville y Southern Indiana.'
-                : 'A New Era of Real Estate. Elevating residential and luxury property representation with architectural precision across Kentucky and Indiana.'}
+                ? 'Una Nueva Era de Bienes Raíces. Elevando la representación residencial y comercial en Greater Louisville y Kentucky.'
+                : 'A New Era of Real Estate. Elevating residential and luxury property representation with architectural precision across Greater Louisville and Kentucky.'}
             </p>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <span className="tag-badge tag-badge-dark">EQUAL HOUSING OPPORTUNITY</span>
-              <span className="tag-badge tag-badge-dark">REALTOR®</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+              <span className="tag-badge" style={{ backgroundColor: 'rgba(102, 14, 26, 0.06)', color: '#660E1A', border: '1px solid rgba(102, 14, 26, 0.18)' }}>
+                EQUAL HOUSING OPPORTUNITY
+              </span>
+              <span className="tag-badge" style={{ backgroundColor: 'rgba(102, 14, 26, 0.06)', color: '#660E1A', border: '1px solid rgba(102, 14, 26, 0.18)' }}>
+                REALTOR®
+              </span>
             </div>
           </div>
 
@@ -78,7 +82,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, lang }) => {
                 fontFamily: 'monospace',
                 fontSize: '0.75rem',
                 letterSpacing: '0.15em',
-                color: 'var(--color-orange-accent)',
+                color: '#660E1A',
+                fontWeight: 700,
                 textTransform: 'uppercase'
               }}
             >
@@ -90,7 +95,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, lang }) => {
                 { id: 'map', labelEn: 'Interactive Map Search', labelEs: 'Búsqueda en Mapa' },
                 { id: 'buy', labelEn: 'Buyer Journey & Grants', labelEs: 'Guía del Comprador' },
                 { id: 'sell', labelEn: 'Sell & CMA Valuation', labelEs: 'Vender & Valuación CMA' },
-                { id: 'agents', labelEn: 'Agent Directory', labelEs: 'Directorio de Agentes' },
                 { id: 'about', labelEn: 'About New Era', labelEs: 'Sobre Nosotros' },
                 { id: 'contact', labelEn: 'Schedule Consultation', labelEs: 'Contacto & Citas' },
               ].map((link) => (
@@ -101,18 +105,23 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, lang }) => {
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
                     style={{
-                      color: 'rgba(255, 255, 255, 0.75)',
+                      color: '#121418',
                       fontSize: '0.85rem',
+                      fontWeight: 600,
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '0.35rem',
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      padding: 0,
                       transition: 'color var(--transition-fast)'
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = '#FFFFFF')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.75)')}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = '#660E1A')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = '#121418')}
                   >
                     <span>{lang === 'es' ? link.labelEs : link.labelEn}</span>
-                    <ArrowUpRight size={12} color="var(--color-orange-accent)" />
+                    <ArrowUpRight size={12} color="#660E1A" />
                   </button>
                 </li>
               ))}
@@ -126,19 +135,20 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, lang }) => {
                 fontFamily: 'monospace',
                 fontSize: '0.75rem',
                 letterSpacing: '0.15em',
-                color: 'var(--color-orange-accent)',
+                color: '#660E1A',
+                fontWeight: 700,
                 textTransform: 'uppercase'
               }}
             >
               {lang === 'es' ? 'MERCADOS CLAVE' : 'KEY MARKETS'}
             </span>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.55rem', fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.65)' }}>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.55rem', fontSize: '0.85rem', color: '#5A606D' }}>
               <li>Prospect & Harrods Creek</li>
               <li>Cherokee Triangle & The Highlands</li>
               <li>St. Matthews & Crescent Hill</li>
               <li>Anchorage & Lake Forest</li>
               <li>Norton Commons & Springhurst</li>
-              <li>Jeffersonville & New Albany, IN</li>
+              <li>Oldham County & Crestwood, KY</li>
             </ul>
           </div>
 
@@ -149,27 +159,29 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, lang }) => {
                 fontFamily: 'monospace',
                 fontSize: '0.75rem',
                 letterSpacing: '0.15em',
-                color: 'var(--color-orange-accent)',
+                color: '#660E1A',
+                fontWeight: 700,
                 textTransform: 'uppercase'
               }}
             >
               {lang === 'es' ? 'SEDE' : 'HEADQUARTERS'}
             </span>
-            <p style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.7)', lineHeight: 1.6 }}>
+            <p style={{ fontSize: '0.85rem', color: '#5A606D', lineHeight: 1.6 }}>
               {BROKERAGE_DATA.address.fullFormatted}
             </p>
             <a
               href="tel:5025000409"
               style={{
                 fontSize: '1.1rem',
-                color: 'var(--color-orange-accent)',
+                color: '#660E1A',
                 fontFamily: 'var(--font-serif)',
-                fontWeight: 600
+                fontWeight: 700,
+                textDecoration: 'none'
               }}
             >
               {BROKERAGE_DATA.phone}
             </a>
-            <p style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.45)' }}>
+            <p style={{ fontSize: '0.75rem', color: '#847C74' }}>
               {BROKERAGE_DATA.brokerCeo}, Principal Broker
             </p>
           </div>
@@ -185,7 +197,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, lang }) => {
             alignItems: 'center',
             gap: '1.5rem',
             fontSize: '0.75rem',
-            color: 'rgba(255, 255, 255, 0.45)'
+            color: '#847C74'
           }}
         >
           <div>

@@ -86,18 +86,6 @@ export const getBrokerageSchema = () => ({
     {
       '@type': 'AdministrativeArea',
       name: 'Bullitt County, KY'
-    },
-    {
-      '@type': 'AdministrativeArea',
-      name: 'Southern Indiana'
-    },
-    {
-      '@type': 'AdministrativeArea',
-      name: 'Clark County, IN'
-    },
-    {
-      '@type': 'AdministrativeArea',
-      name: 'Floyd County, IN'
     }
   ],
   knowsLanguage: ['en', 'es'],
@@ -145,7 +133,7 @@ export const getAgentSchema = (agent: Agent, canonicalUrl: string) => ({
   } : undefined,
   areaServed: [
     'Greater Louisville, KY',
-    'Southern Indiana'
+    'Kentucky'
   ]
 });
 
@@ -272,8 +260,8 @@ export const getPageSEOMetadata = (
       ? `${selectedAgent.name} - Asesor Inmobiliario | New Era Real Estate`
       : `${selectedAgent.name} - Real Estate Advisor | New Era Real Estate`;
     const description = isEs
-      ? `Conoce a ${selectedAgent.name}, ${selectedAgent.title} en New Era Real Estate. Asesoría bilingüe de compra y venta en Greater Louisville, KY y Southern Indiana. Teléfono: ${selectedAgent.phone}.`
-      : `Connect with ${selectedAgent.name}, ${selectedAgent.title} at New Era Real Estate. Elite residential representation across Greater Louisville, KY and Southern Indiana. Call ${selectedAgent.phone}.`;
+      ? `Conoce a ${selectedAgent.name}, ${selectedAgent.title} en New Era Real Estate. Asesoría bilingüe de compra y venta en Greater Louisville y Kentucky. Teléfono: ${selectedAgent.phone}.`
+      : `Connect with ${selectedAgent.name}, ${selectedAgent.title} at New Era Real Estate. Elite residential representation across Greater Louisville and Kentucky. Call ${selectedAgent.phone}.`;
 
     const breadcrumbs = getBreadcrumbSchema([
       { name: isEs ? 'Inicio' : 'Home', item: `${SITE_URL}/` },
@@ -310,8 +298,8 @@ export const getPageSEOMetadata = (
         ? 'Casas y Propiedades en Venta en Louisville KY | New Era Real Estate'
         : 'Homes & Real Estate for Sale in Louisville KY | New Era Real Estate';
       const description = isEs
-        ? 'Explora el inventario exclusivo de propiedades residenciales y de lujo en Louisville, Prospect, Norton Commons y Southern Indiana con New Era Real Estate.'
-        : 'Explore exclusive residential and luxury homes for sale in Greater Louisville, Prospect, Norton Commons, and Southern Indiana with New Era Real Estate.';
+        ? 'Explora el inventario exclusivo de propiedades residenciales y de lujo en Louisville, Prospect, Norton Commons y Greater Louisville con New Era Real Estate.'
+        : 'Explore exclusive residential and luxury homes for sale in Greater Louisville, Prospect, Norton Commons, and Kentucky with New Era Real Estate.';
 
       return {
         title,
@@ -343,8 +331,8 @@ export const getPageSEOMetadata = (
         ? 'Guía y Asesoría para Comprar Casa en Louisville KY | New Era Real Estate'
         : 'Home Buying Advisory & Representation in Louisville KY | New Era Real Estate';
       const description = isEs
-        ? 'Asesoría especializada de compra residencial en Kentucky e Indiana. Búsqueda de inventario off-market, negociación estratégica y acompañamiento en todo el proceso.'
-        : 'Strategic homebuyer advisory and representation in Kentucky and Southern Indiana. Access off-market properties, competitive negotiation, and seamless closing milestones.';
+        ? 'Asesoría especializada de compra residencial en Kentucky. Búsqueda de inventario off-market, negociación estratégica y acompañamiento en todo el proceso.'
+        : 'Strategic homebuyer advisory and representation in Greater Louisville and Kentucky. Access off-market properties, competitive negotiation, and seamless closing milestones.';
 
       return {
         title,
@@ -376,8 +364,8 @@ export const getPageSEOMetadata = (
         ? 'Vende Tu Propiedad y Valuación Inmobiliaria en Louisville | New Era Real Estate'
         : 'Sell Your Home & Real Estate Valuation in Louisville KY | New Era Real Estate';
       const description = isEs
-        ? 'Maximiza el valor de tu propiedad con marketing arquitectónico de alta gama, análisis comparativo de mercado y representación de élite en Greater Louisville y Southern Indiana.'
-        : 'Maximize your property value with bespoke architectural marketing, comparative market intelligence, and elite listing representation in Greater Louisville and Southern Indiana.';
+        ? 'Maximiza el valor de tu propiedad con marketing arquitectónico de alta gama, análisis comparativo de mercado y representación de élite en Greater Louisville y Kentucky.'
+        : 'Maximize your property value with bespoke architectural marketing, comparative market intelligence, and elite listing representation in Greater Louisville and Kentucky.';
 
       return {
         title,
@@ -409,8 +397,8 @@ export const getPageSEOMetadata = (
         ? 'Equipo de Asesores Inmobiliarios | New Era Real Estate Louisville'
         : 'Real Estate Advisors & Brokers | New Era Real Estate Louisville';
       const description = isEs
-        ? 'Conoce a nuestro equipo bilingüe de REALTORS® y asesores inmobiliarios con licencia en Kentucky e Indiana, liderados por la Principal Broker Yeilen Contreras.'
-        : 'Meet our bilingual team of licensed REALTORS® and real estate advisors serving Kentucky and Southern Indiana, led by Principal Broker Yeilen Contreras.';
+        ? 'Conoce a nuestro equipo bilingüe de REALTORS® y asesores inmobiliarios con licencia en Kentucky, liderados por la Principal Broker Yeilen Contreras.'
+        : 'Meet our bilingual team of licensed REALTORS® and real estate advisors serving Greater Louisville and Kentucky, led by Principal Broker Yeilen Contreras.';
 
       return {
         title,
@@ -442,8 +430,8 @@ export const getPageSEOMetadata = (
         ? 'Sobre Nosotros y Filosofía Inmobiliaria | New Era Real Estate'
         : 'About Us & Brokerage Philosophy | New Era Real Estate';
       const description = isEs
-        ? 'New Era Real Estate es una agencia inmobiliaria moderna con sede en Louisville, KY, con licencia bilateral en Kentucky e Indiana. Distinción arquitectónica y rigor analítico.'
-        : 'New Era Real Estate is a modern brokerage headquartered in Louisville, KY, holding bilateral licensure in Kentucky and Indiana. Driven by architectural distinction and market precision.';
+        ? 'New Era Real Estate es una agencia inmobiliaria moderna con sede en Louisville, KY, con licencia en Kentucky. Distinción arquitectónica y rigor analítico.'
+        : 'New Era Real Estate is a modern brokerage headquartered in Louisville, KY, holding licensure in Kentucky. Driven by architectural distinction and market precision.';
 
       return {
         title,
@@ -515,11 +503,11 @@ export const getPageSEOMetadata = (
     default: {
       const canonical = `${SITE_URL}/`;
       const title = isEs
-        ? 'New Era Real Estate | Bienes Raíces en Louisville KY y Southern Indiana'
-        : 'New Era Real Estate | Real Estate Brokerage in Louisville KY & Southern Indiana';
+        ? 'New Era Real Estate | Bienes Raíces en Louisville y Kentucky'
+        : 'New Era Real Estate | Real Estate Brokerage in Louisville & Greater Kentucky';
       const description = isEs
-        ? 'Agencia inmobiliaria líder en Greater Louisville, KY y Southern Indiana. Representación de lujo, compra y venta de propiedades residenciales con asesoría bilingüe experta.'
-        : 'Premier real estate brokerage serving Greater Louisville, KY and Southern Indiana. Modern architecture, data-driven intelligence, and bespoke bilingual property representation.';
+        ? 'Agencia inmobiliaria líder en Greater Louisville y Kentucky. Representación de lujo, compra y venta de propiedades residenciales con asesoría bilingüe experta.'
+        : 'Premier real estate brokerage serving Greater Louisville and Kentucky. Modern architecture, data-driven intelligence, and bespoke bilingual property representation.';
 
       return {
         title,

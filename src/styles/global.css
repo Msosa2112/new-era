@@ -187,7 +187,7 @@ img {
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  border-radius: var(--radius-xs);
+  border-radius: var(--radius-sm);
   transition: background-color 160ms cubic-bezier(0.2, 0, 0, 1), box-shadow 160ms cubic-bezier(0.2, 0, 0, 1);
   position: relative;
   overflow: hidden;
@@ -232,7 +232,7 @@ img {
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  border-radius: var(--radius-xs);
+  border-radius: var(--radius-sm);
   transition: background-color 160ms cubic-bezier(0.2, 0, 0, 1), border-color 160ms cubic-bezier(0.2, 0, 0, 1), color 160ms cubic-bezier(0.2, 0, 0, 1), box-shadow 160ms cubic-bezier(0.2, 0, 0, 1);
   cursor: pointer;
 }
@@ -250,6 +250,7 @@ img {
 .btn-outline-white {
   border-color: rgba(255, 255, 255, 0.4);
   color: #FFFFFF;
+  border-radius: var(--radius-sm);
 }
 
 .btn-outline-white:hover {
@@ -264,6 +265,7 @@ img {
 
 /* Input Focus Bloom & Stability */
 input, select, textarea {
+  border-radius: var(--radius-sm);
   transition: border-color 180ms cubic-bezier(0.2, 0, 0, 1), box-shadow 180ms cubic-bezier(0.2, 0, 0, 1), background-color 180ms ease;
 }
 
@@ -451,7 +453,7 @@ input:focus, select:focus, textarea:focus {
   }
 
   .property-card {
-    border-radius: 10px !important;
+    border-radius: var(--radius-md) !important;
     border-color: rgba(0, 0, 0, 0.07) !important;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03) !important;
     max-width: 100% !important;
@@ -470,7 +472,7 @@ input:focus, select:focus, textarea:focus {
     padding: 0.15rem 0.4rem !important;
     font-size: 0.52rem !important;
     letter-spacing: 0.06em !important;
-    border-radius: 3px !important;
+    border-radius: var(--radius-xs) !important;
   }
 
   .property-card-price-wrap {
@@ -564,7 +566,7 @@ input:focus, select:focus, textarea:focus {
 .pac-container {
   background-color: #FFFFFF !important;
   font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif) !important;
-  border-radius: 8px !important;
+  border-radius: var(--radius-md) !important;
   border: 1px solid rgba(0, 0, 0, 0.12) !important;
   box-shadow: 0 16px 36px rgba(18, 20, 24, 0.16) !important;
   margin-top: 4px !important;

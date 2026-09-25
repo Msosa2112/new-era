@@ -80,7 +80,7 @@ export const MapPropertyCard: React.FC<MapPropertyCardProps> = ({
           display: 'flex',
           flexDirection: 'row',
           backgroundColor: '#FFFFFF',
-          borderRadius: '14px',
+          borderRadius: 'var(--radius-md)',
           overflow: 'hidden',
           border: isSelected
             ? '2px solid var(--color-burgundy-primary, #660E1A)'
@@ -228,7 +228,7 @@ export const MapPropertyCard: React.FC<MapPropertyCardProps> = ({
                 padding: '4px 8px',
                 backgroundColor: 'var(--color-burgundy-primary, #660E1A)',
                 color: '#FFFFFF',
-                borderRadius: '5px',
+                borderRadius: 'var(--radius-sm)',
                 fontSize: '0.72rem',
                 fontWeight: 700,
                 border: 'none',
@@ -258,7 +258,7 @@ export const MapPropertyCard: React.FC<MapPropertyCardProps> = ({
         display: 'flex',
         flexDirection: 'column',
         backgroundColor: '#FFFFFF',
-        borderRadius: '12px',
+        borderRadius: 'var(--radius-md)',
         overflow: 'hidden',
         border: isSelected
           ? '2px solid var(--color-burgundy-primary, #660E1A)'
@@ -645,7 +645,7 @@ export const MapPropertyCard: React.FC<MapPropertyCardProps> = ({
               padding: '4px 9px',
               backgroundColor: 'transparent',
               color: 'var(--color-burgundy-primary, #660E1A)',
-              borderRadius: '4px',
+              borderRadius: 'var(--radius-sm)',
               fontSize: '0.74rem',
               fontWeight: 700,
               border: '1px solid rgba(102, 14, 26, 0.2)',

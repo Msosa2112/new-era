@@ -29,7 +29,7 @@ export const AgentCard: React.FC<AgentCardProps> = ({
         flexDirection: 'column',
         backgroundColor: 'var(--bg-surface)',
         border: '1px solid var(--border-subtle)',
-        borderRadius: 'var(--radius-xs)',
+        borderRadius: 'var(--radius-md)',
         overflow: 'hidden',
         transition: 'all var(--transition-normal)',
         transform: isHovered ? 'translateY(-6px)' : 'none',

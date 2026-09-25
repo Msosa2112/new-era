@@ -15,7 +15,7 @@ export const BROKERAGE_DATA: BrokerageInfo = {
     fullFormatted: '6501 Shepherdsville Road, Suite 119, Louisville, KY 40219'
   },
   officeHours: 'Monday - Friday: 9:00 AM - 5:30 PM | Saturday & Sunday: By Appointment',
-  licenseNote: 'Licensed Real Estate Brokerage in Kentucky and Indiana. Equal Housing Opportunity.'
+  licenseNote: 'Licensed Real Estate Brokerage in Kentucky. Equal Housing Opportunity.'
 };
 
 export const AGENTS_DATA: Agent[] = [
@@ -28,7 +28,7 @@ export const AGENTS_DATA: Agent[] = [
     "email": "newerabroker25@gmail.com",
     "photoUrl": "/assets/agents/yeilen-contreras.jpg",
     "photoNobgUrl": "/assets/agents/yeilen-contreras-nobg.png",
-    "bio": "Principal Broker and visionary founder of New Era Real Estate. Leading bilateral representation across Kentucky and Indiana with unwavering architectural excellence, bilingual negotiation mastery, and strategic wealth-building advisory.",
+    "bio": "Principal Broker and visionary founder of New Era Real Estate. Leading residential representation across Kentucky with unwavering architectural excellence, bilingual negotiation mastery, and strategic wealth-building advisory.",
     "specialties": [
       "Principal Brokerage",
       "Luxury Portfolios",
@@ -421,14 +421,14 @@ export const AGENTS_DATA: Agent[] = [
   {
     "id": "rosa-mustelier-jimenez",
     "name": "Rosa Mustelier",
-    "title": "Licensed REALTOR® | KY & IN Specialist",
+    "title": "Licensed REALTOR® | Residential Specialist",
     "phone": "(502) 909-7399",
     "email": "rosamustelierrealtor@gmail.com",
     "photoUrl": "/assets/agents/rosa-mustelier-jimenez.jpg",
     "photoNobgUrl": "/assets/agents/rosa-mustelier-jimenez-nobg.png",
-    "bio": "Dual-market specialist delivering sharp contract precision, cross-river relocation insight, and dedicated client advocacy.",
+    "bio": "Residential specialist delivering sharp contract precision, relocation insight, and dedicated client advocacy across Kentucky.",
     "specialties": [
-      "Kentucky & Indiana",
+      "Greater Louisville & Kentucky",
       "Relocation Advisory",
       "Condos & Family Homes"
     ],

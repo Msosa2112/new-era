@@ -97,7 +97,7 @@ export const TechnologySection: React.FC<TechnologySectionProps> = ({ lang }) =>
                   padding: '2rem',
                   backgroundColor: 'var(--bg-surface)',
                   border: '1px solid var(--border-subtle)',
-                  borderRadius: 'var(--radius-xs)',
+                  borderRadius: 'var(--radius-md)',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '1rem',
@@ -108,7 +108,7 @@ export const TechnologySection: React.FC<TechnologySectionProps> = ({ lang }) =>
                   style={{
                     width: '44px',
                     height: '44px',
-                    borderRadius: 'var(--radius-xs)',
+                    borderRadius: 'var(--radius-sm)',
                     backgroundColor: 'rgba(114, 22, 35, 0.08)',
                     display: 'flex',
                     alignItems: 'center',

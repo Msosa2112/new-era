@@ -35,22 +35,23 @@ export const ContactPage: React.FC<ContactPageProps> = ({ lang }) => {
       {/* Page Hero */}
       <section
         style={{
-          backgroundColor: 'var(--color-charcoal-950)',
-          color: '#FFFFFF',
+          backgroundColor: 'var(--bg-primary)',
+          color: 'var(--text-primary)',
           padding: '5rem 0 4rem 0',
           position: 'relative',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          borderBottom: '1px solid var(--border-subtle)'
         }}
       >
-        <HexPattern variant="gradient-burgundy" opacity={0.16} maskFade="radial-top-right" />
+        <HexPattern variant="burgundy" opacity={0.08} maskFade="radial-top-right" />
         <div className="container" style={{ position: 'relative', zIndex: 1, maxWidth: '880px' }}>
-          <span className="display-subtitle" style={{ color: 'var(--color-orange-accent)' }}>
+          <span className="display-subtitle" style={{ color: 'var(--color-burgundy-primary)' }}>
             {lang === 'es' ? 'COMUNÍCATE CON NOSOTROS' : 'CONNECT WITH US'}
           </span>
-          <h1 className="display-title" style={{ color: '#FFFFFF', marginTop: '0.5rem', marginBottom: '1.25rem' }}>
+          <h1 className="display-title" style={{ color: 'var(--text-primary)', marginTop: '0.5rem', marginBottom: '1.25rem' }}>
             {lang === 'es' ? 'INICIA TU SIGUIENTE ERA.' : 'START YOUR NEXT ERA.'}
           </h1>
-          <p className="editorial-lead" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+          <p className="editorial-lead" style={{ color: 'var(--text-secondary)' }}>
             {lang === 'es'
               ? 'Visítanos en nuestra oficina en Louisville o agenda una consulta privada con nuestro equipo de liderazgo.'
               : 'Our doors are open at our Louisville headquarters. Connect with us for confidential real estate advisory.'}
@@ -81,7 +82,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ lang }) => {
                 style={{
                   padding: '1.75rem',
                   backgroundColor: 'var(--bg-secondary)',
-                  borderRadius: 'var(--radius-xs)',
+                  borderRadius: 'var(--radius-md)',
                   border: '1px solid var(--border-subtle)'
                 }}
               >

@@ -18,22 +18,23 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenConsultation, lang }
       {/* Hero Header */}
       <section
         style={{
-          backgroundColor: 'var(--color-charcoal-950)',
-          color: '#FFFFFF',
+          backgroundColor: 'var(--bg-primary)',
+          color: 'var(--text-primary)',
           padding: '5rem 0 4rem 0',
           position: 'relative',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          borderBottom: '1px solid var(--border-subtle)'
         }}
       >
-        <HexPattern variant="gradient-burgundy" opacity={0.16} maskFade="radial-top-right" />
+        <HexPattern variant="burgundy" opacity={0.08} maskFade="radial-top-right" />
         <div className="container" style={{ position: 'relative', zIndex: 1, maxWidth: '880px' }}>
-          <span className="display-subtitle" style={{ color: 'var(--color-orange-accent)' }}>
+          <span className="display-subtitle" style={{ color: '#660E1A' }}>
             {lang === 'es' ? 'NUESTRA HISTORIA' : 'OUR HERITAGE & VISION'}
           </span>
-          <h1 className="display-title" style={{ color: '#FFFFFF', marginTop: '0.5rem', marginBottom: '1.25rem' }}>
+          <h1 className="display-title" style={{ color: 'var(--text-primary)', marginTop: '0.5rem', marginBottom: '1.25rem' }}>
             {lang === 'es' ? 'UNA NUEVA ERA DE BIENES RAÍCES' : 'A NEW ERA OF REAL ESTATE'}
           </h1>
-          <p className="editorial-lead" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+          <p className="editorial-lead" style={{ color: 'var(--text-secondary)' }}>
             {lang === 'es'
               ? 'Fundada en Louisville, Kentucky, New Era Real Estate nació de la convicción de que el sector inmobiliario merecía más que transacciones frías: exigía diseño arquitectónico, inteligencia analítica y una profunda empatía humana.'
               : 'Founded on the principle that modern real estate requires architectural clarity, data intelligence, and profound human dedication.'}
@@ -60,7 +61,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenConsultation, lang }
                   position: 'absolute',
                   inset: '-12px',
                   border: '2px solid var(--color-burgundy-primary)',
-                  borderRadius: 'var(--radius-xs)',
+                  borderRadius: 'var(--radius-md)',
                   transform: 'rotate(-1.5deg)',
                   zIndex: 0
                 }}
@@ -72,7 +73,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenConsultation, lang }
                   width: '100%',
                   aspectRatio: '1/1.2',
                   objectFit: 'cover',
-                  borderRadius: 'var(--radius-xs)',
+                  borderRadius: 'var(--radius-md)',
                   position: 'relative',
                   zIndex: 1,
                   boxShadow: 'var(--shadow-luxury)'
@@ -105,7 +106,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenConsultation, lang }
                 <p>
                   {lang === 'es'
                     ? 'Bajo la dirección de Yeilen Contreras, New Era se ha consolidado como una de las firmas inmobiliarias más influyentes y respetadas de la región, rompiendo barreras lingüísticas y guiando a cientos de familias hacia la adquisición de su patrimonio.'
-                    : 'Under Yeilen Contreras’ leadership, New Era has emerged as a premier brokerage connecting multicultural communities with luxury property ownership and robust generational wealth across Kentucky and Indiana.'}
+                    : 'Under Yeilen Contreras’ leadership, New Era has emerged as a premier brokerage connecting multicultural communities with luxury property ownership and robust generational wealth across Greater Louisville and Kentucky.'}
                 </p>
                 <p>
                   {lang === 'es'
@@ -129,15 +130,15 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenConsultation, lang }
       <section
         style={{
           position: 'relative',
-          backgroundColor: 'var(--color-charcoal-950)',
-          color: '#FFFFFF',
+          backgroundColor: 'var(--bg-secondary)',
+          color: 'var(--text-primary)',
           padding: '4rem 0',
           overflow: 'hidden',
-          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
+          borderTop: '1px solid var(--border-subtle)',
+          borderBottom: '1px solid var(--border-subtle)'
         }}
       >
-        <HexPattern variant="gradient-gold" opacity={0.16} maskFade="radial-center" />
+        <HexPattern variant="burgundy" opacity={0.06} maskFade="radial-center" />
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <div
             style={{
@@ -196,7 +197,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenConsultation, lang }
               gap: '1.5rem'
             }}
           >
-            <div style={{ overflow: 'hidden', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border-subtle)' }}>
+            <div style={{ overflow: 'hidden', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
               <img
                 src="/assets/team-hero.png"
                 alt="New Era Advisory Team"
@@ -208,7 +209,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenConsultation, lang }
               </div>
             </div>
 
-            <div style={{ overflow: 'hidden', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border-subtle)' }}>
+            <div style={{ overflow: 'hidden', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
               <img
                 src="/assets/office-lobby.png"
                 alt="New Era Louisville Office"
@@ -220,7 +221,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenConsultation, lang }
               </div>
             </div>
 
-            <div style={{ overflow: 'hidden', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border-subtle)' }}>
+            <div style={{ overflow: 'hidden', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
               <img
                 src="/assets/team-culture.png"
                 alt="New Era Community"

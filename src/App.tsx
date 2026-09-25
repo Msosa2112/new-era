@@ -5,13 +5,13 @@ import { HomePage } from './pages/HomePage';
 import { PropertiesPage } from './pages/PropertiesPage';
 import { BuyPage } from './pages/BuyPage';
 import { SellPage } from './pages/SellPage';
-import { AgentsPage } from './pages/AgentsPage';
 import { AgentProfilePage } from './pages/AgentProfilePage';
 import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
 import { MapPage } from './pages/MapPage';
 import { PropertyDetailView } from './components/properties/PropertyDetailView';
 import { ConsultationModal } from './components/common/ConsultationModal';
+import { JoinTeamModal } from './components/common/JoinTeamModal';
 import { SEOHead } from './components/common/SEOHead';
 import { Property, Agent } from './types/property';
 import { propertyService } from './services/propertyService';
@@ -22,6 +22,7 @@ export const App: React.FC = () => {
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
   const [lang, setLang] = useState<'en' | 'es'>('en');
   const [consultationOpen, setConsultationOpen] = useState<boolean>(false);
+  const [joinModalOpen, setJoinModalOpen] = useState<boolean>(false);
 
   // Handle URL hash navigation or back/forward
   useEffect(() => {
@@ -39,8 +40,13 @@ export const App: React.FC = () => {
           setSelectedAgent(found);
           setActivePage('agent-profile');
         } else {
-          setActivePage('agents');
+          setActivePage('home');
         }
+      } else if (hash === 'agents') {
+        setActivePage('home');
+      } else if (hash === 'join' || hash === 'unirse') {
+        setActivePage('home');
+        setJoinModalOpen(true);
       } else if (hash) {
         setActivePage(hash);
       } else {
@@ -103,7 +109,7 @@ export const App: React.FC = () => {
 
       {/* Global Navbar */}
       <Navbar
-        activePage={activePage === 'agent-profile' ? 'agents' : activePage}
+        activePage={activePage === 'agent-profile' ? 'home' : activePage}
         onNavigate={handleNavigate}
         lang={lang}
         onToggleLang={toggleLanguage}
@@ -118,6 +124,7 @@ export const App: React.FC = () => {
             onSelectAgent={handleSelectAgent}
             onNavigate={handleNavigate}
             onOpenConsultation={() => setConsultationOpen(true)}
+            onOpenJoinModal={() => setJoinModalOpen(true)}
             lang={lang}
           />
         )}
@@ -153,20 +160,12 @@ export const App: React.FC = () => {
           />
         )}
 
-        {activePage === 'agents' && (
-          <AgentsPage
-            onSelectProperty={handleSelectProperty}
-            onSelectAgent={handleSelectAgent}
-            lang={lang}
-          />
-        )}
-
         {activePage === 'agent-profile' && selectedAgent && (
           <AgentProfilePage
             agent={selectedAgent}
             onSelectProperty={handleSelectProperty}
             onSelectAgent={handleSelectAgent}
-            onBack={() => handleNavigate('agents')}
+            onBack={() => handleNavigate('home')}
             onOpenConsultation={() => setConsultationOpen(true)}
             lang={lang}
           />
@@ -202,6 +201,13 @@ export const App: React.FC = () => {
       <ConsultationModal
         isOpen={consultationOpen}
         onClose={() => setConsultationOpen(false)}
+        lang={lang}
+      />
+
+      {/* Join New Era - In-Person Office Interview Modal */}
+      <JoinTeamModal
+        isOpen={joinModalOpen}
+        onClose={() => setJoinModalOpen(false)}
         lang={lang}
       />
     </div>
