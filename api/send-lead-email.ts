@@ -4,7 +4,7 @@ type VercelRequest = any;
 type VercelResponse = any;
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY || process.env.VITE_RESEND_API_KEY;
-const BROKERAGE_NOTIFICATION_EMAIL = process.env.NOTIFICATION_EMAIL || 'newerarealestateky@gmail.com';
+const BROKERAGE_NOTIFICATION_EMAIL = process.env.NOTIFICATION_EMAIL || 'newerabroker25@gmail.com';
 const FROM_EMAIL = process.env.FROM_EMAIL || 'New Era Real Estate <onboarding@resend.dev>';
 
 // Quick map of agents' emails
@@ -183,16 +183,32 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       </html>
     `;
 
-    // Send email to brokerage/agent
-    const sendResult = await resend.emails.send({
-      from: FROM_EMAIL,
-      to: toRecipients,
-      replyTo: email || undefined,
-      subject,
-      html: htmlEmail
-    });
+    // Send email to brokerage/agent with fallback for unverified domains in test mode
+    let sendResult;
+    try {
+      sendResult = await resend.emails.send({
+        from: FROM_EMAIL,
+        to: toRecipients,
+        replyTo: email || undefined,
+        subject,
+        html: htmlEmail
+      });
+    } catch (sendErr: any) {
+      if (sendErr?.statusCode === 403 || sendErr?.message?.includes('verify a domain')) {
+        console.warn('Resend test mode detected. Falling back to account email. Verify your domain at resend.com/domains to send to any recipient.');
+        sendResult = await resend.emails.send({
+          from: 'onboarding@resend.dev',
+          to: ['newerarealestateky@gmail.com'],
+          replyTo: email || undefined,
+          subject: `[Lead Broker: ${toRecipients.join(', ')}] ${subject}`,
+          html: htmlEmail
+        });
+      } else {
+        throw sendErr;
+      }
+    }
 
-    // Optional confirmation email to the client
+    // Optional confirmation email to the client (only works when domain is verified)
     if (email && email.includes('@')) {
       try {
         await resend.emails.send({
@@ -219,7 +235,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           `
         });
       } catch (clientEmailErr) {
-        console.warn('Could not send confirmation email to client:', clientEmailErr);
+        // Expected in Resend free test mode until domain is verified
+        console.info('Client auto-reply skipped (requires verified domain in resend.com/domains):', clientEmailErr);
       }
     }
 
