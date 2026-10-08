@@ -3,6 +3,8 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowUpRight,
+  ArrowRight,
+  Users,
   Globe,
   MessageCircle,
   Instagram,
@@ -20,6 +22,7 @@ import {
   loadSavedMobileFraming
 } from '../../data/agentFramingConfig';
 import { HexPattern } from '../common/HexPattern';
+import { NewEraIcon } from '../common/NewEraIcon';
 
 interface TeamShowcaseSectionProps {
   onSelectAgent: (agent: Agent) => void;
@@ -33,6 +36,7 @@ export const TeamShowcaseSection: React.FC<TeamShowcaseSectionProps> = ({
   lang
 }) => {
   const [agents, setAgents] = useState<Agent[]>([]);
+  const [totalAgentsCount, setTotalAgentsCount] = useState<number>(24);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [desktopFramingMap, setDesktopFramingMap] = useState<Record<string, AgentFraming>>(() => loadSavedDesktopFraming());
@@ -41,7 +45,9 @@ export const TeamShowcaseSection: React.FC<TeamShowcaseSectionProps> = ({
 
   useEffect(() => {
     const loaded = propertyService.getAgents();
-    setAgents(loaded);
+    setTotalAgentsCount(loaded.length);
+    const withPhotos = loaded.filter((a) => Boolean(a.photoNobgUrl || a.photoUrl));
+    setAgents(withPhotos);
   }, []);
 
   const total = agents.length;
@@ -771,6 +777,58 @@ export const TeamShowcaseSection: React.FC<TeamShowcaseSectionProps> = ({
               );
             })}
           </div>
+        </div>
+
+        {/* VIEW ALL ADVISORS CTA BUTTON */}
+        <div
+          style={{
+            marginTop: 'clamp(2.5rem, 4vw, 3.5rem)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            position: 'relative',
+            zIndex: 25
+          }}
+        >
+          <button
+            onClick={() => onNavigate('agents')}
+            className="team-view-all-btn"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.75rem',
+              backgroundColor: '#660E1A',
+              color: '#FFFFFF',
+              padding: '0.9rem 2rem',
+              borderRadius: '9999px',
+              fontSize: '0.95rem',
+              fontWeight: 600,
+              letterSpacing: '0.02em',
+              border: '1px solid rgba(255, 255, 255, 0.22)',
+              boxShadow: '0 10px 24px -4px rgba(102, 14, 26, 0.35), 0 4px 12px rgba(0, 0, 0, 0.08)',
+              cursor: 'pointer',
+              transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+              textDecoration: 'none'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#4A0812';
+              e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+              e.currentTarget.style.boxShadow = '0 16px 32px -4px rgba(102, 14, 26, 0.45), 0 6px 16px rgba(0, 0, 0, 0.12)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#660E1A';
+              e.currentTarget.style.transform = 'translateY(0) scale(1)';
+              e.currentTarget.style.boxShadow = '0 10px 24px -4px rgba(102, 14, 26, 0.35), 0 4px 12px rgba(0, 0, 0, 0.08)';
+            }}
+          >
+            <NewEraIcon color="#FFFFFF" size={15} />
+            <span>
+              {lang === 'es'
+                ? `Ver todos los Asesores (${totalAgentsCount || 24})`
+                : `View All Advisors (${totalAgentsCount || 24})`}
+            </span>
+            <ArrowRight size={17} />
+          </button>
         </div>
       </div>
 

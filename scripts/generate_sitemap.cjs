@@ -10,11 +10,23 @@ const agentsFileContent = fs.readFileSync(agentsDataPath, 'utf8');
 const agentIdMatches = [...agentsFileContent.matchAll(/"id":\s*"([^"]+)"/g)].map(m => m[1]);
 const uniqueAgentIds = [...new Set(agentIdMatches)];
 
-// Extract property slugs from mockProperties.ts
+// Extract property slugs from liveMlsProperties.json & mockProperties.ts
+let livePropertySlugs = [];
+try {
+  const livePropsPath = path.join(__dirname, '../src/data/liveMlsProperties.json');
+  if (fs.existsSync(livePropsPath)) {
+    const liveProps = JSON.parse(fs.readFileSync(livePropsPath, 'utf8'));
+    livePropertySlugs = liveProps.map(p => p.slug).filter(Boolean);
+  }
+} catch (e) {
+  console.warn('Could not read liveMlsProperties.json for sitemap:', e.message);
+}
+
 const propertiesDataPath = path.join(__dirname, '../src/data/mockProperties.ts');
 const propertiesFileContent = fs.readFileSync(propertiesDataPath, 'utf8');
 const propertySlugMatches = [...propertiesFileContent.matchAll(/slug:\s*'([^']+)'/g)].map(m => m[1]);
-const uniquePropertySlugs = [...new Set(propertySlugMatches)];
+const uniquePropertySlugs = [...new Set([...livePropertySlugs, ...propertySlugMatches])];
+
 
 const urls = [
   // 1. Core High-Priority Pages

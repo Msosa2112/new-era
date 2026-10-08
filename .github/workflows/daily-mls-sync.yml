@@ -1,0 +1,51 @@
+name: Daily MLS & Sitemap Sync
+
+on:
+  schedule:
+    # Runs every day at 08:00 UTC (04:00 AM EST)
+    - cron: '0 8 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions UI
+
+permissions:
+  contents: write
+
+jobs:
+  sync-mls:
+    name: Sync Live MLS & Generate Sitemap
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Sync MLS Properties & Update Sitemap
+        env:
+          SPARK_API_TOKEN: ${{ secrets.SPARK_API_TOKEN || secrets.VITE_SPARK_API_TOKEN || 'ar8u3ybcd71qewwrbahvacz6d' }}
+          VITE_SPARK_API_TOKEN: ${{ secrets.VITE_SPARK_API_TOKEN || 'ar8u3ybcd71qewwrbahvacz6d' }}
+          VITE_SPARK_API_BASE_URL: ${{ secrets.VITE_SPARK_API_BASE_URL || 'https://replication.sparkapi.com/v1' }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://rxejkmuzhkxfezkqrjnm.supabase.co' }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ4ZWprbXV6aGt4ZmV6a3Fyam5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2ODc3MDksImV4cCI6MjEwNTI2MzcwOX0.-p98aKj5-g47E1_kfniokkXGCgejyj072fXSv78WW0o' }}
+        run: |
+          node scripts/sync_spark_mls.cjs 1000
+          node scripts/generate_sitemap.cjs
+
+      - name: Commit and Push Changes if Updated
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/data/liveMlsProperties.json public/sitemap.xml
+          if git diff --staged --quiet; then
+            echo "No changes in MLS listings or sitemap."
+          else
+            git commit -m "chore(mls): automated daily MLS & sitemap sync [skip ci]"
+            git push
+          fi

@@ -25,6 +25,20 @@ export interface LeadSubmission {
  */
 export async function submitLead(lead: LeadSubmission) {
   try {
+    // Trigger email notification via Resend asynchronously in background
+    import('../services/emailService').then(({ triggerLeadEmailNotification }) => {
+      triggerLeadEmailNotification({
+        name: lead.name,
+        email: lead.email,
+        phone: lead.phone,
+        type: lead.type,
+        propertyId: lead.propertyId,
+        agentId: lead.agentId,
+        message: lead.message,
+        metadata: lead.metadata
+      }).catch((err) => console.warn('Resend notification trigger caught:', err));
+    }).catch(() => {});
+
     const { data, error } = await supabase
       .from('leads')
       .insert([
@@ -72,6 +86,25 @@ export interface HomeValuationSubmission {
 
 export async function submitHomeValuation(val: HomeValuationSubmission) {
   try {
+    // Trigger email notification via Resend asynchronously in background
+    import('../services/emailService').then(({ triggerLeadEmailNotification }) => {
+      triggerLeadEmailNotification({
+        name: val.ownerName,
+        email: val.ownerEmail,
+        phone: val.ownerPhone,
+        type: 'valuation',
+        address: val.address,
+        message: val.notes || `Condition: ${val.condition || 'N/A'}, Timeline: ${val.timeline || 'N/A'}`,
+        metadata: {
+          bedrooms: val.bedrooms,
+          bathrooms: val.bathrooms,
+          sqft: val.sqft,
+          condition: val.condition,
+          timeline: val.timeline
+        }
+      }).catch((err) => console.warn('Resend valuation trigger caught:', err));
+    }).catch(() => {});
+
     const { data, error } = await supabase
       .from('home_valuations')
       .insert([

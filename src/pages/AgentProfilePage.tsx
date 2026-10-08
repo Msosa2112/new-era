@@ -25,7 +25,9 @@ import { propertyService } from '../services/propertyService';
 import { PropertyCard } from '../components/properties/PropertyCard';
 import { HexPattern } from '../components/common/HexPattern';
 import { BrandLogo } from '../components/common/BrandLogo';
+import { NewEraIcon } from '../components/common/NewEraIcon';
 import { BROKERAGE_DATA } from '../data/agentsData';
+import { submitLead } from '../lib/supabase';
 import {
   ProfileAgentFraming,
   DEFAULT_PROFILE_FRAMING,
@@ -150,9 +152,21 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
       : `Hello ${agent.name}, I saw your profile on New Era Real Estate and would like to learn more about your real estate services.`
   );
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormSent(true);
+    await submitLead({
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      message: formData.message,
+      type: 'agent_inquiry',
+      agentId: agent.id,
+      metadata: {
+        agentName: agent.name,
+        service: formData.service
+      }
+    });
     setTimeout(() => {
       setFormData({ name: '', email: '', phone: '', service: 'buy', message: '' });
     }, 4000);
@@ -173,7 +187,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
           position: 'relative',
           backgroundColor: '#FAF7F2',
           color: '#121418',
-          paddingTop: 'calc(var(--header-height, 75px) + 0.35rem)',
+          paddingTop: 'calc(var(--header-height, 84px) + 1.5rem)',
           paddingBottom: 'clamp(2.5rem, 5vw, 4.5rem)',
           overflow: 'hidden',
           borderBottom: '1px solid #E8E2D8'
@@ -203,7 +217,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
         <div
           style={{
             position: 'relative',
-            zIndex: 10,
+            zIndex: 100,
             borderBottom: '1px solid rgba(102, 14, 26, 0.08)',
             padding: '0.65rem 0 1rem 0',
             marginBottom: 'clamp(1.5rem, 3.5vw, 2.5rem)'
@@ -211,25 +225,47 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
         >
           <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <button
-              onClick={onBack}
+              id="btn-back-to-advisors"
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (onBack) onBack();
+              }}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '0.5rem',
-                fontSize: '0.82rem',
+                gap: '0.55rem',
+                fontSize: '0.85rem',
                 fontWeight: 700,
                 color: '#660E1A',
-                backgroundColor: 'transparent',
-                border: 'none',
+                backgroundColor: '#FFFFFF',
+                border: '1px solid rgba(102, 14, 26, 0.22)',
+                padding: '0.55rem 1.1rem',
+                borderRadius: '8px',
                 cursor: 'pointer',
-                transition: 'transform 0.2s ease'
+                pointerEvents: 'auto',
+                position: 'relative',
+                zIndex: 101,
+                transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                boxShadow: '0 4px 12px rgba(102, 14, 26, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04)'
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateX(-3px)')}
-              onMouseLeave={(e) => (e.currentTarget.style.transform = 'none')}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(102, 14, 26, 0.08)';
+                e.currentTarget.style.borderColor = '#660E1A';
+                e.currentTarget.style.transform = 'translateX(-3px)';
+                e.currentTarget.style.boxShadow = '0 6px 16px rgba(102, 14, 26, 0.15)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#FFFFFF';
+                e.currentTarget.style.borderColor = 'rgba(102, 14, 26, 0.22)';
+                e.currentTarget.style.transform = 'none';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(102, 14, 26, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04)';
+              }}
             >
               <ArrowLeft size={16} color="#660E1A" />
-              <span style={{ color: '#121418' }}>
-                {lang === 'es' ? 'Volver al Inicio' : 'Back to Home'}
+              <span style={{ color: '#111827', fontWeight: 700 }}>
+                {lang === 'es' ? 'Volver a Asesores' : 'Back to Advisors'}
               </span>
             </button>
 
@@ -375,24 +411,74 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                 }}
               />
 
-              <img
-                className="agent-portrait-img"
-                src={agent.photoNobgUrl || agent.photoUrl}
-                alt={agent.name}
-                style={{
-                  width: 'auto',
-                  maxHeight: '480px',
-                  objectFit: 'contain',
-                  objectPosition: 'bottom center',
-                  filter: 'drop-shadow(0 20px 30px rgba(0, 0, 0, 0.12))',
-                  position: 'relative',
-                  zIndex: 2,
-                  transform: `translate(var(--p-d-x, 0px), var(--p-d-y, 0px)) scale(var(--p-d-scale, 1))`,
-                  maskImage: `linear-gradient(to bottom, black var(--p-d-fadestart, 78%), transparent var(--p-d-fadeend, 98%))`,
-                  WebkitMaskImage: `linear-gradient(to bottom, black var(--p-d-fadestart, 78%), transparent var(--p-d-fadeend, 98%))`,
-                  transition: 'transform 0.05s ease-out'
-                }}
-              />
+              {agent.photoNobgUrl || agent.photoUrl ? (
+                <img
+                  className="agent-portrait-img"
+                  src={agent.photoNobgUrl || agent.photoUrl}
+                  alt={agent.name}
+                  style={{
+                    width: 'auto',
+                    maxHeight: '480px',
+                    objectFit: 'contain',
+                    objectPosition: 'bottom center',
+                    filter: 'drop-shadow(0 20px 30px rgba(0, 0, 0, 0.12))',
+                    position: 'relative',
+                    zIndex: 2,
+                    transform: `translate(var(--p-d-x, 0px), var(--p-d-y, 0px)) scale(var(--p-d-scale, 1))`,
+                    maskImage: `linear-gradient(to bottom, black var(--p-d-fadestart, 78%), transparent var(--p-d-fadeend, 98%))`,
+                    WebkitMaskImage: `linear-gradient(to bottom, black var(--p-d-fadestart, 78%), transparent var(--p-d-fadeend, 98%))`,
+                    transition: 'transform 0.05s ease-out'
+                  }}
+                />
+              ) : (
+                <div
+                  style={{
+                    width: '210px',
+                    height: '210px',
+                    borderRadius: '50%',
+                    backgroundColor: '#FFFFFF',
+                    border: '3px solid rgba(102, 14, 26, 0.25)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 24px 48px rgba(102, 14, 26, 0.12), 0 4px 16px rgba(0, 0, 0, 0.04)',
+                    position: 'relative',
+                    zIndex: 2,
+                    marginBottom: '2.5rem'
+                  }}
+                >
+                  <NewEraIcon color="#660E1A" size={28} style={{ marginBottom: '0.45rem' }} />
+                  <span
+                    style={{
+                      fontFamily: 'serif',
+                      fontSize: '3rem',
+                      fontWeight: 700,
+                      color: '#660E1A',
+                      lineHeight: 1
+                    }}
+                  >
+                    {agent.name
+                      .split(' ')
+                      .map((n) => n[0])
+                      .slice(0, 2)
+                      .join('')
+                      .toUpperCase()}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '0.62rem',
+                      fontWeight: 800,
+                      letterSpacing: '0.12em',
+                      textTransform: 'uppercase',
+                      color: '#660E1A',
+                      marginTop: '0.45rem'
+                    }}
+                  >
+                    NEW ERA REALTOR®
+                  </span>
+                </div>
+              )}
             </div>
 
             {/* BIO, CREDENTIALS & DIRECT ACTIONS */}

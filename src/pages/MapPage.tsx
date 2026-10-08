@@ -4,6 +4,7 @@ import { propertyService } from '../services/propertyService';
 import { PropertyMap } from '../components/map/PropertyMap';
 import { MapPropertyCard } from '../components/map/MapPropertyCard';
 import { useGooglePlacesAutocomplete } from '../hooks/useGooglePlacesAutocomplete';
+import { NewEraIcon } from '../components/common/NewEraIcon';
 import {
   Search,
   Grid,
@@ -43,6 +44,12 @@ export const MapPage: React.FC<MapPageProps> = ({
   const [feedViewMode, setFeedViewMode] = useState<'list' | 'grid'>('list');
   const [mobileViewMode, setMobileViewMode] = useState<'map' | 'list'>('map');
   const [onlySaved, setOnlySaved] = useState<boolean>(false);
+  const [visibleCount, setVisibleCount] = useState<number>(24);
+
+  // Reset visible cards count when filters or favorites change
+  useEffect(() => {
+    setVisibleCount(24);
+  }, [filter, onlySaved]);
 
   // Popover state for floating filter pills
   const [activePopover, setActivePopover] = useState<'type' | 'price' | 'beds' | null>(null);
@@ -106,14 +113,23 @@ export const MapPage: React.FC<MapPageProps> = ({
     });
   }, [filter]);
 
-  // Handle marker selection from the map -> smooth scroll to listing card
+  // Handle marker selection from the map -> ensure card is loaded and smooth scroll to listing card
   const handleSelectFromMap = useCallback((property: Property | null) => {
     setSelectedProperty(property);
     if (property) {
-      const cardEl = document.getElementById(`map-card-${property.id}`);
-      if (cardEl) {
-        cardEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
+      setProperties((currentProps) => {
+        const idx = currentProps.findIndex((p) => p.id === property.id);
+        if (idx >= 0) {
+          setVisibleCount((prev) => Math.max(prev, idx + 8));
+        }
+        return currentProps;
+      });
+      setTimeout(() => {
+        const cardEl = document.getElementById(`map-card-${property.id}`);
+        if (cardEl) {
+          cardEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }, 50);
     }
   }, []);
 
@@ -186,6 +202,12 @@ export const MapPage: React.FC<MapPageProps> = ({
       {/* ========================================================================= */}
       <aside
         className={`map-list-sidebar ${mobileViewMode === 'list' ? 'mobile-visible' : 'mobile-hidden'}`}
+        onScroll={(e) => {
+          const el = e.currentTarget;
+          if (el.scrollTop + el.clientHeight >= el.scrollHeight - 400) {
+            setVisibleCount((prev) => Math.min(prev + 24, displayedProperties.length));
+          }
+        }}
         style={{
           width: '40%',
           minWidth: '420px',
@@ -349,7 +371,34 @@ export const MapPage: React.FC<MapPageProps> = ({
               </button>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+              {/* Only New Era Filter Toggle */}
+              <button
+                type="button"
+                onClick={() => setFilter((prev) => ({ ...prev, onlyNewEra: !prev.onlyNewEra }))}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  padding: '5px 9px',
+                  borderRadius: 'var(--radius-sm)',
+                  fontSize: '0.76rem',
+                  fontWeight: 700,
+                  border: filter.onlyNewEra
+                    ? '1.5px solid var(--color-burgundy-primary, #660E1A)'
+                    : '1px solid rgba(0, 0, 0, 0.08)',
+                  backgroundColor: filter.onlyNewEra ? 'var(--color-burgundy-primary, #660E1A)' : '#FFFFFF',
+                  color: filter.onlyNewEra ? '#FFFFFF' : 'var(--color-burgundy-primary, #660E1A)',
+                  cursor: 'pointer',
+                  transition: 'all 150ms ease',
+                  boxShadow: filter.onlyNewEra ? '0 2px 8px rgba(102, 14, 26, 0.3)' : 'none'
+                }}
+                title={lang === 'es' ? 'Ver únicamente propiedades de New Era' : 'View New Era properties only'}
+              >
+                <NewEraIcon color={filter.onlyNewEra ? '#FFFFFF' : 'var(--color-burgundy-primary, #660E1A)'} size={12} />
+                <span>{lang === 'es' ? 'Solo New Era' : 'New Era Only'}</span>
+              </button>
+
               {/* Favorites Filter Toggle */}
               <button
                 type="button"
@@ -475,22 +524,58 @@ export const MapPage: React.FC<MapPageProps> = ({
             </button>
           </div>
         ) : (
-          <div className={feedViewMode === 'grid' ? 'listings-feed-grid' : 'listings-feed-list'}>
-            {displayedProperties.map((prop) => (
-              <MapPropertyCard
-                key={prop.id}
-                property={prop}
-                viewMode={feedViewMode}
-                isSelected={selectedProperty?.id === prop.id}
-                isHovered={hoveredPropertyId === prop.id}
-                isSaved={savedPropertyIds.includes(prop.id)}
-                onSelect={handleSelectCard}
-                onOpenDetail={onSelectProperty}
-                onToggleSave={handleToggleSave}
-                onHover={setHoveredPropertyId}
-                lang={lang}
-              />
-            ))}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div className={feedViewMode === 'grid' ? 'listings-feed-grid' : 'listings-feed-list'}>
+              {displayedProperties.slice(0, visibleCount).map((prop) => (
+                <MapPropertyCard
+                  key={prop.id}
+                  property={prop}
+                  viewMode={feedViewMode}
+                  isSelected={selectedProperty?.id === prop.id}
+                  isHovered={hoveredPropertyId === prop.id}
+                  isSaved={savedPropertyIds.includes(prop.id)}
+                  onSelect={handleSelectCard}
+                  onOpenDetail={onSelectProperty}
+                  onToggleSave={handleToggleSave}
+                  onHover={setHoveredPropertyId}
+                  lang={lang}
+                />
+              ))}
+            </div>
+
+            {/* Progressive Infinite Loader / Show More Trigger */}
+            {visibleCount < displayedProperties.length && (
+              <button
+                type="button"
+                onClick={() => setVisibleCount((prev) => Math.min(prev + 24, displayedProperties.length))}
+                style={{
+                  padding: '10px 16px',
+                  backgroundColor: '#FAF8F5',
+                  border: '1px solid rgba(0, 0, 0, 0.1)',
+                  borderRadius: 'var(--radius-sm)',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  color: 'var(--color-burgundy-primary, #660E1A)',
+                  cursor: 'pointer',
+                  width: '100%',
+                  marginTop: '4px',
+                  transition: 'all 160ms ease',
+                  textAlign: 'center'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#FFFFFF';
+                  e.currentTarget.style.borderColor = 'var(--color-burgundy-primary, #660E1A)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#FAF8F5';
+                  e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.1)';
+                }}
+              >
+                {lang === 'es'
+                  ? `Mostrar más propiedades (${displayedProperties.length - visibleCount} restantes)`
+                  : `Load more properties (${displayedProperties.length - visibleCount} remaining)`}
+              </button>
+            )}
           </div>
         )}
       </aside>

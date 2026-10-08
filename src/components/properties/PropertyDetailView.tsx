@@ -59,7 +59,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
   const [interestRate, setInterestRate] = useState(6.5);
   const [loanTermYears, setLoanTermYears] = useState(30);
 
-  const agent = propertyService.getAgentById(property.agentId);
+  const agent = property.agentId ? propertyService.getAgentById(property.agentId) : null;
   const [similarProperties, setSimilarProperties] = useState<Property[]>([]);
 
   React.useEffect(() => {
@@ -94,7 +94,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
       phone: clientPhone,
       type: 'tour',
       propertyId: property.id,
-      agentId: property.agentId,
+      agentId: property.agentId || undefined,
       message: `Requested ${tourType} tour on ${tourDate} at ${tourTime}`,
       metadata: {
         tourDate,
@@ -615,8 +615,8 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
 
             {/* Right Column: Agent Card & Private Tour Booking Form */}
             <div style={{ position: 'sticky', top: '5rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-              {/* Agent Representation Card */}
-              {agent && (
+              {/* Agent Representation Card / Brokerage Advisory */}
+              {agent ? (
                 <div
                   style={{
                     padding: '2rem',
@@ -626,7 +626,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                     boxShadow: 'var(--shadow-sm)'
                   }}
                 >
-                  <span className="display-subtitle">YOUR ADVISORY AGENT</span>
+                  <span className="display-subtitle">{lang === 'es' ? 'ASESOR DESIGNADO' : 'YOUR ADVISORY AGENT'}</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', margin: '1.25rem 0' }}>
                     <img
                       src={agent.photoUrl}
@@ -680,7 +680,52 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                       style={{ width: '100%', justifyContent: 'center', fontSize: '0.8rem', padding: '0.75rem' }}
                     >
                       <Mail size={14} color="var(--color-burgundy-primary)" />
-                      <span>Email Advisor</span>
+                      <span>{lang === 'es' ? 'Contactar al Asesor' : 'Email Advisor'}</span>
+                    </a>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  style={{
+                    padding: '2rem',
+                    border: '1px solid var(--border-subtle)',
+                    borderRadius: 'var(--radius-md)',
+                    backgroundColor: 'var(--bg-surface)',
+                    boxShadow: 'var(--shadow-sm)'
+                  }}
+                >
+                  <span className="display-subtitle">{lang === 'es' ? 'ASESORÍA Y REPRESENTACIÓN' : 'BUYER REPRESENTATION'}</span>
+                  <div style={{ margin: '1rem 0' }}>
+                    <h4 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--color-burgundy-primary)' }}>New Era Real Estate</h4>
+                    <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
+                      {lang === 'es'
+                        ? 'Representación profesional y personalizada para compradores en Greater Louisville.'
+                        : 'Expert advisory and dedicated buyer representation across Greater Louisville.'}
+                    </p>
+                    {property.mls?.listOfficeName && (
+                      <div style={{ marginTop: '0.75rem', padding: '0.5rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-sm)', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                        {lang === 'es' ? 'Listado cortesía de: ' : 'Listing courtesy of: '}<strong>{property.mls.listOfficeName}</strong>
+                      </div>
+                    )}
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                    <a
+                      href={`tel:${BROKERAGE_DATA.phone.replace(/[^0-9]/g, '')}`}
+                      className="btn-outline"
+                      style={{ width: '100%', justifyContent: 'center', fontSize: '0.8rem', padding: '0.75rem' }}
+                    >
+                      <Phone size={14} color="var(--color-burgundy-primary)" />
+                      <span>{BROKERAGE_DATA.phone}</span>
+                    </a>
+
+                    <a
+                      href={`mailto:${BROKERAGE_DATA.email}`}
+                      className="btn-outline"
+                      style={{ width: '100%', justifyContent: 'center', fontSize: '0.8rem', padding: '0.75rem' }}
+                    >
+                      <Mail size={14} color="var(--color-burgundy-primary)" />
+                      <span>{BROKERAGE_DATA.email}</span>
                     </a>
                   </div>
                 </div>

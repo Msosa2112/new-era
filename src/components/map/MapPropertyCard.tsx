@@ -10,6 +10,7 @@ import {
   X
 } from 'lucide-react';
 import { propertyService } from '../../services/propertyService';
+import { NewEraIcon } from '../common/NewEraIcon';
 
 export interface MapPropertyCardProps {
   property: Property;
@@ -26,7 +27,7 @@ export interface MapPropertyCardProps {
   compact?: boolean;
 }
 
-export const MapPropertyCard: React.FC<MapPropertyCardProps> = ({
+const MapPropertyCardComponent: React.FC<MapPropertyCardProps> = ({
   property,
   isSelected = false,
   isHovered = false,
@@ -41,7 +42,7 @@ export const MapPropertyCard: React.FC<MapPropertyCardProps> = ({
   compact = false
 }) => {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number>(0);
-  const agent = propertyService.getAgentById(property.agentId);
+  const agent = property.agentId ? propertyService.getAgentById(property.agentId) : null;
 
   const formattedPrice = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -147,17 +148,28 @@ export const MapPropertyCard: React.FC<MapPropertyCardProps> = ({
               top: '6px',
               left: '6px',
               padding: '2px 6px',
-              backgroundColor: 'rgba(10, 11, 14, 0.78)',
+              backgroundColor: property.isNewEra ? 'var(--color-burgundy-primary, #660E1A)' : 'rgba(10, 11, 14, 0.78)',
               backdropFilter: 'blur(6px)',
               color: '#FFFFFF',
               fontSize: '8px',
-              fontWeight: 700,
+              fontWeight: 800,
               textTransform: 'uppercase',
               letterSpacing: '0.06em',
-              borderRadius: '3px'
+              borderRadius: '3px',
+              border: property.isNewEra ? '1px solid rgba(255, 255, 255, 0.4)' : 'none',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '3px'
             }}
           >
-            {property.status}
+            {property.isNewEra ? (
+              <>
+                <NewEraIcon color="#FFFFFF" size={10} />
+                <span>NEW ERA</span>
+              </>
+            ) : (
+              property.status
+            )}
           </div>
         </div>
 
@@ -339,7 +351,7 @@ export const MapPropertyCard: React.FC<MapPropertyCardProps> = ({
           }}
         />
 
-        {/* Status Badge */}
+        {/* Status / New Era Badge */}
         <div
           style={{
             position: 'absolute',
@@ -347,7 +359,7 @@ export const MapPropertyCard: React.FC<MapPropertyCardProps> = ({
             left: '10px',
             zIndex: 20,
             padding: '3px 8px',
-            backgroundColor: 'rgba(12, 13, 16, 0.82)',
+            backgroundColor: property.isNewEra ? 'var(--color-burgundy-primary, #660E1A)' : 'rgba(12, 13, 16, 0.82)',
             backdropFilter: 'blur(8px)',
             color: '#FFFFFF',
             fontSize: '9px',
@@ -355,10 +367,21 @@ export const MapPropertyCard: React.FC<MapPropertyCardProps> = ({
             letterSpacing: '0.08em',
             textTransform: 'uppercase',
             borderRadius: '4px',
-            border: '1px solid rgba(255, 255, 255, 0.2)'
+            border: property.isNewEra ? '1px solid rgba(255, 255, 255, 0.4)' : '1px solid rgba(255, 255, 255, 0.2)',
+            boxShadow: property.isNewEra ? '0 2px 8px rgba(102, 14, 26, 0.5)' : 'none',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '4px'
           }}
         >
-          {property.status}
+          {property.isNewEra ? (
+            <>
+              <NewEraIcon color="#FFFFFF" size={11} />
+              <span>{lang === 'es' ? 'EXCLUSIVA NEW ERA' : 'NEW ERA EXCLUSIVE'}</span>
+            </>
+          ) : (
+            property.status
+          )}
         </div>
 
         {/* Heart / Save Favorite Button */}
@@ -629,7 +652,20 @@ export const MapPropertyCard: React.FC<MapPropertyCardProps> = ({
               </span>
             </div>
           ) : (
-            <span style={{ fontSize: '0.7rem', color: '#8E877E' }}>MLS #{property.mls?.mlsId}</span>
+            <span
+              style={{
+                fontSize: '0.68rem',
+                fontWeight: 500,
+                color: '#6E7480',
+                maxWidth: '55%',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
+              }}
+              title={property.mls?.listOfficeName ? `Cortesía de ${property.mls.listOfficeName}` : `MLS #${property.mls?.mlsId}`}
+            >
+              {lang === 'es' ? 'Cortesía: ' : 'Courtesy: '}{property.mls?.listOfficeName || 'GLAR MLS'}
+            </span>
           )}
 
           <button
@@ -671,3 +707,5 @@ export const MapPropertyCard: React.FC<MapPropertyCardProps> = ({
     </article>
   );
 };
+
+export const MapPropertyCard = React.memo(MapPropertyCardComponent);

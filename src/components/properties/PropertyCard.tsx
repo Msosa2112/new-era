@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ArrowUpRight, Bed, Bath, Square, MapPin } from 'lucide-react';
 import { Property } from '../../types/property';
 import { propertyService } from '../../services/propertyService';
+import { NewEraIcon } from '../common/NewEraIcon';
 
 interface PropertyCardProps {
   property: Property;
@@ -20,7 +21,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [tilt, setTilt] = useState({ x: 0, y: 0, glareX: 50, glareY: 50 });
-  const agent = propertyService.getAgentById(property.agentId);
+  const agent = property.agentId ? propertyService.getAgentById(property.agentId) : null;
 
   const formattedPrice = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -147,24 +148,48 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
             zIndex: 2
           }}
         >
-          <span
-            className="property-card-badge-status"
-            style={{
-              backgroundColor: 'rgba(17, 24, 39, 0.82)',
-              backdropFilter: 'blur(8px)',
-              WebkitBackdropFilter: 'blur(8px)',
-              color: '#FFFFFF',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              fontSize: '0.65rem',
-              fontWeight: 700,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              padding: '0.22rem 0.55rem',
-              borderRadius: '4px'
-            }}
-          >
-            {property.status}
-          </span>
+          {property.isNewEra ? (
+            <span
+              className="property-card-badge-newera"
+              style={{
+                backgroundColor: 'var(--color-burgundy-primary, #660E1A)',
+                color: '#FFFFFF',
+                border: '1px solid rgba(255, 255, 255, 0.4)',
+                fontSize: '0.65rem',
+                fontWeight: 800,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                padding: '0.24rem 0.6rem',
+                borderRadius: '4px',
+                boxShadow: '0 2px 8px rgba(102, 14, 26, 0.5)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem'
+              }}
+            >
+              <NewEraIcon color="#FFFFFF" size={13} />
+              <span>{lang === 'es' ? 'Exclusiva New Era' : 'New Era Exclusive'}</span>
+            </span>
+          ) : (
+            <span
+              className="property-card-badge-status"
+              style={{
+                backgroundColor: 'rgba(17, 24, 39, 0.82)',
+                backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
+                color: '#FFFFFF',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                fontSize: '0.65rem',
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                padding: '0.22rem 0.55rem',
+                borderRadius: '4px'
+              }}
+            >
+              {property.status}
+            </span>
+          )}
         </div>
 
         {/* Price Floating (Bottom-Left) */}
@@ -357,17 +382,19 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
             </div>
           ) : (
             <span
-              className="property-card-agent-name"
+              className="property-card-courtesy"
               style={{
-                fontSize: '0.7rem',
-                fontWeight: 600,
+                fontSize: '0.68rem',
+                fontWeight: 500,
                 color: '#6B7280',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap'
+                whiteSpace: 'nowrap',
+                maxWidth: '65%'
               }}
+              title={property.mls?.listOfficeName ? `Listado cortesía de ${property.mls.listOfficeName}` : 'GLAR MLS'}
             >
-              New Era
+              {lang === 'es' ? 'Cortesía: ' : 'Courtesy: '}{property.mls?.listOfficeName || 'GLAR MLS'}
             </span>
           )}
 

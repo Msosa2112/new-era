@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Property } from '../../types/property';
 import { Layers, Crosshair, ZoomIn, ZoomOut, Globe, Map as MapIcon, Mountain, Loader2 } from 'lucide-react';
 import { loadGoogleMapsScript, isGoogleMapsAuthFailed } from '../../lib/googleMaps';
+import { getNewEraSvgHtml } from '../common/NewEraIcon';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './PropertyMap.css';
@@ -44,41 +45,111 @@ function buildPopupHtml(prop: Property, lang: 'en' | 'es'): string {
     maximumFractionDigits: 0
   }).format(prop.price);
 
+  // Clean street address vs city/neighborhood to eliminate redundant text
+  const rawAddress = prop.location.address || '';
+  const streetAddress = rawAddress.includes(',') ? rawAddress.split(',')[0].trim() : (rawAddress || prop.title.split(',')[0].trim());
+  const hasCustomEditorialTitle = prop.title && !prop.title.toLowerCase().includes(streetAddress.toLowerCase()) && prop.title.length < 45;
+  const mainTitle = hasCustomEditorialTitle ? prop.title : (streetAddress || prop.title);
+  
+  const localityParts = [
+    prop.location.neighborhood,
+    prop.location.city,
+    prop.location.state ? `${prop.location.state} ${prop.location.zip || ''}`.trim() : ''
+  ].filter(Boolean);
+  const locationSubtitle = localityParts.length > 0 ? localityParts.join(' · ') : `${prop.location.city || 'Louisville'}, KY`;
+
+  // Determine property category / land vs residential
+  const isLandOrLot = prop.propertyType === 'Land' || (prop.bedrooms === 0 && prop.bathrooms <= 1 && prop.sqft < 500);
+
+  let specsHtml = '';
+  if (isLandOrLot) {
+    specsHtml = `
+      <div class="map-spec-pill">
+        <span class="map-spec-label">${lang === 'es' ? 'TIPO' : 'TYPE'}</span>
+        <strong class="map-spec-value">${prop.propertyType || (lang === 'es' ? 'Terreno' : 'Land')}</strong>
+      </div>
+      <div class="map-spec-pill">
+        <span class="map-spec-label">${lang === 'es' ? 'SUPERFICIE' : 'AREA'}</span>
+        <strong class="map-spec-value">${prop.sqft > 0 ? `${new Intl.NumberFormat('en-US').format(prop.sqft)} sf` : (lang === 'es' ? 'Lote' : 'Lot')}</strong>
+      </div>
+      <div class="map-spec-pill">
+        <span class="map-spec-label">${lang === 'es' ? 'ESTADO' : 'STATUS'}</span>
+        <strong class="map-spec-value is-status-active">${prop.status || 'Active'}</strong>
+      </div>
+    `;
+  } else {
+    specsHtml = `
+      <div class="map-spec-pill">
+        <strong class="map-spec-value">${prop.bedrooms}</strong>
+        <span class="map-spec-label">${lang === 'es' ? 'HABS' : 'BEDS'}</span>
+      </div>
+      <div class="map-spec-pill">
+        <strong class="map-spec-value">${prop.bathrooms}</strong>
+        <span class="map-spec-label">${lang === 'es' ? 'BAÑOS' : 'BATHS'}</span>
+      </div>
+      <div class="map-spec-pill">
+        <strong class="map-spec-value">${prop.sqft > 0 ? new Intl.NumberFormat('en-US').format(prop.sqft) : '—'}</strong>
+        <span class="map-spec-label">SQ FT</span>
+      </div>
+    `;
+  }
+
+  const isNewEra = Boolean(prop.isNewEra || prop.mls?.isNewEra);
+
   return `
     <div class="map-popup-card" id="popup-card-${prop.id}">
       <div class="map-popup-img-wrap">
         <img class="map-popup-img" src="${primaryPhoto}" alt="${prop.title}" />
-        <span class="map-popup-status">${prop.status}</span>
+        
+        <!-- Top Left Badge -->
+        ${isNewEra ? `
+          <div class="map-popup-badge-newera">
+            ${getNewEraSvgHtml('#FFFFFF', 11)}
+            <span>${lang === 'es' ? 'EXCLUSIVA NEW ERA' : 'NEW ERA EXCLUSIVE'}</span>
+          </div>
+        ` : `
+          <div class="map-popup-badge-market">
+            <span>${prop.propertyType || prop.status || 'Active'}</span>
+          </div>
+        `}
+
+        <!-- Close Button -->
         <button type="button" class="map-popup-close-btn" id="btn-close-popup-${prop.id}" aria-label="${lang === 'es' ? 'Cerrar' : 'Close'}">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
+
+        <!-- Floating Price Pill on Image -->
         <div class="map-popup-price-tag">${formattedFullPrice}</div>
       </div>
+
       <div class="map-popup-info">
+        <!-- Title & Property Type -->
         <div class="map-popup-header-row">
-          <h4 class="map-popup-title">${prop.title}</h4>
-          <span class="map-popup-type-badge">${prop.propertyType}</span>
+          <h4 class="map-popup-title" title="${mainTitle}">${mainTitle}</h4>
+          ${!isLandOrLot && prop.propertyType ? `<span class="map-popup-type-badge">${prop.propertyType}</span>` : ''}
         </div>
-        <div class="map-popup-location">
+
+        <!-- Clean Location Line -->
+        <div class="map-popup-location" title="${locationSubtitle}">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--color-burgundy-primary, #660E1A)" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span>${prop.location.address}, ${prop.location.city}</span>
+          <span>${locationSubtitle}</span>
         </div>
+
+        <!-- 3-Column Specifications Grid -->
         <div class="map-popup-specs">
-          <div class="map-spec-pill">
-            <strong>${prop.bedrooms}</strong>
-            <span>${lang === 'es' ? 'Hab' : 'Beds'}</span>
-          </div>
-          <div class="map-spec-pill">
-            <strong>${prop.bathrooms}</strong>
-            <span>${lang === 'es' ? 'Baños' : 'Baths'}</span>
-          </div>
-          <div class="map-spec-pill">
-            <strong>${new Intl.NumberFormat('en-US').format(prop.sqft)}</strong>
-            <span>Sq Ft</span>
-          </div>
+          ${specsHtml}
         </div>
+
+        <!-- Courtesy MLS attribution if generic MLS listing -->
+        ${!isNewEra && prop.mls?.listOfficeName ? `
+          <div class="map-popup-courtesy">
+            ${lang === 'es' ? 'Cortesía de: ' : 'Courtesy: '}${prop.mls.listOfficeName}
+          </div>
+        ` : ''}
+
+        <!-- High-End Call to Action Button -->
         <button class="map-popup-btn" id="btn-view-popup-${prop.id}">
-          <span>${lang === 'es' ? 'Ver Propiedad' : 'View Property'}</span>
+          <span>${lang === 'es' ? 'Ver Detalles de la Propiedad' : 'View Property Details'}</span>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
         </button>
       </div>
@@ -101,6 +172,9 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
     return isGoogleMapsAuthFailed() ? 'leaflet' : 'google';
   });
   const [isInitializing, setIsInitializing] = useState<boolean>(true);
+  const [isMapReady, setIsMapReady] = useState<boolean>(false);
+  const [zoomLevel, setZoomLevel] = useState<number>(DEFAULT_ZOOM);
+  const isDetailedZoom = zoomLevel >= 13.5;
 
   // Google Maps Refs
   const googleMapRef = useRef<google.maps.Map | null>(null);
@@ -139,6 +213,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
       if (mapContainerRef.current) {
         mapContainerRef.current.innerHTML = '';
       }
+      setIsMapReady(false);
       setEngine('leaflet');
       setIsInitializing(false);
     };
@@ -153,10 +228,20 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
   useEffect(() => {
     if (!mapContainerRef.current) return;
     let isCancelled = false;
+    setIsMapReady(false);
 
     if (engine === 'google') {
+      // Fallback timer if Google Maps fails to respond within 3.5s
+      const fallbackTimer = setTimeout(() => {
+        if (!googleMapRef.current && !isCancelled) {
+          console.warn('Google Maps SDK load timed out. Falling back to Leaflet engine.');
+          setEngine('leaflet');
+        }
+      }, 3500);
+
       loadGoogleMapsScript()
         .then((googleInstance) => {
+          clearTimeout(fallbackTimer);
           if (isCancelled || !mapContainerRef.current) return;
 
           // Double check if auth failed during script load
@@ -188,11 +273,20 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
             onSelectPropertyRef.current?.(null);
           });
 
+          map.addListener('zoom_changed', () => {
+            const z = map.getZoom();
+            if (z !== undefined) {
+              setZoomLevel(z);
+            }
+          });
+
           googleMapRef.current = map;
           googleInfoWindowRef.current = infoWindow;
+          setIsMapReady(true);
           setIsInitializing(false);
         })
         .catch((err) => {
+          clearTimeout(fallbackTimer);
           console.warn('Google Maps SDK unavailable, using high-definition satellite fallback:', err);
           if (!isCancelled) {
             setEngine('leaflet');
@@ -216,8 +310,13 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
         onSelectPropertyRef.current?.(null);
       });
 
+      map.on('zoomend', () => {
+        setZoomLevel(map.getZoom());
+      });
+
       leafletMapRef.current = map;
       applyLeafletTiles(map, mapStyle);
+      setIsMapReady(true);
       setIsInitializing(false);
 
       const resizeObserver = new ResizeObserver(() => {
@@ -229,11 +328,13 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
         resizeObserver.disconnect();
         map.remove();
         leafletMapRef.current = null;
+        setIsMapReady(false);
       };
     }
 
     return () => {
       isCancelled = true;
+      setIsMapReady(false);
       if (googleInfoWindowRef.current) {
         googleInfoWindowRef.current.close();
         googleInfoWindowRef.current = null;
@@ -297,20 +398,20 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
     }
   }, [mapStyle, engine]);
 
-  // Sync Markers for Google Engine (Runs only when engine or property list changes)
+  // Sync Markers for Google Engine (Runs when map is ready or properties change)
   useEffect(() => {
-    if (engine !== 'google' || !googleMapRef.current || !window.google?.maps) return;
+    if (engine !== 'google' || !isMapReady || !googleMapRef.current || !window.google?.maps) return;
     const map = googleMapRef.current;
     const googleInstance = window.google;
 
     const currentIds = properties.map((p) => p.id).join(',');
     const propertiesChanged = currentIds !== prevGooglePropertyIdsRef.current;
-    prevGooglePropertyIdsRef.current = currentIds;
 
     // Prevent destroying and recreating markers when properties have not changed
-    if (!propertiesChanged && googleOverlaysRef.current.size === properties.length) {
+    if (!propertiesChanged && googleOverlaysRef.current.size === properties.length && properties.length > 0) {
       return;
     }
+    prevGooglePropertyIdsRef.current = currentIds;
 
     class PricePillOverlay extends googleInstance.maps.OverlayView {
       private position: google.maps.LatLng;
@@ -331,11 +432,17 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
         div.className = 'custom-google-price-marker';
         div.style.position = 'absolute';
         div.style.cursor = 'pointer';
-        div.style.zIndex = '100';
+        div.style.zIndex = this.prop.isNewEra ? '800' : '30';
 
         div.innerHTML = `
-          <div id="marker-pill-${this.prop.id}" class="map-price-pill">
-            ${formatPricePill(this.prop.price)}
+          <div id="marker-pill-${this.prop.id}" class="map-price-pill ${this.prop.isNewEra ? 'is-new-era' : 'is-market'}">
+            <div class="map-marker-dot-view">
+              ${this.prop.isNewEra ? '<span class="new-era-dot-star">★</span>' : ''}
+            </div>
+            <div class="map-marker-pill-view">
+              ${this.prop.isNewEra ? getNewEraSvgHtml('#FFFFFF', 13) : ''}
+              <span>${formatPricePill(this.prop.price)}</span>
+            </div>
           </div>
         `;
 
@@ -347,13 +454,13 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
         div.addEventListener('mouseenter', () => {
           onHoverPropertyRef.current?.(this.prop.id);
           div.querySelector('.map-price-pill')?.classList.add('is-hovered');
-          div.style.zIndex = '1000';
+          div.style.zIndex = '2500';
         });
 
         div.addEventListener('mouseleave', () => {
           onHoverPropertyRef.current?.(null);
           div.querySelector('.map-price-pill')?.classList.remove('is-hovered');
-          div.style.zIndex = '100';
+          div.style.zIndex = this.prop.isNewEra ? '800' : '30';
         });
 
         this.div = div;
@@ -383,10 +490,10 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
         const pill = this.div.querySelector('.map-price-pill');
         if (isActive) {
           pill?.classList.add('is-active');
-          this.div.style.zIndex = '2000';
+          this.div.style.zIndex = '3000';
         } else {
           pill?.classList.remove('is-active');
-          this.div.style.zIndex = '100';
+          this.div.style.zIndex = this.prop.isNewEra ? '800' : '30';
         }
       }
 
@@ -395,9 +502,10 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
         const pill = this.div.querySelector('.map-price-pill');
         if (isHovered) {
           pill?.classList.add('is-hovered');
-          this.div.style.zIndex = '1000';
+          this.div.style.zIndex = '2500';
         } else {
           pill?.classList.remove('is-hovered');
+          this.div.style.zIndex = this.prop.isNewEra ? '800' : '30';
         }
       }
     }
@@ -408,7 +516,14 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
     const bounds = new googleInstance.maps.LatLngBounds();
     let hasCoords = false;
 
-    properties.forEach((prop) => {
+    // Render market properties first and New Era properties last so New Era is always in front
+    const sortedProperties = [...properties].sort((a, b) => {
+      const isNewEraA = a.isNewEra || a.mls?.isNewEra ? 1 : 0;
+      const isNewEraB = b.isNewEra || b.mls?.isNewEra ? 1 : 0;
+      return isNewEraA - isNewEraB;
+    });
+
+    sortedProperties.forEach((prop) => {
       const lat = prop.location.latitude;
       const lng = prop.location.longitude;
       if (!lat || !lng) return;
@@ -424,28 +539,35 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
     if (hasCoords && properties.length > 0 && propertiesChanged) {
       map.fitBounds(bounds, { top: 60, right: 60, bottom: 60, left: 60 });
     }
-  }, [engine, properties]);
+  }, [engine, properties, isMapReady]);
 
-  // Sync Markers for Leaflet Engine (Runs only when engine, property list, or language changes)
+  // Sync Markers for Leaflet Engine (Runs when map is ready or properties change)
   useEffect(() => {
-    if (engine !== 'leaflet' || !leafletMapRef.current) return;
+    if (engine !== 'leaflet' || !isMapReady || !leafletMapRef.current) return;
     const map = leafletMapRef.current;
 
     const currentIds = properties.map((p) => p.id).join(',');
     const propertiesChanged = currentIds !== prevLeafletPropertyIdsRef.current;
-    prevLeafletPropertyIdsRef.current = currentIds;
 
     // Prevent destroying and recreating markers when properties have not changed
-    if (!propertiesChanged && leafletMarkersRef.current.size === properties.length) {
+    if (!propertiesChanged && leafletMarkersRef.current.size === properties.length && properties.length > 0) {
       return;
     }
+    prevLeafletPropertyIdsRef.current = currentIds;
 
     leafletMarkersRef.current.forEach((marker) => marker.remove());
     leafletMarkersRef.current.clear();
 
     const bounds = L.latLngBounds([]);
 
-    properties.forEach((prop) => {
+    // Render market properties first and New Era properties last so New Era is always in front
+    const sortedProperties = [...properties].sort((a, b) => {
+      const isNewEraA = a.isNewEra || a.mls?.isNewEra ? 1 : 0;
+      const isNewEraB = b.isNewEra || b.mls?.isNewEra ? 1 : 0;
+      return isNewEraA - isNewEraB;
+    });
+
+    sortedProperties.forEach((prop) => {
       const lat = prop.location.latitude;
       const lng = prop.location.longitude;
       if (!lat || !lng) return;
@@ -454,17 +576,28 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
 
       const customIcon = L.divIcon({
         className: 'custom-price-marker',
-        html: `<div id="marker-pill-${prop.id}" class="map-price-pill">${pillText}</div>`,
-        iconSize: [68, 30],
-        iconAnchor: [34, 34],
+        html: `<div id="marker-pill-${prop.id}" class="map-price-pill ${prop.isNewEra ? 'is-new-era' : 'is-market'}">
+          <div class="map-marker-dot-view">
+            ${prop.isNewEra ? '<span class="new-era-dot-star">★</span>' : ''}
+          </div>
+          <div class="map-marker-pill-view">
+            ${prop.isNewEra ? getNewEraSvgHtml('#FFFFFF', 13) : ''}
+            <span>${pillText}</span>
+          </div>
+        </div>`,
+        iconSize: [prop.isNewEra ? 86 : 58, 28],
+        iconAnchor: [prop.isNewEra ? 43 : 29, 32],
         popupAnchor: [0, -32]
       });
 
-      const marker = L.marker([lat, lng], { icon: customIcon });
+      const marker = L.marker([lat, lng], {
+        icon: customIcon,
+        zIndexOffset: prop.isNewEra ? 1000 : 10
+      });
 
-      // On desktop only, bind interactive popup
+      // On desktop only, bind interactive popup on-demand
       if (window.innerWidth > 768) {
-        marker.bindPopup(buildPopupHtml(prop, lang), {
+        marker.bindPopup(() => buildPopupHtml(prop, lang), {
           maxWidth: 320,
           minWidth: 300,
           closeButton: false,
@@ -511,12 +644,14 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
 
       marker.on('mouseover', () => {
         onHoverPropertyRef.current?.(prop.id);
+        marker.setZIndexOffset(2500);
         const el = document.getElementById(`marker-pill-${prop.id}`);
         if (el) el.classList.add('is-hovered');
       });
 
       marker.on('mouseout', () => {
         onHoverPropertyRef.current?.(null);
+        marker.setZIndexOffset(prop.isNewEra ? 1000 : 10);
         const el = document.getElementById(`marker-pill-${prop.id}`);
         if (el && selectedPropertyRef.current?.id !== prop.id) el.classList.remove('is-hovered');
       });
@@ -529,7 +664,7 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
     if (properties.length > 0 && bounds.isValid() && propertiesChanged) {
       map.fitBounds(bounds, { padding: [60, 60], maxZoom: 14 });
     }
-  }, [engine, properties, lang]);
+  }, [engine, properties, lang, isMapReady]);
 
   // Sync Hover State ONLY (Ultra-lightweight DOM class toggle - never pans, never recreates overlays)
   useEffect(() => {
@@ -676,7 +811,10 @@ export const PropertyMap: React.FC<PropertyMapProps> = ({
   }, [engine, properties]);
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
+    <div
+      className={`property-map-root-wrapper ${isDetailedZoom ? 'map-zoom-detailed' : 'map-zoom-overview'}`}
+      style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}
+    >
       {/* Loading Skeleton */}
       {isInitializing && (
         <div

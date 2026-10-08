@@ -1,5 +1,8 @@
 import { Agent, BrokerageInfo } from '../types/property';
 
+export const NEW_ERA_OFFICE_ID = '20250912140954028096000000';
+export const NEW_ERA_OFFICE_MLS_ID = '20012870';
+
 export const BROKERAGE_DATA: BrokerageInfo = {
   name: 'New Era Real Estate',
   legalName: 'New Era Real Estate LLC',
@@ -20,424 +23,513 @@ export const BROKERAGE_DATA: BrokerageInfo = {
 
 export const AGENTS_DATA: Agent[] = [
   {
-    "id": "yeilen-contreras",
-    "name": "Yeilen Contreras",
-    "title": "Principal Broker & Founder",
-    "licenseNumber": "KY-284910",
-    "phone": "(502) 500-0409",
-    "email": "newerabroker25@gmail.com",
-    "photoUrl": "/assets/agents/yeilen-contreras.jpg",
-    "photoNobgUrl": "/assets/agents/yeilen-contreras-nobg.png",
-    "bio": "Principal Broker and visionary founder of New Era Real Estate. Leading residential representation across Kentucky with unwavering architectural excellence, bilingual negotiation mastery, and strategic wealth-building advisory.",
-    "specialties": [
+    id: "yeilen-contreras",
+    name: "Yeilen Contreras",
+    title: "Principal Broker & Founder",
+    licenseNumber: "302425",
+    phone: "(502) 500-0409",
+    email: "newerabroker25@gmail.com",
+    photoUrl: "/assets/agents/yeilen-contreras.jpg",
+    photoNobgUrl: "/assets/agents/yeilen-contreras-nobg.png",
+    bio: "Principal Broker and visionary founder of New Era Real Estate. Leading residential representation across Kentucky with unwavering architectural excellence, bilingual negotiation mastery, and strategic wealth-building advisory.",
+    specialties: [
       "Principal Brokerage",
       "Luxury Portfolios",
       "Bilingual Advisory",
       "Investment Portfolios",
       "New Construction"
     ],
-    "languages": [
-      "English",
-      "Spanish"
-    ],
-    "activeListingsCount": 2,
-    "yearsExperience": 14,
-    "featured": true
+    languages: ["English", "Spanish"],
+    activeListingsCount: 3,
+    yearsExperience: 14,
+    featured: true,
+    mlsAgentId: "24571",
+    mlsAccountId: "20161115204006349210000000"
   },
   {
-    "id": "yenny-mendoza-molina",
-    "name": "Yenny Mendoza",
-    "title": "Licensed REALTOR® | Residential Specialist",
-    "phone": "(502) 356-4187",
-    "email": "Yennymm1997@gmail.com",
-    "photoUrl": "/assets/agents/yenny-mendoza-molina.jpg",
-    "photoNobgUrl": "/assets/agents/yenny-mendoza-molina-nobg.png",
-    "bio": "Dedicated real estate professional specializing in residential property acquisitions, first-time homebuyer representation, and comparative valuation throughout Greater Louisville.",
-    "specialties": [
+    id: "yenny-mendoza-molina",
+    name: "Yenny Mendoza",
+    title: "Licensed REALTOR® | Residential Specialist",
+    licenseNumber: "286756",
+    phone: "(502) 356-4187",
+    email: "Yennymm1997@gmail.com",
+    photoUrl: "/assets/agents/yenny-mendoza-molina.jpg",
+    photoNobgUrl: "/assets/agents/yenny-mendoza-molina-nobg.png",
+    bio: "Dedicated real estate professional specializing in residential property acquisitions, first-time homebuyer representation, and comparative valuation throughout Greater Louisville.",
+    specialties: [
       "Residential Buying & Selling",
       "First-Time Homebuyers",
       "Market Valuation"
     ],
-    "languages": [
-      "English",
-      "Spanish"
-    ],
-    "activeListingsCount": 2,
-    "yearsExperience": 5,
-    "featured": true
+    languages: ["English", "Spanish"],
+    activeListingsCount: 3,
+    yearsExperience: 5,
+    featured: true,
+    mlsAgentId: "29847",
+    mlsAccountId: "20230828190135764263000000"
   },
   {
-    "id": "dianelis-segrea-castellon",
-    "name": "Dianelis Segrea",
-    "title": "Licensed REALTOR® | Listing Advisor",
-    "phone": "(502) 249-4050",
-    "email": "dianelis.realtor@gmail.com",
-    "photoUrl": "/assets/agents/dianelis-segrea-castellon.jpg",
-    "photoNobgUrl": "/assets/agents/dianelis-segrea-castellon-nobg.png",
-    "bio": "Expert in strategic residential listings, market positioning, and buyer consultation across top Kentucky neighborhoods.",
-    "specialties": [
+    id: "dianelis-segrea-castellon",
+    name: "Dianelis Segrea",
+    title: "Licensed REALTOR® | Listing Advisor",
+    licenseNumber: "303315",
+    phone: "(502) 249-4050",
+    email: "dianelis.realtor@gmail.com",
+    photoUrl: "/assets/agents/dianelis-segrea-castellon.jpg",
+    photoNobgUrl: "/assets/agents/dianelis-segrea-castellon-nobg.png",
+    bio: "Expert in strategic residential listings, market positioning, and buyer consultation across top Kentucky neighborhoods.",
+    specialties: [
       "Residential Listings",
       "Buyer Advisory",
       "Negotiation Strategy"
     ],
-    "languages": [
-      "English",
-      "Spanish"
-    ],
-    "activeListingsCount": 3,
-    "yearsExperience": 6,
-    "featured": true
+    languages: ["English", "Spanish"],
+    activeListingsCount: 3,
+    yearsExperience: 6,
+    featured: true,
+    mlsAgentId: "10079932",
+    mlsAccountId: "20251125214810259660000000"
   },
   {
-    "id": "marien-rodriguez-reyes",
-    "name": "Marien Rodriguez",
-    "title": "Licensed REALTOR® | Relocation & Family Homes",
-    "phone": "(502) 565-5401",
-    "email": "marienrodriguez7908@gmail.com",
-    "photoUrl": "/assets/agents/marien-rodriguez-reyes.jpg",
-    "photoNobgUrl": "/assets/agents/marien-rodriguez-reyes-nobg.png",
-    "bio": "Providing personalized, proactive representation to families relocating to Louisville or upgrading to executive suburban residences.",
-    "specialties": [
+    id: "marien-rodriguez-reyes",
+    name: "Marien Rodriguez",
+    title: "Licensed REALTOR® | Relocation & Family Homes",
+    licenseNumber: "298140",
+    phone: "(502) 565-5401",
+    email: "marienrodriguez7908@gmail.com",
+    photoUrl: "/assets/agents/marien-rodriguez-reyes.jpg",
+    photoNobgUrl: "/assets/agents/marien-rodriguez-reyes-nobg.png",
+    bio: "Providing personalized, proactive representation to families relocating to Louisville or upgrading to executive suburban residences.",
+    specialties: [
       "Relocation Services",
       "Family Residences",
       "Suburban Estates"
     ],
-    "languages": [
-      "English",
-      "Spanish"
-    ],
-    "activeListingsCount": 3,
-    "yearsExperience": 7,
-    "featured": true
+    languages: ["English", "Spanish"],
+    activeListingsCount: 3,
+    yearsExperience: 7,
+    featured: true,
+    mlsAgentId: "30426",
+    mlsAccountId: "20250310192023990906000000"
   },
   {
-    "id": "claudia-aguilera-cuenca",
-    "name": "Claudia Aguilera",
-    "title": "Licensed REALTOR® | Contemporary Living Advisor",
-    "phone": "(502) 389-6889",
-    "email": "claudiaguilera1999@gmail.com",
-    "photoUrl": "/assets/agents/claudia-aguilera-cuenca.jpg",
-    "photoNobgUrl": "/assets/agents/claudia-aguilera-cuenca-nobg.png",
-    "bio": "Passionate about architectural design, modern builds, and securing optimal financing pathways for new homeowners.",
-    "specialties": [
+    id: "claudia-aguilera-cuenca",
+    name: "Claudia Aguilera",
+    title: "Licensed REALTOR® | Contemporary Living Advisor",
+    licenseNumber: "310109",
+    phone: "(502) 389-6889",
+    email: "claudiaguilera1999@gmail.com",
+    photoUrl: "/assets/agents/claudia-aguilera-cuenca.jpg",
+    photoNobgUrl: "/assets/agents/claudia-aguilera-cuenca-nobg.png",
+    bio: "Passionate about architectural design, modern builds, and securing optimal financing pathways for new homeowners.",
+    specialties: [
       "Modern Living",
       "New Construction",
       "First-Time Buyers"
     ],
-    "languages": [
-      "English",
-      "Spanish"
-    ],
-    "activeListingsCount": 2,
-    "yearsExperience": 5,
-    "featured": true
+    languages: ["English", "Spanish"],
+    activeListingsCount: 2,
+    yearsExperience: 5,
+    featured: true,
+    mlsAgentId: "10080946",
+    mlsAccountId: "20260729155636858739000000"
   },
   {
-    "id": "yazbel-diaz",
-    "name": "Yazbel Diaz",
-    "title": "Licensed REALTOR® | Community Wealth Advisor",
-    "phone": "(502) 956-3177",
-    "email": "Yazbelrealtor@gmail.com",
-    "photoUrl": "/assets/agents/yazbel-diaz.jpg",
-    "photoNobgUrl": "/assets/agents/yazbel-diaz-nobg.png",
-    "bio": "Committed to delivering clear, data-driven real estate guidance and empowering families through sustainable homeownership.",
-    "specialties": [
+    id: "yazbel-diaz",
+    name: "Yazbel Diaz",
+    title: "Licensed REALTOR® | Community Wealth Advisor",
+    licenseNumber: "268934",
+    phone: "(502) 956-3177",
+    email: "Yazbelrealtor@gmail.com",
+    photoUrl: "/assets/agents/yazbel-diaz.jpg",
+    photoNobgUrl: "/assets/agents/yazbel-diaz-nobg.png",
+    bio: "Committed to delivering clear, data-driven real estate guidance and empowering families through sustainable homeownership.",
+    specialties: [
       "Residential Sales",
       "Down Payment Programs",
       "Buyer Advisory"
     ],
-    "languages": [
-      "English",
-      "Spanish"
-    ],
-    "activeListingsCount": 4,
-    "yearsExperience": 5,
-    "featured": false
+    languages: ["English", "Spanish"],
+    activeListingsCount: 4,
+    yearsExperience: 5,
+    featured: false,
+    mlsAgentId: "28485",
+    mlsAccountId: "20210212152010452444000000"
   },
   {
-    "id": "javier-ferrer-rodriguez",
-    "name": "Javier Ferrer",
-    "title": "Licensed REALTOR® | Architectural & New Construction Advisor",
-    "phone": "(502) 281-1462",
-    "email": "Javferrer96@gmail.com",
-    "photoUrl": "/assets/agents/javier-ferrer-rodriguez.jpg",
-    "photoNobgUrl": "/assets/agents/javier-ferrer-rodriguez-nobg.png",
-    "bio": "Pairing structural appreciation with aggressive digital marketing to highlight architectural integrity and custom builds.",
-    "specialties": [
+    id: "javier-ferrer-rodriguez",
+    name: "Javier Ferrer",
+    title: "Licensed REALTOR® | Architectural & New Construction Advisor",
+    licenseNumber: "308704",
+    phone: "(502) 281-1462",
+    email: "Javferrer96@gmail.com",
+    photoUrl: "/assets/agents/javier-ferrer-rodriguez.jpg",
+    photoNobgUrl: "/assets/agents/javier-ferrer-rodriguez-nobg.png",
+    bio: "Pairing structural appreciation with aggressive digital marketing to highlight architectural integrity and custom builds.",
+    specialties: [
       "New Builds",
       "Architectural Properties",
       "Digital Property Marketing"
     ],
-    "languages": [
-      "English",
-      "Spanish"
-    ],
-    "activeListingsCount": 3,
-    "yearsExperience": 5,
-    "featured": false
+    languages: ["English", "Spanish"],
+    activeListingsCount: 3,
+    yearsExperience: 5,
+    featured: false,
+    mlsAgentId: "10080664",
+    mlsAccountId: "20260527192651406017000000"
   },
   {
-    "id": "leidys-herrera",
-    "name": "Leidys Herrera",
-    "title": "Licensed REALTOR® | Top Producing Advisor",
-    "phone": "(502) 356-7264",
-    "email": "lhtopagent@gmail.com",
-    "photoUrl": "/assets/agents/leidys-herrera.jpg",
-    "photoNobgUrl": "/assets/agents/leidys-herrera-nobg.png",
-    "bio": "Top-tier agent specializing in high-volume residential representation, equity acceleration, and turnkey transactions.",
-    "specialties": [
+    id: "leidys-herrera",
+    name: "Leidys Herrera",
+    title: "Licensed REALTOR® | Top Producing Advisor",
+    licenseNumber: "245387",
+    phone: "(502) 356-7264",
+    email: "lhtopagent@gmail.com",
+    photoUrl: "/assets/agents/leidys-herrera.jpg",
+    photoNobgUrl: "/assets/agents/leidys-herrera-nobg.png",
+    bio: "Top-tier agent specializing in high-volume residential representation, equity acceleration, and turnkey transactions.",
+    specialties: [
       "High-Velocity Listings",
       "Buyer Representation",
       "Equity Growth"
     ],
-    "languages": [
-      "English",
-      "Spanish"
-    ],
-    "activeListingsCount": 4,
-    "yearsExperience": 6,
-    "featured": false
+    languages: ["English", "Spanish"],
+    activeListingsCount: 4,
+    yearsExperience: 6,
+    featured: false,
+    mlsAgentId: "26377",
+    mlsAccountId: "20181031182008400725000000"
   },
   {
-    "id": "dahana-aguila",
-    "name": "Dahana Aguila",
-    "title": "Licensed REALTOR® | Residential Specialist",
-    "phone": "(502) 650-5926",
-    "email": "Dahanaaguila@gmail.com",
-    "photoUrl": "/assets/agents/dahana-aguila.jpg",
-    "photoNobgUrl": "/assets/agents/dahana-aguila-nobg.png",
-    "bio": "Focused on creating seamless homebuying experiences with market analysis and tailored property matching.",
-    "specialties": [
+    id: "dahana-aguila",
+    name: "Dahana Aguila",
+    title: "Licensed REALTOR® | Residential Specialist",
+    licenseNumber: "311049",
+    phone: "(502) 650-5926",
+    email: "Dahanaaguila@gmail.com",
+    photoUrl: "/assets/agents/dahana-aguila.jpg",
+    photoNobgUrl: "/assets/agents/dahana-aguila-nobg.png",
+    bio: "Focused on creating seamless homebuying experiences with market analysis and tailored property matching.",
+    specialties: [
       "Residential Purchases",
       "Market Trend Analysis",
       "Buyer Advocacy"
     ],
-    "languages": [
-      "English",
-      "Spanish"
-    ],
-    "activeListingsCount": 2,
-    "yearsExperience": 4,
-    "featured": false
+    languages: ["English", "Spanish"],
+    activeListingsCount: 2,
+    yearsExperience: 4,
+    featured: false,
+    mlsAgentId: "10080985",
+    mlsAccountId: "20260806144504930278000000"
   },
   {
-    "id": "walter-gotay",
-    "name": "Walter Gotay",
-    "title": "Licensed REALTOR® | Senior Property Strategist",
-    "phone": "(502) 533-3999",
-    "email": "compraconwalter@gmail.com",
-    "photoUrl": "/assets/agents/walter-gotay.jpg",
-    "photoNobgUrl": "/assets/agents/walter-gotay-nobg.png",
-    "bio": "Seasoned advisor delivering rigorous contract management, aggressive negotiation, and market expertise.",
-    "specialties": [
+    id: "walter-gotay",
+    name: "Walter Gotay",
+    title: "Licensed REALTOR® | Senior Property Strategist",
+    licenseNumber: "295377",
+    phone: "(502) 533-3999",
+    email: "compraconwalter@gmail.com",
+    photoUrl: "/assets/agents/walter-gotay.jpg",
+    photoNobgUrl: "/assets/agents/walter-gotay-nobg.png",
+    bio: "Seasoned advisor delivering rigorous contract management, aggressive negotiation, and market expertise.",
+    specialties: [
       "Negotiation Mastery",
       "Residential Estates",
       "Land Parcels"
     ],
-    "languages": [
-      "English",
-      "Spanish"
-    ],
-    "activeListingsCount": 4,
-    "yearsExperience": 10,
-    "featured": false
+    languages: ["English", "Spanish"],
+    activeListingsCount: 4,
+    yearsExperience: 10,
+    featured: false,
+    mlsAgentId: "30290",
+    mlsAccountId: "20240930142025580959000000"
   },
   {
-    "id": "karla-fernandez-soto",
-    "name": "Karla Fernandez",
-    "title": "Licensed REALTOR® | Residential Consultant",
-    "phone": "(502) 676-8141",
-    "email": "Karlafsoto26@gmail.com",
-    "photoUrl": "/assets/agents/karla-fernandez-soto.jpg",
-    "photoNobgUrl": "/assets/agents/karla-fernandez-soto-nobg.png",
-    "bio": "Providing warm and meticulous client representation, specializing in residential neighborhoods and family living spaces.",
-    "specialties": [
+    id: "karla-fernandez-soto",
+    name: "Karla Fernandez",
+    title: "Licensed REALTOR® | Residential Consultant",
+    licenseNumber: "304851",
+    phone: "(502) 676-8141",
+    email: "Karlafsoto26@gmail.com",
+    photoUrl: "/assets/agents/karla-fernandez-soto.jpg",
+    photoNobgUrl: "/assets/agents/karla-fernandez-soto-nobg.png",
+    bio: "Providing warm and meticulous client representation, specializing in residential neighborhoods and family living spaces.",
+    specialties: [
       "Residential Advisory",
       "First-Time Buyers",
       "Property Valuation"
     ],
-    "languages": [
-      "English",
-      "Spanish"
-    ],
-    "activeListingsCount": 4,
-    "yearsExperience": 4,
-    "featured": false
+    languages: ["English", "Spanish"],
+    activeListingsCount: 4,
+    yearsExperience: 4,
+    featured: false,
+    mlsAgentId: "10080045",
+    mlsAccountId: "20260107140657546900000000"
   },
   {
-    "id": "geraldine-santiago-then",
-    "name": "Geraldine Santiago",
-    "title": "Licensed REALTOR® | Homeownership Pathways Advisor",
-    "phone": "(502) 321-0671",
-    "email": "Geraldine10realtor@gmail.com",
-    "photoUrl": "/assets/agents/geraldine-santiago-then.jpg",
-    "photoNobgUrl": "/assets/agents/geraldine-santiago-then-nobg.png",
-    "bio": "Passionate advocate for unlocking down-payment assistance programs and guiding families to financial stability through real estate.",
-    "specialties": [
+    id: "geraldine-santiago-then",
+    name: "Geraldine Santiago",
+    title: "Licensed REALTOR® | Homeownership Pathways Advisor",
+    licenseNumber: "289628",
+    phone: "(502) 321-0671",
+    email: "Geraldine10realtor@gmail.com",
+    photoUrl: "/assets/agents/geraldine-santiago-then.jpg",
+    photoNobgUrl: "/assets/agents/geraldine-santiago-then-nobg.png",
+    bio: "Passionate advocate for unlocking down-payment assistance programs and guiding families to financial stability through real estate.",
+    specialties: [
       "Down Payment Assistance",
       "First-Time Homebuyers",
       "Community Housing"
     ],
-    "languages": [
-      "English",
-      "Spanish"
-    ],
-    "activeListingsCount": 2,
-    "yearsExperience": 5,
-    "featured": false
+    languages: ["English", "Spanish"],
+    activeListingsCount: 2,
+    yearsExperience: 5,
+    featured: false,
+    mlsAgentId: "30085",
+    mlsAccountId: "20240325212014998033000000"
   },
   {
-    "id": "lizandra-parra-rodriguez",
-    "name": "Lizandra Parra",
-    "title": "Licensed REALTOR® | Executive Property Advisor",
-    "phone": "(786) 818-8531",
-    "email": "realestate@lizandraparra.com",
-    "photoUrl": "/assets/agents/lizandra-parra-rodriguez.jpg",
-    "photoNobgUrl": "/assets/agents/lizandra-parra-rodriguez-nobg.png",
-    "bio": "Experienced real estate advisor known for executive presentation, client advocacy, and curated portfolio selection.",
-    "specialties": [
+    id: "lizandra-parra-rodriguez",
+    name: "Lizandra Parra",
+    title: "Licensed REALTOR® | Executive Property Advisor",
+    licenseNumber: "311105",
+    phone: "(786) 818-8531",
+    email: "realestate@lizandraparra.com",
+    photoUrl: "/assets/agents/lizandra-parra-rodriguez.jpg",
+    photoNobgUrl: "/assets/agents/lizandra-parra-rodriguez-nobg.png",
+    bio: "Experienced real estate advisor known for executive presentation, client advocacy, and curated portfolio selection.",
+    specialties: [
       "Executive Portfolios",
       "Residential Advisory",
       "Relocation Consulting"
     ],
-    "languages": [
-      "English",
-      "Spanish"
-    ],
-    "activeListingsCount": 3,
-    "yearsExperience": 7,
-    "featured": false
+    languages: ["English", "Spanish"],
+    activeListingsCount: 3,
+    yearsExperience: 7,
+    featured: false,
+    mlsAgentId: "10081002",
+    mlsAccountId: "20260811193606962673000000"
   },
   {
-    "id": "yisel-pupo",
-    "name": "Yisel Pupo",
-    "title": "Licensed REALTOR® | Market Specialist",
-    "phone": "(502) 643-9265",
-    "email": "yiselatnewera@gmail.com",
-    "photoUrl": "/assets/agents/yisel-pupo.jpg",
-    "photoNobgUrl": "/assets/agents/yisel-pupo-nobg.png",
-    "bio": "Dedicated to empowering buyers and sellers with localized market intelligence, proactive communication, and ethical representation.",
-    "specialties": [
+    id: "yisel-pupo",
+    name: "Yisel Pupo",
+    title: "Licensed REALTOR® | Market Specialist",
+    licenseNumber: "305523",
+    phone: "(502) 643-9265",
+    email: "yiselatnewera@gmail.com",
+    photoUrl: "/assets/agents/yisel-pupo.jpg",
+    photoNobgUrl: "/assets/agents/yisel-pupo-nobg.png",
+    bio: "Dedicated to empowering buyers and sellers with localized market intelligence, proactive communication, and ethical representation.",
+    specialties: [
       "Residential Markets",
       "Buyer Consultation",
       "Homeowner Guidance"
     ],
-    "languages": [
-      "English",
-      "Spanish"
-    ],
-    "activeListingsCount": 3,
-    "yearsExperience": 5,
-    "featured": false
+    languages: ["English", "Spanish"],
+    activeListingsCount: 3,
+    yearsExperience: 5,
+    featured: false,
+    mlsAgentId: "10080080",
+    mlsAccountId: "20260115140928619910000000"
   },
   {
-    "id": "solanch-rodriguez-curbeira",
-    "name": "Solanch Rodríguez",
-    "title": "Licensed REALTOR® | Client Advisory & Acquisition",
-    "phone": "(502) 240-8463",
-    "email": "Solanchrodriguez.realtor@gmail.com",
-    "photoUrl": "/assets/agents/solanch-rodriguez-curbeira.jpg",
-    "photoNobgUrl": "/assets/agents/solanch-rodriguez-curbeira-nobg.png",
-    "bio": "Specializing in personalized client advisory, market research, and smooth closing coordination for discerning buyers.",
-    "specialties": [
+    id: "solanch-rodriguez-curbeira",
+    name: "Solanch Rodríguez",
+    title: "Licensed REALTOR® | Client Advisory & Acquisition",
+    licenseNumber: "306436",
+    phone: "(502) 240-8463",
+    email: "Solanchrodriguez.realtor@gmail.com",
+    photoUrl: "/assets/agents/solanch-rodriguez-curbeira.jpg",
+    photoNobgUrl: "/assets/agents/solanch-rodriguez-curbeira-nobg.png",
+    bio: "Specializing in personalized client advisory, market research, and smooth closing coordination for discerning buyers.",
+    specialties: [
       "Client Advisory",
       "Residential Purchases",
       "Transaction Oversight"
     ],
-    "languages": [
-      "English",
-      "Spanish"
-    ],
-    "activeListingsCount": 2,
-    "yearsExperience": 4,
-    "featured": false
+    languages: ["English", "Spanish"],
+    activeListingsCount: 2,
+    yearsExperience: 4,
+    featured: false,
+    mlsAgentId: "10080188",
+    mlsAccountId: "20260217202740852806000000"
   },
   {
-    "id": "albin-machado-campo",
-    "name": "Albin Machado",
-    "title": "Licensed REALTOR® | Residential & Investment Consultant",
-    "phone": "(502) 701-4699",
-    "email": "albinmm2005@gmail.com",
-    "photoUrl": "/assets/agents/albin-machado-campo.jpg",
-    "photoNobgUrl": "/assets/agents/albin-machado-campo-nobg.png",
-    "bio": "Providing in-depth market valuation, residential advisory, and investment property scouting across Louisville metro.",
-    "specialties": [
+    id: "albin-machado-campo",
+    name: "Albin Machado",
+    title: "Licensed REALTOR® | Residential & Investment Consultant",
+    licenseNumber: "307238",
+    phone: "(502) 701-4699",
+    email: "albinmm2005@gmail.com",
+    photoUrl: "/assets/agents/albin-machado-campo.jpg",
+    photoNobgUrl: "/assets/agents/albin-machado-campo-nobg.png",
+    bio: "Providing in-depth market valuation, residential advisory, and investment property scouting across Louisville metro.",
+    specialties: [
       "Market Valuation",
       "Residential Advisory",
       "Investment Opportunities"
     ],
-    "languages": [
-      "English",
-      "Spanish"
-    ],
-    "activeListingsCount": 3,
-    "yearsExperience": 5,
-    "featured": false
+    languages: ["English", "Spanish"],
+    activeListingsCount: 3,
+    yearsExperience: 5,
+    featured: false,
+    mlsAgentId: "10080282",
+    mlsAccountId: "20260311184532471699000000"
   },
   {
-    "id": "ivonne-medina",
-    "name": "Ivonne Medina",
-    "title": "Licensed REALTOR® | Seller & Buyer Advocate",
-    "phone": "(502) 202-7557",
-    "email": "ivon.ori@icloud.com",
-    "photoUrl": "/assets/agents/ivonne-medina.jpg",
-    "photoNobgUrl": "/assets/agents/ivonne-medina-nobg.png",
-    "bio": "Delivering tailored customer service, rigorous property valuation, and optimal market capture for homeowners.",
-    "specialties": [
+    id: "ivonne-medina",
+    name: "Ivonne Medina",
+    title: "Licensed REALTOR® | Seller & Buyer Advocate",
+    licenseNumber: "307711",
+    phone: "(502) 202-7557",
+    email: "ivon.ori@icloud.com",
+    photoUrl: "/assets/agents/ivonne-medina.jpg",
+    photoNobgUrl: "/assets/agents/ivonne-medina-nobg.png",
+    bio: "Delivering tailored customer service, rigorous property valuation, and optimal market capture for homeowners.",
+    specialties: [
       "Seller Representation",
       "Staging Insights",
       "Buyer Advisory"
     ],
-    "languages": [
-      "English",
-      "Spanish"
-    ],
-    "activeListingsCount": 2,
-    "yearsExperience": 6,
-    "featured": false
+    languages: ["English", "Spanish"],
+    activeListingsCount: 2,
+    yearsExperience: 6,
+    featured: false,
+    mlsAgentId: "10080460",
+    mlsAccountId: "20260406145141993374000000"
   },
   {
-    "id": "maria-mendez",
-    "name": "Maria Méndez",
-    "title": "Licensed REALTOR® | Residential Advisor",
-    "phone": "(305) 923-7367",
-    "email": "mtm60bayona@gmail.com",
-    "photoUrl": "/assets/agents/maria-mendez.jpg",
-    "photoNobgUrl": "/assets/agents/maria-mendez-nobg.png",
-    "bio": "Committed to delivering trusted, comprehensive guidance to families building long-term equity through homeownership.",
-    "specialties": [
+    id: "maria-mendez",
+    name: "Maria Méndez",
+    title: "Licensed REALTOR® | Residential Advisor",
+    licenseNumber: "251631",
+    phone: "(305) 923-7367",
+    email: "mtm60bayona@gmail.com",
+    photoUrl: "/assets/agents/maria-mendez.jpg",
+    photoNobgUrl: "/assets/agents/maria-mendez-nobg.png",
+    bio: "Committed to delivering trusted, comprehensive guidance to families building long-term equity through homeownership.",
+    specialties: [
       "Family Residences",
       "Residential Advisory",
       "Homeownership Growth"
     ],
-    "languages": [
-      "English",
-      "Spanish"
-    ],
-    "activeListingsCount": 2,
-    "yearsExperience": 6,
-    "featured": false
+    languages: ["English", "Spanish"],
+    activeListingsCount: 2,
+    yearsExperience: 6,
+    featured: false,
+    mlsAgentId: "26917",
+    mlsAccountId: "20190917142010619933000000"
   },
   {
-    "id": "rosa-mustelier-jimenez",
-    "name": "Rosa Mustelier",
-    "title": "Licensed REALTOR® | Residential Specialist",
-    "phone": "(502) 909-7399",
-    "email": "rosamustelierrealtor@gmail.com",
-    "photoUrl": "/assets/agents/rosa-mustelier-jimenez.jpg",
-    "photoNobgUrl": "/assets/agents/rosa-mustelier-jimenez-nobg.png",
-    "bio": "Residential specialist delivering sharp contract precision, relocation insight, and dedicated client advocacy across Kentucky.",
-    "specialties": [
+    id: "rosa-mustelier-jimenez",
+    name: "Rosa Mustelier",
+    title: "Licensed REALTOR® | Residential Specialist",
+    licenseNumber: "309143",
+    phone: "(502) 909-7399",
+    email: "rosamustelierrealtor@gmail.com",
+    photoUrl: "/assets/agents/rosa-mustelier-jimenez.jpg",
+    photoNobgUrl: "/assets/agents/rosa-mustelier-jimenez-nobg.png",
+    bio: "Residential specialist delivering sharp contract precision, relocation insight, and dedicated client advocacy across Kentucky.",
+    specialties: [
       "Greater Louisville & Kentucky",
       "Relocation Advisory",
       "Condos & Family Homes"
     ],
-    "languages": [
-      "English",
-      "Spanish"
-    ],
-    "activeListingsCount": 3,
-    "yearsExperience": 5,
-    "featured": false
+    languages: ["English", "Spanish"],
+    activeListingsCount: 3,
+    yearsExperience: 5,
+    featured: false,
+    mlsAgentId: "10080692",
+    mlsAccountId: "20260603152539463069000000"
+  },
+  {
+    id: "yordanis-alba-elias",
+    name: "Yordanis Alba",
+    title: "Licensed REALTOR® | Residential Specialist",
+    licenseNumber: "307105",
+    phone: "(502) 500-0409",
+    email: "newerarealestateky@gmail.com",
+    photoUrl: "",
+    photoNobgUrl: "",
+    bio: "Committed real estate specialist delivering client-focused negotiation and trusted residential guidance in Greater Louisville.",
+    specialties: ["Residential Buying & Selling", "Investment Advisory"],
+    languages: ["English", "Spanish"],
+    activeListingsCount: 1,
+    yearsExperience: 4,
+    featured: false,
+    mlsAgentId: "10080280",
+    mlsAccountId: "20260311193856471864000000"
+  },
+  {
+    id: "alejandro-robles",
+    name: "Alejandro Robles",
+    title: "Licensed REALTOR® | Residential Advisor",
+    licenseNumber: "304383",
+    phone: "(502) 500-0409",
+    email: "newerarealestateky@gmail.com",
+    photoUrl: "",
+    photoNobgUrl: "",
+    bio: "Dedicated advisor assisting families and investors with comprehensive real estate opportunities across Kentucky.",
+    specialties: ["Residential Purchases", "Property Marketing"],
+    languages: ["English", "Spanish"],
+    activeListingsCount: 1,
+    yearsExperience: 4,
+    featured: false,
+    mlsAgentId: "10079929",
+    mlsAccountId: "20251125194017259076000000"
+  },
+  {
+    id: "dayani-chavez",
+    name: "Dayani Chavez",
+    title: "Licensed REALTOR® | Residential Consultant",
+    licenseNumber: "306338",
+    phone: "(502) 500-0409",
+    email: "newerarealestateky@gmail.com",
+    photoUrl: "",
+    photoNobgUrl: "",
+    bio: "Providing responsive and insightful home acquisition and sales guidance with local market expertise.",
+    specialties: ["First-Time Buyers", "Residential Advisory"],
+    languages: ["English", "Spanish"],
+    activeListingsCount: 1,
+    yearsExperience: 4,
+    featured: false,
+    mlsAgentId: "10080194",
+    mlsAccountId: "20260220140731878438000000"
+  },
+  {
+    id: "nina-gonzalez",
+    name: "Nina Gonzalez",
+    title: "Licensed REALTOR® | Residential Specialist",
+    licenseNumber: "308875",
+    phone: "(502) 500-0409",
+    email: "newerarealestateky@gmail.com",
+    photoUrl: "",
+    photoNobgUrl: "",
+    bio: "Passionate about connecting buyers with dream homes and optimizing return on investment for property sellers.",
+    specialties: ["Residential Sales", "Buyer Representation"],
+    languages: ["English", "Spanish"],
+    activeListingsCount: 1,
+    yearsExperience: 4,
+    featured: false,
+    mlsAgentId: "10080704",
+    mlsAccountId: "20260604201019472702000000"
+  },
+  {
+    id: "stephanie-preciado",
+    name: "Stephanie Preciado",
+    title: "Licensed REALTOR® | Residential Consultant",
+    licenseNumber: "283571",
+    phone: "(502) 500-0409",
+    email: "newerarealestateky@gmail.com",
+    photoUrl: "",
+    photoNobgUrl: "",
+    bio: "Experienced consultant offering bilingual negotiation, client-first advocacy, and thorough valuation guidance.",
+    specialties: ["Residential Sales", "Bilingual Advisory"],
+    languages: ["English", "Spanish"],
+    activeListingsCount: 1,
+    yearsExperience: 5,
+    featured: false,
+    mlsAgentId: "29607",
+    mlsAccountId: "20230308212013696700000000"
   }
 ];

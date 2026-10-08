@@ -20,27 +20,201 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 11px;
-  background-color: var(--color-burgundy-primary, #660E1A);
-  color: #FFFFFF;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
-  border-radius: 9999px;
-  border: 1.5px solid rgba(255, 255, 255, 0.35);
-  box-shadow: 0 4px 14px rgba(10, 11, 14, 0.32), 0 1px 3px rgba(0, 0, 0, 0.18);
-  cursor: pointer;
-  transition: transform 220ms cubic-bezier(0.32, 0.72, 0, 1),
-              background-color 220ms ease,
-              box-shadow 220ms ease,
-              border-color 220ms ease;
   user-select: none;
-  transform-origin: center bottom;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 220ms cubic-bezier(0.32, 0.72, 0, 1),
+              background 200ms ease,
+              opacity 200ms ease,
+              box-shadow 200ms ease,
+              border-color 200ms ease,
+              width 180ms ease,
+              height 180ms ease,
+              padding 180ms ease;
 }
 
-/* Marker Arrow Pointer Notch */
-.map-price-pill::after {
+.map-marker-pill-view {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.map-marker-dot-view {
+  display: none;
+}
+
+/* ========================================================================= */
+/* 1. OVERVIEW MODE (Zoom < 13.5: Sleek Dots to avoid map clutter)           */
+/* ========================================================================= */
+.map-zoom-overview .map-price-pill {
+  padding: 0 !important;
+  border-radius: 50% !important;
+  transform-origin: center center;
+}
+
+.map-zoom-overview .map-price-pill .map-marker-pill-view {
+  display: none !important;
+}
+
+.map-zoom-overview .map-price-pill .map-marker-dot-view {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.map-zoom-overview .map-price-pill::after {
+  display: none !important;
+}
+
+/* Market Dots in Overview - Small, sleek, non-intrusive */
+.map-zoom-overview .map-price-pill.is-market {
+  width: 9px !important;
+  height: 9px !important;
+  background: rgba(17, 24, 39, 0.85) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.75) !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35) !important;
+  opacity: 0.7 !important;
+}
+
+/* New Era Dots in Overview - Elegant larger burgundy ring with gold star */
+.map-zoom-overview .map-price-pill.is-new-era {
+  width: 17px !important;
+  height: 17px !important;
+  background: linear-gradient(135deg, #8A1424 0%, #4D0811 100%) !important;
+  border: 2px solid #F6D8A8 !important;
+  box-shadow: 0 2px 10px rgba(102, 14, 26, 0.75), 0 0 10px rgba(212, 154, 61, 0.5) !important;
+  opacity: 1 !important;
+  animation: newEraDotPulse 2.4s infinite ease-in-out !important;
+}
+
+.map-zoom-overview .map-price-pill.is-new-era .new-era-dot-star {
+  font-size: 9px;
+  color: #F6D8A8;
+  line-height: 1;
+}
+
+@keyframes newEraDotPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 2px 10px rgba(102, 14, 26, 0.75), 0 0 10px rgba(212, 154, 61, 0.4);
+  }
+  50% {
+    transform: scale(1.18);
+    box-shadow: 0 4px 16px rgba(102, 14, 26, 0.95), 0 0 18px rgba(212, 154, 61, 0.8);
+  }
+}
+
+/* Hovering or Selecting ANY Dot in Overview Mode blooms into a full price pill */
+.map-zoom-overview .map-price-pill:hover,
+.map-zoom-overview .map-price-pill.is-hovered,
+.map-zoom-overview .map-price-pill.is-active {
+  width: auto !important;
+  height: auto !important;
+  border-radius: 9999px !important;
+  transform-origin: center bottom !important;
+  z-index: 2500 !important;
+}
+
+.map-zoom-overview .map-price-pill:hover .map-marker-dot-view,
+.map-zoom-overview .map-price-pill.is-hovered .map-marker-dot-view,
+.map-zoom-overview .map-price-pill.is-active .map-marker-dot-view {
+  display: none !important;
+}
+
+.map-zoom-overview .map-price-pill:hover .map-marker-pill-view,
+.map-zoom-overview .map-price-pill.is-hovered .map-marker-pill-view,
+.map-zoom-overview .map-price-pill.is-active .map-marker-pill-view {
+  display: inline-flex !important;
+}
+
+.map-zoom-overview .map-price-pill:hover::after,
+.map-zoom-overview .map-price-pill.is-hovered::after,
+.map-zoom-overview .map-price-pill.is-active::after {
+  display: block !important;
+}
+
+.map-zoom-overview .map-price-pill.is-market:hover,
+.map-zoom-overview .map-price-pill.is-market.is-hovered {
+  padding: 3.5px 8px !important;
+  opacity: 1 !important;
+  background-color: #1F2937 !important;
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  transform: scale(1.15) translateY(-3px) !important;
+}
+
+.map-zoom-overview .map-price-pill.is-new-era:hover,
+.map-zoom-overview .map-price-pill.is-new-era.is-hovered {
+  padding: 6px 12px !important;
+  background: linear-gradient(135deg, #961A2B 0%, #660E1A 100%) !important;
+  border: 2px solid #FFFFFF !important;
+  transform: scale(1.22) translateY(-5px) !important;
+}
+
+/* ========================================================================= */
+/* 2. DETAILED MODE (Zoom >= 13.5: Full Price Pills Everywhere)              */
+/* ========================================================================= */
+.map-price-pill.is-market {
+  background: rgba(17, 24, 39, 0.75);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  padding: 3.5px 8px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  opacity: 0.72;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+}
+
+.map-price-pill.is-market::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid rgba(17, 24, 39, 0.75);
+  transition: border-top-color 200ms ease;
+}
+
+.map-price-pill.is-market:hover,
+.map-price-pill.is-market.is-hovered {
+  opacity: 1;
+  background-color: #1F2937;
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.75);
+  transform: scale(1.15) translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+  z-index: 1500 !important;
+}
+
+.map-price-pill.is-market:hover::after,
+.map-price-pill.is-market.is-hovered::after {
+  border-top-color: #1F2937;
+}
+
+.map-price-pill.is-new-era {
+  background: linear-gradient(135deg, #7A1220 0%, #4D0811 100%);
+  border: 2px solid #F6D8A8;
+  color: #FFFFFF;
+  font-size: 13.5px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  opacity: 1;
+  box-shadow: 0 4px 18px rgba(102, 14, 26, 0.65), 0 0 0 1px rgba(246, 216, 168, 0.6), 0 0 16px rgba(212, 154, 61, 0.35);
+  animation: newEraPillGlow 3s infinite ease-in-out;
+}
+
+.map-price-pill.is-new-era::after {
   content: '';
   position: absolute;
   bottom: -6px;
@@ -50,48 +224,63 @@
   height: 0;
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
-  border-top: 6px solid var(--color-burgundy-primary, #660E1A);
-  transition: border-top-color 220ms ease;
+  border-top: 6px solid #4D0811;
+  transition: border-top-color 200ms ease;
 }
 
-/* Marker Hover State */
-.map-price-pill:hover,
-.map-price-pill.is-hovered {
-  background-color: #8B1D2C;
-  border-color: #F6D8A8;
-  transform: scale(1.14) translateY(-3px);
-  box-shadow: 0 10px 24px rgba(102, 14, 26, 0.45), 0 2px 6px rgba(0, 0, 0, 0.2);
-  z-index: 1000 !important;
-}
-.map-price-pill:hover::after,
-.map-price-pill.is-hovered::after {
-  border-top-color: #8B1D2C;
+@keyframes newEraPillGlow {
+  0%, 100% {
+    box-shadow: 0 4px 18px rgba(102, 14, 26, 0.65), 0 0 0 1px rgba(246, 216, 168, 0.6), 0 0 14px rgba(212, 154, 61, 0.3);
+  }
+  50% {
+    box-shadow: 0 6px 24px rgba(102, 14, 26, 0.85), 0 0 0 2px rgba(246, 216, 168, 0.9), 0 0 22px rgba(212, 154, 61, 0.6);
+  }
 }
 
-/* Marker Active / Selected State */
+.map-price-pill.is-new-era:hover,
+.map-price-pill.is-new-era.is-hovered {
+  opacity: 1;
+  background: linear-gradient(135deg, #961A2B 0%, #660E1A 100%);
+  border-color: #FFFFFF;
+  transform: scale(1.22) translateY(-4px);
+  box-shadow: 0 12px 28px rgba(102, 14, 26, 0.8), 0 0 0 3px #F6D8A8;
+  z-index: 2500 !important;
+}
+
+.map-price-pill.is-new-era:hover::after,
+.map-price-pill.is-new-era.is-hovered::after {
+  border-top-color: #660E1A;
+}
+
+/* ========================================================================= */
+/* 3. ACTIVE / SELECTED STATE                                                */
+/* ========================================================================= */
 .map-price-pill.is-active {
-  background-color: #0C0D10;
-  color: #FFFFFF;
-  border-color: #D49A3D;
-  transform: scale(1.18) translateY(-4px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5), 0 0 0 4px rgba(212, 154, 61, 0.35);
-  z-index: 2000 !important;
+  background: #0C0D10 !important;
+  color: #FFFFFF !important;
+  border: 2px solid #D49A3D !important;
+  opacity: 1 !important;
+  transform: scale(1.25) translateY(-5px) !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.6), 0 0 0 4px rgba(212, 154, 61, 0.45) !important;
+  z-index: 3000 !important;
 }
+
 .map-price-pill.is-active::after {
-  border-top-color: #0C0D10;
+  border-top-color: #0C0D10 !important;
 }
 
 /* Leaflet Popup Luxury Overwrite */
 .leaflet-popup-content-wrapper {
   padding: 0 !important;
   background: #FFFFFF !important;
-  border-radius: var(--radius-md) !important;
-  box-shadow: 0 20px 45px -8px rgba(17, 24, 39, 0.32), 0 0 0 1px rgba(0, 0, 0, 0.08) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 24px 50px -10px rgba(12, 14, 20, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.08) !important;
   overflow: hidden !important;
 }
 
 .leaflet-popup-content {
   margin: 0 !important;
+  padding: 0 !important;
   line-height: normal !important;
   width: 310px !important;
 }
@@ -158,17 +347,18 @@
   display: flex;
   flex-direction: column;
   background: #FFFFFF;
-  border-radius: var(--radius-md);
+  border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
   width: 310px;
   box-sizing: border-box;
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
 }
 
 .map-popup-img-wrap {
   position: relative;
   width: 100%;
-  height: 165px;
+  height: 172px;
   background-color: #121418;
   overflow: hidden;
 }
@@ -182,33 +372,53 @@
 }
 
 .map-popup-card:hover .map-popup-img {
-  transform: scale(1.05);
+  transform: scale(1.04);
 }
 
-/* Luxury gradient shadow at base of image for contrast */
+/* Subtle Vignette Gradient */
 .map-popup-img-wrap::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.22) 0%, transparent 45%, rgba(0, 0, 0, 0.65) 100%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, transparent 42%, rgba(0, 0, 0, 0.7) 100%);
   pointer-events: none;
 }
 
-/* Status Badge */
-.map-popup-status {
+/* Badges */
+.map-popup-badge-newera {
   position: absolute;
   top: 10px;
   left: 10px;
   z-index: 10;
-  padding: 3px 8px;
-  background: rgba(10, 11, 14, 0.75);
+  padding: 4px 9px;
+  background: linear-gradient(135deg, #7A1220 0%, #4D0811 100%);
+  border: 1px solid rgba(246, 216, 168, 0.85);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), 0 0 10px rgba(212, 154, 61, 0.35);
+  color: #FFFFFF;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.map-popup-badge-market {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+  padding: 3.5px 8px;
+  background: rgba(15, 17, 21, 0.78);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   color: #FFFFFF;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   border-radius: 4px;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
@@ -222,25 +432,25 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: rgba(10, 11, 14, 0.7);
+  background: rgba(15, 17, 21, 0.65);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   padding: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
   transition: all 180ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .map-popup-close-btn:hover {
   background: var(--color-burgundy-primary, #660E1A);
-  border-color: rgba(255, 255, 255, 0.6);
+  border-color: rgba(255, 255, 255, 0.8);
   transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(102, 14, 26, 0.5);
+  box-shadow: 0 4px 12px rgba(102, 14, 26, 0.6);
 }
 
 /* Modern High-Contrast Price Tag */
@@ -249,8 +459,8 @@
   bottom: 10px;
   left: 10px;
   z-index: 10;
-  padding: 3px 9px;
-  background: rgba(10, 11, 14, 0.82);
+  padding: 3.5px 10px;
+  background: rgba(12, 14, 18, 0.88);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.25);
@@ -267,7 +477,7 @@
   padding: 12px 14px 14px 14px;
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 6px;
   background: #FFFFFF;
 }
 
@@ -279,15 +489,16 @@
 }
 
 .map-popup-title {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
-  color: #121418;
-  line-height: 1.3;
+  color: #0C0D10;
+  line-height: 1.25;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   flex: 1;
+  font-family: inherit;
 }
 
 .map-popup-type-badge {
@@ -304,14 +515,15 @@
 }
 
 .map-popup-location {
-  font-size: 11px;
+  font-size: 11.5px;
   color: #5A606D;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-weight: 500;
 }
 
 /* 3-Column Specifications Pills */
@@ -320,7 +532,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 6px;
   margin-top: 2px;
-  padding-top: 6px;
+  padding-top: 7px;
   border-top: 1px solid #F3EFE8;
 }
 
@@ -332,52 +544,70 @@
   background: #F8F6F2;
   border: 1px solid #ECE7DE;
   border-radius: 6px;
-  padding: 4px 2px;
+  padding: 5px 2px;
   text-align: center;
 }
 
-.map-spec-pill strong {
+.map-spec-value {
   font-size: 12px;
   font-weight: 700;
   color: #121418;
   line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
-.map-spec-pill span {
-  font-size: 9px;
-  font-weight: 600;
+.map-spec-value.is-status-active {
+  color: #059669;
+}
+
+.map-spec-label {
+  font-size: 8.5px;
+  font-weight: 700;
   color: #78736B;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
+  margin-top: 2px;
+}
+
+/* Courtesy attribution text */
+.map-popup-courtesy {
+  font-size: 9.5px;
+  color: #847C74;
   margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Luxury View Property Button */
 .map-popup-btn {
   margin-top: 4px;
   width: 100%;
-  padding: 8px 14px;
-  background: var(--color-burgundy-primary, #660E1A);
+  padding: 9px 14px;
+  background: linear-gradient(135deg, #7A1220 0%, #560A14 100%);
   color: #FFFFFF;
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-radius: 6px;
-  border: none;
+  border-radius: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  transition: background-color 200ms ease, transform 180ms ease, box-shadow 180ms ease;
-  box-shadow: 0 2px 8px rgba(102, 14, 26, 0.25);
+  transition: all 180ms ease;
+  box-shadow: 0 3px 10px rgba(102, 14, 26, 0.28);
 }
 
 .map-popup-btn:hover {
-  background: #8B1D2C;
+  background: linear-gradient(135deg, #961A2B 0%, #660E1A 100%);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(102, 14, 26, 0.35);
+  box-shadow: 0 5px 16px rgba(102, 14, 26, 0.42);
 }
 
 /* Google Maps Custom Overlay Marker */
@@ -392,22 +622,32 @@
 /* Google Maps InfoWindow Luxury Polish */
 .gm-style-iw.gm-style-iw-c {
   padding: 0 !important;
-  border-radius: var(--radius-md) !important;
-  box-shadow: 0 20px 45px -8px rgba(10, 11, 14, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.08) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 24px 50px -10px rgba(12, 14, 20, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.08) !important;
   background: #FFFFFF !important;
   max-width: 320px !important;
   min-width: 310px !important;
+  overflow: hidden !important;
+}
+
+/* Hide default Google Maps InfoWindow Header Row & Close Button that caused the top white bar */
+.gm-style-iw-chr {
+  display: none !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 .gm-style-iw-d {
   overflow: hidden !important;
   padding: 0 !important;
   max-width: 320px !important;
+  max-height: none !important;
 }
 
 .gm-style-iw-tc::after {
   background: #FFFFFF !important;
-  box-shadow: -1px 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: -1px 2px 4px rgba(0, 0, 0, 0.12);
 }
 
 /* Completely hide Google Maps default hover effect close button - replaced by custom in-card close button */

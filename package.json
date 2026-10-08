@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "node scripts/generate_sitemap.cjs && tsc -b && vite build",
     "sitemap": "node scripts/generate_sitemap.cjs",
+    "sync:mls": "node scripts/sync_spark_mls.cjs 500",
+    "sync:daily": "node scripts/sync_spark_mls.cjs 1000 && node scripts/generate_sitemap.cjs",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -16,10 +18,12 @@
     "lucide-react": "^0.475.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "resend": "^6.32.1",
     "three": "^0.160.0"
   },
   "devDependencies": {
     "@types/google.maps": "^3.66.3",
+    "@types/node": "^26.6.4",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@types/three": "^0.160.0",

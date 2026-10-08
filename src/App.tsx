@@ -7,6 +7,7 @@ import { BuyPage } from './pages/BuyPage';
 import { SellPage } from './pages/SellPage';
 import { AgentProfilePage } from './pages/AgentProfilePage';
 import { AboutPage } from './pages/AboutPage';
+import { AgentsPage } from './pages/AgentsPage';
 import { ContactPage } from './pages/ContactPage';
 import { MapPage } from './pages/MapPage';
 import { PropertyDetailView } from './components/properties/PropertyDetailView';
@@ -42,8 +43,8 @@ export const App: React.FC = () => {
         } else {
           setActivePage('home');
         }
-      } else if (hash === 'agents') {
-        setActivePage('home');
+      } else if (hash === 'agents' || hash === 'team' || hash === 'asesores') {
+        setActivePage('agents');
       } else if (hash === 'join' || hash === 'unirse') {
         setActivePage('home');
         setJoinModalOpen(true);
@@ -137,6 +138,14 @@ export const App: React.FC = () => {
           />
         )}
 
+        {activePage === 'agents' && (
+          <AgentsPage
+            onSelectProperty={handleSelectProperty}
+            onSelectAgent={handleSelectAgent}
+            lang={lang}
+          />
+        )}
+
         {activePage === 'map' && (
           <MapPage
             onSelectProperty={handleSelectProperty}
@@ -165,7 +174,7 @@ export const App: React.FC = () => {
             agent={selectedAgent}
             onSelectProperty={handleSelectProperty}
             onSelectAgent={handleSelectAgent}
-            onBack={() => handleNavigate('home')}
+            onBack={() => handleNavigate('agents')}
             onOpenConsultation={() => setConsultationOpen(true)}
             lang={lang}
           />

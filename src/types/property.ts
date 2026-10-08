@@ -21,6 +21,11 @@ export interface MLSMetadata {
   yearBuilt: number;
   originalListPrice?: number;
   daysOnMarket: number;
+  listOfficeName?: string;
+  listOfficeId?: string;
+  listAgentName?: string;
+  listAgentId?: string;
+  isNewEra?: boolean;
 }
 
 export interface PropertyLocation {
@@ -52,6 +57,8 @@ export interface Agent {
   instagram?: string;
   facebook?: string;
   featured?: boolean;
+  mlsAgentId?: string;
+  mlsAccountId?: string;
 }
 
 export interface PropertyFeatureCategory {
@@ -81,7 +88,8 @@ export interface Property {
   media: PropertyMedia[];
   features: PropertyFeatureCategory[];
   mls: MLSMetadata;
-  agentId: string;
+  agentId?: string | null;
+  isNewEra?: boolean;
   listedAt: string;
   updatedAt: string;
 }
@@ -98,8 +106,10 @@ export interface PropertyFilter {
   minBaths?: number;
   minSqft?: number;
   status?: ListingStatus | 'All';
+  onlyNewEra?: boolean;
   sortBy?: 'price-asc' | 'price-desc' | 'newest' | 'sqft-desc';
 }
+
 
 export interface BrokerageInfo {
   name: string;

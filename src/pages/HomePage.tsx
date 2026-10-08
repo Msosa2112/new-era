@@ -38,7 +38,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   const [featuredAgents, setFeaturedAgents] = useState<Agent[]>([]);
 
   useEffect(() => {
-    propertyService.getFeaturedProperties(4).then(setFeaturedProperties);
+    propertyService.getFeaturedProperties(6).then(setFeaturedProperties);
     setFeaturedAgents(propertyService.getFeaturedAgents());
   }, []);
 

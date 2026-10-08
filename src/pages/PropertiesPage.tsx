@@ -7,6 +7,7 @@ import { HexPattern } from '../components/common/HexPattern';
 import { SlidersHorizontal, ArrowUpDown, Map as MapIcon } from 'lucide-react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { LuxurySelect, SelectOption } from '../components/common/LuxurySelect';
+import { NewEraIcon } from '../components/common/NewEraIcon';
 
 interface PropertiesPageProps {
   onSelectProperty: (property: Property) => void;
@@ -21,6 +22,7 @@ export const PropertiesPage: React.FC<PropertiesPageProps> = ({
 }) => {
   const mainRef = useScrollReveal<HTMLElement>();
   const [properties, setProperties] = useState<Property[]>([]);
+  const [displayCount, setDisplayCount] = useState<number>(24);
   const [filter, setFilter] = useState<PropertyFilter>({ transactionType: 'Buy', sortBy: 'newest' });
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -35,6 +37,7 @@ export const PropertiesPage: React.FC<PropertiesPageProps> = ({
     setLoading(true);
     propertyService.getProperties(filter).then((res) => {
       setProperties(res);
+      setDisplayCount(24);
       setLoading(false);
     });
   }, [filter]);
@@ -110,8 +113,33 @@ export const PropertiesPage: React.FC<PropertiesPageProps> = ({
               )}
             </div>
 
-            {/* Controls: Sort and Map View Toggle */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            {/* Controls: New Era Filter, Sort and Map View Toggle */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+              {/* Only New Era Filter Button */}
+              <button
+                type="button"
+                onClick={() => setFilter(prev => ({ ...prev, onlyNewEra: !prev.onlyNewEra }))}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.45rem',
+                  padding: '0.55rem 1rem',
+                  backgroundColor: filter.onlyNewEra ? 'var(--color-burgundy-primary, #660E1A)' : '#FFFFFF',
+                  color: filter.onlyNewEra ? '#FFFFFF' : 'var(--color-burgundy-primary, #660E1A)',
+                  borderRadius: 'var(--radius-sm)',
+                  border: filter.onlyNewEra ? '1.5px solid var(--color-burgundy-primary, #660E1A)' : '1.5px solid rgba(102, 14, 26, 0.3)',
+                  fontSize: '0.82rem',
+                  fontWeight: 700,
+                  letterSpacing: '0.02em',
+                  cursor: 'pointer',
+                  transition: 'all 200ms ease',
+                  boxShadow: filter.onlyNewEra ? '0 4px 12px rgba(102, 14, 26, 0.3)' : 'var(--shadow-sm)'
+                }}
+              >
+                <NewEraIcon color={filter.onlyNewEra ? '#FFFFFF' : 'var(--color-burgundy-primary, #660E1A)'} size={13} />
+                <span>{lang === 'es' ? 'Solo New Era' : 'New Era Only'}</span>
+              </button>
+
               {/* Map View Toggle Button */}
               {onNavigateToMap && (
                 <button
@@ -195,20 +223,74 @@ export const PropertiesPage: React.FC<PropertiesPageProps> = ({
               </button>
             </div>
           ) : (
-            <div
-              className="property-grid-container"
-            >
-              {properties.map((prop, idx) => (
-                <PropertyCard
-                  key={prop.id}
-                  property={prop}
-                  onSelect={onSelectProperty}
-                  lang={lang}
-                  priority={idx < 2}
-                  staggerIndex={(idx % 6) + 1}
-                />
-              ))}
-            </div>
+            <>
+              <div className="property-grid-container">
+                {properties.slice(0, displayCount).map((prop, idx) => (
+                  <PropertyCard
+                    key={prop.id}
+                    property={prop}
+                    onSelect={onSelectProperty}
+                    lang={lang}
+                    priority={idx < 2}
+                    staggerIndex={(idx % 6) + 1}
+                  />
+                ))}
+              </div>
+
+              {displayCount < properties.length && (
+                <div
+                  style={{
+                    marginTop: '3.5rem',
+                    textAlign: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '0.85rem'
+                  }}
+                >
+                  <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
+                    {lang === 'es'
+                      ? `Mostrando ${Math.min(displayCount, properties.length)} de ${properties.length} propiedades activas`
+                      : `Showing ${Math.min(displayCount, properties.length)} of ${properties.length} active listings`}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setDisplayCount((prev) => prev + 24)}
+                    className="btn-outline"
+                    style={{
+                      padding: '0.85rem 2.25rem',
+                      borderRadius: '9999px',
+                      fontWeight: 700,
+                      letterSpacing: '0.04em',
+                      textTransform: 'uppercase',
+                      fontSize: '0.85rem',
+                      borderColor: '#660E1A',
+                      color: '#660E1A',
+                      backgroundColor: '#FFFFFF',
+                      boxShadow: '0 4px 14px rgba(102, 14, 26, 0.08)',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#660E1A';
+                      e.currentTarget.style.color = '#FFFFFF';
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '#FFFFFF';
+                      e.currentTarget.style.color = '#660E1A';
+                      e.currentTarget.style.transform = 'none';
+                    }}
+                  >
+                    <span>
+                      {lang === 'es'
+                        ? `Cargar Más Propiedades (+24)`
+                        : `Load More Properties (+24)`}
+                    </span>
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>

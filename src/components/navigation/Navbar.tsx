@@ -33,6 +33,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const navLinks = [
     { id: 'properties', labelEn: 'Properties', labelEs: 'Propiedades' },
     { id: 'map', labelEn: 'Map', labelEs: 'Mapa' },
+    { id: 'agents', labelEn: 'Agents', labelEs: 'Asesores' },
     { id: 'buy', labelEn: 'Buy', labelEs: 'Comprar' },
     { id: 'sell', labelEn: 'Sell', labelEs: 'Vender' },
     { id: 'about', labelEn: 'About', labelEs: 'Nosotros' },

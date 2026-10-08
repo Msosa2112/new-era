@@ -93,6 +93,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, lang }) => {
               {[
                 { id: 'properties', labelEn: 'Curated Properties', labelEs: 'Propiedades Exclusivas' },
                 { id: 'map', labelEn: 'Interactive Map Search', labelEs: 'Búsqueda en Mapa' },
+                { id: 'agents', labelEn: 'Advisory Roster (Realtors)', labelEs: 'Equipo de Asesores (Realtors)' },
                 { id: 'buy', labelEn: 'Buyer Journey & Grants', labelEs: 'Guía del Comprador' },
                 { id: 'sell', labelEn: 'Sell & CMA Valuation', labelEs: 'Vender & Valuación CMA' },
                 { id: 'about', labelEn: 'About New Era', labelEs: 'Sobre Nosotros' },
