@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { Play } from 'lucide-react';
 import { HexPattern } from '../components/common/HexPattern';
 import { useScrollReveal } from '../hooks/useScrollReveal';
@@ -10,6 +10,14 @@ interface AboutPageProps {
 
 export const AboutPage: React.FC<AboutPageProps> = ({ lang }) => {
   const mainRef = useScrollReveal<HTMLElement>();
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const handlePlayVideo = () => {
+    if (!videoRef.current) return;
+    videoRef.current.play();
+    setIsPlaying(true);
+  };
 
   return (
     <main ref={mainRef} style={{ paddingTop: 'var(--header-height)', minHeight: '100vh', backgroundColor: 'var(--bg-primary)' }}>
@@ -45,7 +53,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ lang }) => {
         </div>
       </section>
 
-      {/* Built for Collaboration — Clean Video Mock Container */}
+      {/* Built for Collaboration — Official Team Video */}
       <section className="section-padding" style={{ backgroundColor: 'var(--bg-surface)', borderTop: '1px solid var(--border-subtle)', position: 'relative', overflow: 'hidden' }}>
         <HexPattern variant="subtle" opacity={0.05} maskFade="radial-center" />
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
@@ -58,7 +66,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ lang }) => {
             </h2>
           </div>
 
-          {/* Empty Clean 16:9 Video Mock Container */}
+          {/* 16:9 Team Video Player */}
           <div
             style={{
               maxWidth: '1080px',
@@ -68,31 +76,67 @@ export const AboutPage: React.FC<AboutPageProps> = ({ lang }) => {
               backgroundColor: '#0F1115',
               borderRadius: 'var(--radius-md)',
               border: '1px solid rgba(102, 14, 26, 0.2)',
-              boxShadow: '0 24px 60px rgba(0, 0, 0, 0.14)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              boxShadow: '0 24px 60px rgba(0, 0, 0, 0.16)',
               position: 'relative',
               overflow: 'hidden'
             }}
-            aria-label="Video Showcase Placeholder"
           >
-            <div
+            <video
+              ref={videoRef}
+              src="/assets/videos/about-collaboration.mp4"
+              poster="/assets/videos/about-collaboration-poster.jpg"
+              controls={isPlaying}
+              playsInline
+              preload="metadata"
+              onPlay={() => setIsPlaying(true)}
+              onPause={() => setIsPlaying(false)}
+              onEnded={() => setIsPlaying(false)}
               style={{
-                width: '72px',
-                height: '72px',
-                borderRadius: '50%',
-                backgroundColor: 'rgba(102, 14, 26, 0.85)',
-                border: '1px solid rgba(255, 255, 255, 0.25)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#FFFFFF',
-                boxShadow: '0 12px 32px rgba(0, 0, 0, 0.4)'
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                display: 'block'
               }}
-            >
-              <Play size={28} fill="#FFFFFF" style={{ marginLeft: '3px' }} />
-            </div>
+            />
+
+            {!isPlaying && (
+              <button
+                type="button"
+                onClick={handlePlayVideo}
+                aria-label={lang === 'es' ? 'Reproducir video de New Era' : 'Play New Era video'}
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  background: 'radial-gradient(circle, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0.42) 100%)',
+                  border: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  transition: 'background 0.25s ease'
+                }}
+              >
+                <div
+                  style={{
+                    width: '80px',
+                    height: '80px',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(102, 14, 26, 0.9)',
+                    border: '2px solid rgba(255, 255, 255, 0.45)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#FFFFFF',
+                    boxShadow: '0 14px 36px rgba(0, 0, 0, 0.45)',
+                    backdropFilter: 'blur(6px)'
+                  }}
+                >
+                  <Play size={32} fill="#FFFFFF" style={{ marginLeft: '4px' }} />
+                </div>
+              </button>
+            )}
           </div>
         </div>
       </section>
