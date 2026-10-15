@@ -214,7 +214,7 @@ export const getPageSEOMetadata = (
 
   // 1. DYNAMIC PROPERTY DETAIL VIEW
   if (selectedProperty) {
-    const canonical = `${SITE_URL}/#/properties/${selectedProperty.slug}`;
+    const canonical = `${SITE_URL}/properties/${selectedProperty.slug}`;
     const primaryImg = selectedProperty.media?.[0]?.url || DEFAULT_OG_IMAGE;
     const title = isEs
       ? `${selectedProperty.title} en ${selectedProperty.location.city}, KY | New Era Real Estate`
@@ -225,7 +225,7 @@ export const getPageSEOMetadata = (
 
     const breadcrumbs = getBreadcrumbSchema([
       { name: isEs ? 'Inicio' : 'Home', item: `${SITE_URL}/` },
-      { name: isEs ? 'Propiedades' : 'Properties', item: `${SITE_URL}/#/properties` },
+      { name: isEs ? 'Propiedades' : 'Properties', item: `${SITE_URL}/properties` },
       { name: selectedProperty.title, item: canonical }
     ]);
 
@@ -252,7 +252,7 @@ export const getPageSEOMetadata = (
 
   // 2. DYNAMIC ADVISOR PROFILE
   if (activePage === 'agent-profile' && selectedAgent) {
-    const canonical = `${SITE_URL}/#/agents/${selectedAgent.id}`;
+    const canonical = `${SITE_URL}/agents/${selectedAgent.id}`;
     const agentPhoto = selectedAgent.photoUrl.startsWith('http')
       ? selectedAgent.photoUrl
       : `${SITE_URL}${selectedAgent.photoUrl}`;
@@ -265,7 +265,7 @@ export const getPageSEOMetadata = (
 
     const breadcrumbs = getBreadcrumbSchema([
       { name: isEs ? 'Inicio' : 'Home', item: `${SITE_URL}/` },
-      { name: isEs ? 'Asesores' : 'Advisors', item: `${SITE_URL}/#/agents` },
+      { name: isEs ? 'Asesores' : 'Advisors', item: `${SITE_URL}/agents` },
       { name: selectedAgent.name, item: canonical }
     ]);
 
@@ -293,7 +293,7 @@ export const getPageSEOMetadata = (
   // 3. STATIC AND CORE PAGES
   switch (activePage) {
     case 'properties': {
-      const canonical = `${SITE_URL}/#/properties`;
+      const canonical = `${SITE_URL}/properties`;
       const title = isEs
         ? 'Casas y Propiedades en Venta en Louisville KY | New Era Real Estate'
         : 'Homes & Real Estate for Sale in Louisville KY | New Era Real Estate';
@@ -326,7 +326,7 @@ export const getPageSEOMetadata = (
     }
 
     case 'buy': {
-      const canonical = `${SITE_URL}/#/buy`;
+      const canonical = `${SITE_URL}/buy`;
       const title = isEs
         ? 'Guía y Asesoría para Comprar Casa en Louisville KY | New Era Real Estate'
         : 'Home Buying Advisory & Representation in Louisville KY | New Era Real Estate';
@@ -359,7 +359,7 @@ export const getPageSEOMetadata = (
     }
 
     case 'sell': {
-      const canonical = `${SITE_URL}/#/sell`;
+      const canonical = `${SITE_URL}/sell`;
       const title = isEs
         ? 'Vende Tu Propiedad y Valuación Inmobiliaria en Louisville | New Era Real Estate'
         : 'Sell Your Home & Real Estate Valuation in Louisville KY | New Era Real Estate';
@@ -392,7 +392,7 @@ export const getPageSEOMetadata = (
     }
 
     case 'agents': {
-      const canonical = `${SITE_URL}/#/agents`;
+      const canonical = `${SITE_URL}/agents`;
       const title = isEs
         ? 'Equipo de Asesores Inmobiliarios | New Era Real Estate Louisville'
         : 'Real Estate Advisors & Brokers | New Era Real Estate Louisville';
@@ -425,7 +425,7 @@ export const getPageSEOMetadata = (
     }
 
     case 'about': {
-      const canonical = `${SITE_URL}/#/about`;
+      const canonical = `${SITE_URL}/about`;
       const title = isEs
         ? 'Sobre Nosotros y Filosofía Inmobiliaria | New Era Real Estate'
         : 'About Us & Brokerage Philosophy | New Era Real Estate';
@@ -459,7 +459,7 @@ export const getPageSEOMetadata = (
     }
 
     case 'contact': {
-      const canonical = `${SITE_URL}/#/contact`;
+      const canonical = `${SITE_URL}/contact`;
       const title = isEs
         ? 'Contacto y Ubicación de Oficinas | New Era Real Estate Louisville'
         : 'Contact Us & Office Location | New Era Real Estate Louisville';

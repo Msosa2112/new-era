@@ -25,72 +25,98 @@ export const App: React.FC = () => {
   const [consultationOpen, setConsultationOpen] = useState<boolean>(false);
   const [joinModalOpen, setJoinModalOpen] = useState<boolean>(false);
 
-  // Handle URL hash navigation or back/forward
+  // Handle clean URL path navigation, legacy #/ hash redirects, and browser Back/Forward
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.replace('#/', '').replace('#', '');
-      if (hash.startsWith('properties/')) {
-        const slug = hash.replace('properties/', '');
+    const syncRouteFromLocation = () => {
+      let route = '';
+      const rawHash = window.location.hash;
+
+      // Legacy #/route support -> automatically redirect to clean /route
+      if (rawHash.startsWith('#/')) {
+        route = rawHash.replace(/^#\/+|\/+$/g, '');
+        const cleanUrl = route && route !== 'home' ? `/${route}` : '/';
+        window.history.replaceState(null, '', cleanUrl);
+      } else {
+        route = window.location.pathname.replace(/^\/+|\/+$/g, '');
+      }
+
+      if (!route || route === 'home') {
+        setSelectedProperty(null);
+        setActivePage('home');
+      } else if (route.startsWith('properties/')) {
+        const slug = route.replace('properties/', '');
         propertyService.getPropertyById(slug).then((p) => {
           if (p) setSelectedProperty(p);
         });
-      } else if (hash.startsWith('agents/') || hash.startsWith('agent/')) {
-        const agentId = hash.replace('agents/', '').replace('agent/', '');
+      } else if (route.startsWith('agents/') || route.startsWith('agent/')) {
+        setSelectedProperty(null);
+        const agentId = route.replace('agents/', '').replace('agent/', '');
         const found = propertyService.getAgentById(agentId);
         if (found) {
           setSelectedAgent(found);
           setActivePage('agent-profile');
         } else {
-          setActivePage('home');
+          setActivePage('agents');
         }
-      } else if (hash === 'agents' || hash === 'team' || hash === 'asesores') {
+      } else if (route === 'agents' || route === 'team' || route === 'asesores') {
+        setSelectedProperty(null);
         setActivePage('agents');
-      } else if (hash === 'join' || hash === 'unirse') {
+      } else if (route === 'join' || route === 'unirse') {
+        setSelectedProperty(null);
         setActivePage('home');
         setJoinModalOpen(true);
-      } else if (hash) {
-        setActivePage(hash);
       } else {
-        setActivePage('home');
+        setSelectedProperty(null);
+        setActivePage(route);
       }
     };
 
-    window.addEventListener('hashchange', handleHashChange);
-    handleHashChange();
+    window.addEventListener('popstate', syncRouteFromLocation);
+    window.addEventListener('hashchange', syncRouteFromLocation);
+    syncRouteFromLocation();
 
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    return () => {
+      window.removeEventListener('popstate', syncRouteFromLocation);
+      window.removeEventListener('hashchange', syncRouteFromLocation);
+    };
   }, []);
 
   const handleNavigate = (page: string, param?: string) => {
+    setSelectedProperty(null);
     setActivePage(page);
+    let targetPath = '/';
     if (param && page === 'properties') {
-      window.location.hash = `#/properties/${param}`;
+      targetPath = `/properties/${param}`;
     } else if (param && (page === 'agents' || page === 'agent-profile')) {
-      window.location.hash = `#/agents/${param}`;
-    } else {
-      window.location.hash = `#/${page}`;
+      targetPath = `/agents/${param}`;
+    } else if (page && page !== 'home') {
+      targetPath = `/${page}`;
     }
+    window.history.pushState(null, '', targetPath);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSelectProperty = (property: Property) => {
     setSelectedProperty(property);
-    window.location.hash = `#/properties/${property.slug}`;
+    window.history.pushState(null, '', `/properties/${property.slug}`);
   };
 
   const handleCloseProperty = () => {
     setSelectedProperty(null);
     if (activePage === 'agent-profile' && selectedAgent) {
-      window.location.hash = `#/agents/${selectedAgent.id}`;
+      window.history.pushState(null, '', `/agents/${selectedAgent.id}`);
+    } else if (!activePage || activePage === 'home') {
+      window.history.pushState(null, '', '/');
     } else {
-      window.location.hash = `#/${activePage}`;
+      window.history.pushState(null, '', `/${activePage}`);
     }
   };
 
   const handleSelectAgent = (agent: Agent) => {
+    setSelectedProperty(null);
     setSelectedAgent(agent);
     setActivePage('agent-profile');
-    window.location.hash = `#/agents/${agent.id}`;
+    window.history.pushState(null, '', `/agents/${agent.id}`);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

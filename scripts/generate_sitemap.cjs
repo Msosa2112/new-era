@@ -31,22 +31,23 @@ const uniquePropertySlugs = [...new Set([...livePropertySlugs, ...propertySlugMa
 const urls = [
   // 1. Core High-Priority Pages
   { loc: `${SITE_URL}/`, changefreq: 'daily', priority: '1.0' },
-  { loc: `${SITE_URL}/#/properties`, changefreq: 'daily', priority: '0.9' },
-  { loc: `${SITE_URL}/#/buy`, changefreq: 'monthly', priority: '0.8' },
-  { loc: `${SITE_URL}/#/sell`, changefreq: 'monthly', priority: '0.8' },
-  { loc: `${SITE_URL}/#/about`, changefreq: 'monthly', priority: '0.7' },
-  { loc: `${SITE_URL}/#/contact`, changefreq: 'monthly', priority: '0.7' },
+  { loc: `${SITE_URL}/properties`, changefreq: 'daily', priority: '0.9' },
+  { loc: `${SITE_URL}/agents`, changefreq: 'weekly', priority: '0.9' },
+  { loc: `${SITE_URL}/buy`, changefreq: 'monthly', priority: '0.8' },
+  { loc: `${SITE_URL}/sell`, changefreq: 'monthly', priority: '0.8' },
+  { loc: `${SITE_URL}/about`, changefreq: 'monthly', priority: '0.7' },
+  { loc: `${SITE_URL}/contact`, changefreq: 'monthly', priority: '0.7' },
 
-  // 2. Dynamic Advisor Profiles (All 19 Licensed Advisors)
+  // 2. Dynamic Advisor Profiles
   ...uniqueAgentIds.map(agentId => ({
-    loc: `${SITE_URL}/#/agents/${agentId}`,
+    loc: `${SITE_URL}/agents/${agentId}`,
     changefreq: 'weekly',
     priority: '0.8'
   })),
 
   // 3. Dynamic Property Listings
   ...uniquePropertySlugs.map(slug => ({
-    loc: `${SITE_URL}/#/properties/${slug}`,
+    loc: `${SITE_URL}/properties/${slug}`,
     changefreq: 'weekly',
     priority: '0.8'
   }))
