@@ -422,8 +422,8 @@ export const AGENTS_DATA: Agent[] = [
     licenseNumber: "307105",
     phone: "(786) 838-9751",
     email: "yalbarealty@gmail.com",
-    photoUrl: "",
-    photoNobgUrl: "",
+    photoUrl: "/assets/agents/yordanis-alba-elias.jpg",
+    photoNobgUrl: "/assets/agents/yordanis-alba-elias-nobg.png",
     bio: "",
     specialties: [],
     languages: ["English", "Spanish"],
@@ -432,6 +432,24 @@ export const AGENTS_DATA: Agent[] = [
     featured: false,
     mlsAgentId: "10080280",
     mlsAccountId: "20260311193856471864000000"
+  },
+  {
+    id: "stephanie-preciado",
+    name: "Stephanie Preciado",
+    title: "Licensed REALTOR®",
+    licenseNumber: "283571",
+    phone: "(502) 500-0409",
+    email: "newerarealestateky@gmail.com",
+    photoUrl: "/assets/agents/stephanie-preciado.jpg",
+    photoNobgUrl: "/assets/agents/stephanie-preciado-nobg.png",
+    bio: "",
+    specialties: [],
+    languages: ["English", "Spanish"],
+    activeListingsCount: 1,
+    yearsExperience: 0,
+    featured: false,
+    mlsAgentId: "29607",
+    mlsAccountId: "20230308212013696700000000"
   },
   {
     id: "alejandro-robles",
@@ -450,23 +468,5 @@ export const AGENTS_DATA: Agent[] = [
     featured: false,
     mlsAgentId: "10079929",
     mlsAccountId: "20251125194017259076000000"
-  },
-  {
-    id: "stephanie-preciado",
-    name: "Stephanie Preciado",
-    title: "Licensed REALTOR®",
-    licenseNumber: "283571",
-    phone: "(502) 500-0409",
-    email: "newerarealestateky@gmail.com",
-    photoUrl: "",
-    photoNobgUrl: "",
-    bio: "",
-    specialties: [],
-    languages: ["English", "Spanish"],
-    activeListingsCount: 1,
-    yearsExperience: 0,
-    featured: false,
-    mlsAgentId: "29607",
-    mlsAccountId: "20230308212013696700000000"
   }
 ];
