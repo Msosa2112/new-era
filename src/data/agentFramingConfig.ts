@@ -246,6 +246,15 @@ export const DESKTOP_AGENT_FRAMING: Record<string, AgentFraming> = {
     "avatarZoom": 1.5,
     "avatarX": 50,
     "avatarY": 10
+  },
+  "alejandro-robles": {
+    "scale": 1,
+    "offsetX": 0,
+    "offsetY": -10,
+    "heightPercent": 100,
+    "avatarZoom": 1.5,
+    "avatarX": 50,
+    "avatarY": 10
   }
 };
 
@@ -477,11 +486,20 @@ export const MOBILE_AGENT_FRAMING: Record<string, AgentFraming> = {
     "avatarZoom": 1.5,
     "avatarX": 50,
     "avatarY": 10
+  },
+  "alejandro-robles": {
+    "scale": 1,
+    "offsetX": 0,
+    "offsetY": 6,
+    "heightPercent": 100,
+    "avatarZoom": 1.5,
+    "avatarX": 50,
+    "avatarY": 10
   }
 };
 
-const STORAGE_KEY_DESKTOP = 'agent_framing_desktop_v7';
-const STORAGE_KEY_MOBILE = 'agent_framing_mobile_v7';
+const STORAGE_KEY_DESKTOP = 'agent_framing_desktop_v8';
+const STORAGE_KEY_MOBILE = 'agent_framing_mobile_v8';
 
 export function loadSavedDesktopFraming(): Record<string, AgentFraming> {
   if (typeof window === 'undefined') return { ...DESKTOP_AGENT_FRAMING };
@@ -753,6 +771,14 @@ export const DESKTOP_PROFILE_FRAMING: Record<string, ProfileAgentFraming> = {
     "heightPercent": 100,
     "fadeStart": 63,
     "fadeEnd": 85
+  },
+  "alejandro-robles": {
+    "scale": 1.6,
+    "offsetX": 0,
+    "offsetY": 0,
+    "heightPercent": 100,
+    "fadeStart": 63,
+    "fadeEnd": 85
   }
 };
 
@@ -956,11 +982,19 @@ export const MOBILE_PROFILE_FRAMING: Record<string, ProfileAgentFraming> = {
     "heightPercent": 100,
     "fadeStart": 63,
     "fadeEnd": 85
+  },
+  "alejandro-robles": {
+    "scale": 1.6,
+    "offsetX": 0,
+    "offsetY": 0,
+    "heightPercent": 100,
+    "fadeStart": 63,
+    "fadeEnd": 85
   }
 };
 
-const STORAGE_KEY_PROFILE_DESKTOP = 'agent_profile_framing_desktop_v4';
-const STORAGE_KEY_PROFILE_MOBILE = 'agent_profile_framing_mobile_v4';
+const STORAGE_KEY_PROFILE_DESKTOP = 'agent_profile_framing_desktop_v5';
+const STORAGE_KEY_PROFILE_MOBILE = 'agent_profile_framing_mobile_v5';
 
 export function loadSavedProfileDesktopFraming(): Record<string, ProfileAgentFraming> {
   if (typeof window === 'undefined') return { ...DESKTOP_PROFILE_FRAMING };
