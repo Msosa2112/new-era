@@ -383,9 +383,21 @@ input:focus, select:focus, textarea:focus {
 }
 
 /* Motion system accessibility & Fluid 60fps Scroll Reveal */
+@keyframes revealFallback {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .reveal-on-scroll {
-  opacity: 0;
-  transform: translateY(22px);
+  opacity: 1;
+  transform: translateY(0);
+  animation: revealFallback 450ms var(--ease-out-fluid) both;
   transition: opacity 600ms var(--ease-out-fluid), transform 600ms var(--ease-out-fluid);
   will-change: opacity, transform;
 }
@@ -395,12 +407,12 @@ input:focus, select:focus, textarea:focus {
   transform: translateY(0);
 }
 
-.stagger-1 { transition-delay: 60ms; }
-.stagger-2 { transition-delay: 120ms; }
-.stagger-3 { transition-delay: 180ms; }
-.stagger-4 { transition-delay: 240ms; }
-.stagger-5 { transition-delay: 300ms; }
-.stagger-6 { transition-delay: 360ms; }
+.stagger-1 { transition-delay: 60ms; animation-delay: 40ms; }
+.stagger-2 { transition-delay: 120ms; animation-delay: 80ms; }
+.stagger-3 { transition-delay: 180ms; animation-delay: 120ms; }
+.stagger-4 { transition-delay: 240ms; animation-delay: 160ms; }
+.stagger-5 { transition-delay: 300ms; animation-delay: 200ms; }
+.stagger-6 { transition-delay: 360ms; animation-delay: 240ms; }
 
 /* Apple-Style Physical Press Feedback (Mobile & Desktop) */
 @media (prefers-reduced-motion: no-preference) {
@@ -430,6 +442,7 @@ input:focus, select:focus, textarea:focus {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
+    animation: none !important;
   }
 }
 
@@ -447,6 +460,12 @@ input:focus, select:focus, textarea:focus {
 }
 
 @media (max-width: 768px) {
+  .reveal-on-scroll {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+
   .property-grid-container {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: clamp(0.5rem, 2.5vw, 0.75rem) !important;

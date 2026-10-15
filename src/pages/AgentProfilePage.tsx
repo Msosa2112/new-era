@@ -38,6 +38,7 @@ import {
   loadSavedProfileMobileFraming,
   saveProfileMobileFramingToStorage
 } from '../data/agentFramingConfig';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 
 interface AgentProfilePageProps {
   agent: Agent;
@@ -56,6 +57,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
   onOpenConsultation,
   lang
 }) => {
+  const mainRef = useScrollReveal<HTMLElement>();
   const [activeTab, setActiveTab] = useState<'listings' | 'bio' | 'track-record'>('listings');
   const [properties, setProperties] = useState<Property[]>([]);
   const [loadingProps, setLoadingProps] = useState(true);
@@ -174,6 +176,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
 
   return (
     <main
+      ref={mainRef}
       style={{
         minHeight: '100vh',
         backgroundColor: '#FAF7F2',

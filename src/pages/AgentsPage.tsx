@@ -5,6 +5,7 @@ import { propertyService } from '../services/propertyService';
 import { HexPattern } from '../components/common/HexPattern';
 import { BROKERAGE_DATA } from '../data/agentsData';
 import { Phone, Mail, Award, Globe, Building2, X, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 
 interface AgentsPageProps {
   onSelectProperty: (property: Property) => void;
@@ -13,6 +14,7 @@ interface AgentsPageProps {
 }
 
 export const AgentsPage: React.FC<AgentsPageProps> = ({ onSelectProperty, onSelectAgent, lang }) => {
+  const mainRef = useScrollReveal<HTMLElement>();
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
   const [agentProperties, setAgentProperties] = useState<Property[]>([]);
   const [filterLang, setFilterLang] = useState<string>('All');
@@ -43,7 +45,7 @@ export const AgentsPage: React.FC<AgentsPageProps> = ({ onSelectProperty, onSele
   };
 
   return (
-    <main style={{ paddingTop: 'var(--header-height)', minHeight: '100vh', backgroundColor: '#F8F9FA' }}>
+    <main ref={mainRef} style={{ paddingTop: 'var(--header-height)', minHeight: '100vh', backgroundColor: '#F8F9FA' }}>
       {/* Page Header */}
       <section
         style={{

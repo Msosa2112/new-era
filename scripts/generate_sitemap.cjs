@@ -7,7 +7,7 @@ const TODAY = new Date().toISOString().split('T')[0];
 // Extract agent IDs from agentsData.ts
 const agentsDataPath = path.join(__dirname, '../src/data/agentsData.ts');
 const agentsFileContent = fs.readFileSync(agentsDataPath, 'utf8');
-const agentIdMatches = [...agentsFileContent.matchAll(/"id":\s*"([^"]+)"/g)].map(m => m[1]);
+const agentIdMatches = [...agentsFileContent.matchAll(/(?:"id"|\bid):\s*"([^"]+)"/g)].map(m => m[1]);
 const uniqueAgentIds = [...new Set(agentIdMatches)];
 
 // Extract property slugs from liveMlsProperties.json & mockProperties.ts

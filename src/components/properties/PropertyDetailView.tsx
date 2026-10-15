@@ -628,17 +628,47 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                 >
                   <span className="display-subtitle">{lang === 'es' ? 'ASESOR DESIGNADO' : 'YOUR ADVISORY AGENT'}</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', margin: '1.25rem 0' }}>
-                    <img
-                      src={agent.photoUrl}
-                      alt={agent.name}
-                      style={{
-                        width: '74px',
-                        height: '74px',
-                        borderRadius: '50%',
-                        objectFit: 'cover',
-                        border: '2px solid var(--color-burgundy-primary)'
-                      }}
-                    />
+                    {agent.photoUrl || agent.photoNobgUrl ? (
+                      <img
+                        src={agent.photoUrl || agent.photoNobgUrl}
+                        alt={agent.name}
+                        style={{
+                          width: '74px',
+                          height: '74px',
+                          borderRadius: '50%',
+                          objectFit: 'cover',
+                          objectPosition: 'center 15%',
+                          border: '2px solid var(--color-burgundy-primary)',
+                          flexShrink: 0
+                        }}
+                      />
+                    ) : (
+                      <div
+                        style={{
+                          width: '74px',
+                          height: '74px',
+                          borderRadius: '50%',
+                          backgroundColor: '#660E1A',
+                          color: '#FFFFFF',
+                          fontFamily: 'var(--font-serif)',
+                          fontSize: '1.5rem',
+                          fontWeight: 700,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          border: '2px solid var(--color-burgundy-primary)',
+                          flexShrink: 0
+                        }}
+                      >
+                        {agent.name
+                          .split(' ')
+                          .filter(Boolean)
+                          .slice(0, 2)
+                          .map((n) => n[0])
+                          .join('')
+                          .toUpperCase()}
+                      </div>
+                    )}
                     <div>
                       <h4 style={{ fontSize: '1.2rem', fontWeight: 600 }}>{agent.name}</h4>
                       <p style={{ fontSize: '0.8rem', color: 'var(--color-orange-accent)', fontWeight: 600 }}>{agent.title}</p>

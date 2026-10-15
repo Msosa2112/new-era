@@ -353,19 +353,48 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
         >
           {agent ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', minWidth: 0 }}>
-              <img
-                src={agent.photoUrl}
-                alt={agent.name}
-                className="property-card-agent-avatar"
-                style={{
-                  width: '22px',
-                  height: '22px',
-                  borderRadius: '50%',
-                  objectFit: 'cover',
-                  border: '1px solid rgba(102, 14, 26, 0.4)',
-                  flexShrink: 0
-                }}
-              />
+              {agent.photoUrl || agent.photoNobgUrl ? (
+                <img
+                  src={agent.photoUrl || agent.photoNobgUrl}
+                  alt={agent.name}
+                  className="property-card-agent-avatar"
+                  style={{
+                    width: '22px',
+                    height: '22px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    objectPosition: 'center 15%',
+                    border: '1px solid rgba(102, 14, 26, 0.4)',
+                    flexShrink: 0
+                  }}
+                />
+              ) : (
+                <div
+                  className="property-card-agent-avatar"
+                  style={{
+                    width: '22px',
+                    height: '22px',
+                    borderRadius: '50%',
+                    backgroundColor: '#660E1A',
+                    color: '#FFFFFF',
+                    fontSize: '0.55rem',
+                    fontWeight: 700,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    border: '1px solid rgba(102, 14, 26, 0.4)',
+                    flexShrink: 0
+                  }}
+                >
+                  {agent.name
+                    .split(' ')
+                    .filter(Boolean)
+                    .slice(0, 2)
+                    .map((n) => n[0])
+                    .join('')
+                    .toUpperCase()}
+                </div>
+              )}
               <span
                 className="property-card-agent-name"
                 style={{
@@ -377,7 +406,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
                   whiteSpace: 'nowrap'
                 }}
               >
-                {agent.name.split(' ')[0]} {agent.name.split(' ')[1]?.[0] ? `${agent.name.split(' ')[1][0]}.` : ''}
+                {agent.name.split(' ')[0]} {agent.name.split(' ')[1]?.[0] ? `${agent.name.split(' ')[1].replace(/[^A-Za-z]/g, '')[0]}.` : ''}
               </span>
             </div>
           ) : (

@@ -5,17 +5,24 @@ import { useEffect, useRef, useState } from 'react';
  * Once an element enters the viewport, .is-revealed is added and observation stops,
  * ensuring 60fps/120fps with zero persistent scroll listeners.
  */
-export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(threshold = 0.12) {
+export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(threshold = 0.05) {
   const containerRef = useRef<T>(null);
 
   useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
+    const rootEl = containerRef.current || document.body;
+    if (!rootEl) return;
 
-    // Check prefers-reduced-motion
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      const targets = el.querySelectorAll('.reveal-on-scroll');
+    const revealAll = (scope: ParentNode) => {
+      const targets = scope.querySelectorAll('.reveal-on-scroll:not(.is-revealed)');
       targets.forEach((target) => target.classList.add('is-revealed'));
+    };
+
+    // Check prefers-reduced-motion or lacking IntersectionObserver
+    if (
+      typeof IntersectionObserver === 'undefined' ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      revealAll(rootEl);
       return;
     }
 
@@ -30,20 +37,35 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(threshol
       },
       {
         threshold,
-        rootMargin: '0px 0px -40px 0px'
+        rootMargin: '60px 0px 40px 0px'
       }
     );
 
-    // If container itself has .reveal-on-scroll
-    if (el.classList.contains('reveal-on-scroll')) {
-      observer.observe(el);
-    }
+    const observeTargets = (scope: ParentNode) => {
+      if (scope instanceof HTMLElement && scope.classList.contains('reveal-on-scroll') && !scope.classList.contains('is-revealed')) {
+        observer.observe(scope);
+      }
+      const targets = scope.querySelectorAll('.reveal-on-scroll:not(.is-revealed)');
+      targets.forEach((target) => observer.observe(target));
+    };
 
-    // Observe all children with .reveal-on-scroll
-    const targets = el.querySelectorAll('.reveal-on-scroll');
-    targets.forEach((target) => observer.observe(target));
+    observeTargets(rootEl);
+
+    // Watch for async rendered cards (e.g. MLS properties, filtered agents, Load More)
+    const mutationObserver = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        mutation.addedNodes.forEach((node) => {
+          if (node instanceof HTMLElement) {
+            observeTargets(node);
+          }
+        });
+      }
+    });
+
+    mutationObserver.observe(rootEl, { childList: true, subtree: true });
 
     return () => {
+      mutationObserver.disconnect();
       observer.disconnect();
     };
   }, [threshold]);

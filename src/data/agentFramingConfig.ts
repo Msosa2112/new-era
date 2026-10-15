@@ -59,13 +59,13 @@ export const DESKTOP_AGENT_FRAMING: Record<string, AgentFraming> = {
     "avatarY": 7
   },
   "claudia-aguilera-cuenca": {
-    "scale": 1.19,
+    "scale": 1,
     "offsetX": 0,
-    "offsetY": -141,
-    "heightPercent": 106,
-    "avatarZoom": 1.9,
+    "offsetY": -10,
+    "heightPercent": 100,
+    "avatarZoom": 1.5,
     "avatarX": 50,
-    "avatarY": 24
+    "avatarY": 10
   },
   "yazbel-diaz": {
     "scale": 1.55,
@@ -158,13 +158,13 @@ export const DESKTOP_AGENT_FRAMING: Record<string, AgentFraming> = {
     "avatarY": 7
   },
   "albin-machado-campo": {
-    "scale": 1.37,
+    "scale": 1,
     "offsetX": 0,
-    "offsetY": -132,
+    "offsetY": -10,
     "heightPercent": 100,
-    "avatarZoom": 1.8,
+    "avatarZoom": 1.5,
     "avatarX": 50,
-    "avatarY": 19
+    "avatarY": 10
   },
   "ivonne-medina": {
     "scale": 1.33,
@@ -192,6 +192,42 @@ export const DESKTOP_AGENT_FRAMING: Record<string, AgentFraming> = {
     "avatarZoom": 1.5,
     "avatarX": 50,
     "avatarY": 20
+  },
+  "dayani-chavez": {
+    "scale": 1,
+    "offsetX": 0,
+    "offsetY": -10,
+    "heightPercent": 100,
+    "avatarZoom": 1.5,
+    "avatarX": 50,
+    "avatarY": 10
+  },
+  "nina-gonzalez": {
+    "scale": 1,
+    "offsetX": 0,
+    "offsetY": -12,
+    "heightPercent": 100,
+    "avatarZoom": 1.55,
+    "avatarX": 50,
+    "avatarY": 10
+  },
+  "grisel-gonzalez": {
+    "scale": 1,
+    "offsetX": 0,
+    "offsetY": -12,
+    "heightPercent": 100,
+    "avatarZoom": 1.55,
+    "avatarX": 50,
+    "avatarY": 10
+  },
+  "rebeca-lopez-portuondo": {
+    "scale": 1,
+    "offsetX": 0,
+    "offsetY": -10,
+    "heightPercent": 100,
+    "avatarZoom": 1.5,
+    "avatarX": 50,
+    "avatarY": 10
   }
 };
 
@@ -236,13 +272,13 @@ export const MOBILE_AGENT_FRAMING: Record<string, AgentFraming> = {
     "avatarY": 7
   },
   "claudia-aguilera-cuenca": {
-    "scale": 1.03,
+    "scale": 1,
     "offsetX": 0,
-    "offsetY": -38,
-    "heightPercent": 106,
-    "avatarZoom": 1.9,
+    "offsetY": 6,
+    "heightPercent": 100,
+    "avatarZoom": 1.5,
     "avatarX": 50,
-    "avatarY": 24
+    "avatarY": 10
   },
   "yazbel-diaz": {
     "scale": 1.51,
@@ -335,13 +371,13 @@ export const MOBILE_AGENT_FRAMING: Record<string, AgentFraming> = {
     "avatarY": 7
   },
   "albin-machado-campo": {
-    "scale": 1.31,
+    "scale": 1,
     "offsetX": 0,
-    "offsetY": -52,
+    "offsetY": 6,
     "heightPercent": 100,
-    "avatarZoom": 1.8,
+    "avatarZoom": 1.5,
     "avatarX": 50,
-    "avatarY": 19
+    "avatarY": 10
   },
   "ivonne-medina": {
     "scale": 1.33,
@@ -369,11 +405,47 @@ export const MOBILE_AGENT_FRAMING: Record<string, AgentFraming> = {
     "avatarZoom": 1.5,
     "avatarX": 50,
     "avatarY": 20
+  },
+  "dayani-chavez": {
+    "scale": 1,
+    "offsetX": 0,
+    "offsetY": 6,
+    "heightPercent": 100,
+    "avatarZoom": 1.5,
+    "avatarX": 50,
+    "avatarY": 10
+  },
+  "nina-gonzalez": {
+    "scale": 1,
+    "offsetX": 0,
+    "offsetY": 5,
+    "heightPercent": 100,
+    "avatarZoom": 1.55,
+    "avatarX": 50,
+    "avatarY": 10
+  },
+  "grisel-gonzalez": {
+    "scale": 1,
+    "offsetX": 0,
+    "offsetY": 5,
+    "heightPercent": 100,
+    "avatarZoom": 1.55,
+    "avatarX": 50,
+    "avatarY": 10
+  },
+  "rebeca-lopez-portuondo": {
+    "scale": 1,
+    "offsetX": 0,
+    "offsetY": 6,
+    "heightPercent": 100,
+    "avatarZoom": 1.5,
+    "avatarX": 50,
+    "avatarY": 10
   }
 };
 
-const STORAGE_KEY_DESKTOP = 'agent_framing_desktop_v5';
-const STORAGE_KEY_MOBILE = 'agent_framing_mobile_v5';
+const STORAGE_KEY_DESKTOP = 'agent_framing_desktop_v6';
+const STORAGE_KEY_MOBILE = 'agent_framing_mobile_v6';
 
 export function loadSavedDesktopFraming(): Record<string, AgentFraming> {
   if (typeof window === 'undefined') return { ...DESKTOP_AGENT_FRAMING };
@@ -479,12 +551,12 @@ export const DESKTOP_PROFILE_FRAMING: Record<string, ProfileAgentFraming> = {
     "fadeEnd": 88
   },
   "claudia-aguilera-cuenca": {
-    "scale": 1.7,
-    "offsetX": -20,
-    "offsetY": -50,
+    "scale": 1.6,
+    "offsetX": 0,
+    "offsetY": 0,
     "heightPercent": 100,
-    "fadeStart": 67,
-    "fadeEnd": 90
+    "fadeStart": 65,
+    "fadeEnd": 86
   },
   "yazbel-diaz": {
     "scale": 2.16,
@@ -567,12 +639,12 @@ export const DESKTOP_PROFILE_FRAMING: Record<string, ProfileAgentFraming> = {
     "fadeEnd": 80
   },
   "albin-machado-campo": {
-    "scale": 1.63,
+    "scale": 1.6,
     "offsetX": 0,
-    "offsetY": -50,
+    "offsetY": 0,
     "heightPercent": 100,
-    "fadeStart": 56,
-    "fadeEnd": 92
+    "fadeStart": 63,
+    "fadeEnd": 85
   },
   "ivonne-medina": {
     "scale": 1.74,
@@ -597,6 +669,38 @@ export const DESKTOP_PROFILE_FRAMING: Record<string, ProfileAgentFraming> = {
     "heightPercent": 100,
     "fadeStart": 63,
     "fadeEnd": 84
+  },
+  "dayani-chavez": {
+    "scale": 1.6,
+    "offsetX": 0,
+    "offsetY": 0,
+    "heightPercent": 100,
+    "fadeStart": 63,
+    "fadeEnd": 85
+  },
+  "nina-gonzalez": {
+    "scale": 1.65,
+    "offsetX": 0,
+    "offsetY": 0,
+    "heightPercent": 100,
+    "fadeStart": 63,
+    "fadeEnd": 85
+  },
+  "grisel-gonzalez": {
+    "scale": 1.65,
+    "offsetX": 0,
+    "offsetY": 0,
+    "heightPercent": 100,
+    "fadeStart": 63,
+    "fadeEnd": 85
+  },
+  "rebeca-lopez-portuondo": {
+    "scale": 1.6,
+    "offsetX": 0,
+    "offsetY": 0,
+    "heightPercent": 100,
+    "fadeStart": 63,
+    "fadeEnd": 85
   }
 };
 
@@ -634,12 +738,12 @@ export const MOBILE_PROFILE_FRAMING: Record<string, ProfileAgentFraming> = {
     "fadeEnd": 88
   },
   "claudia-aguilera-cuenca": {
-    "scale": 1.7,
-    "offsetX": -20,
-    "offsetY": -50,
+    "scale": 1.6,
+    "offsetX": 0,
+    "offsetY": 0,
     "heightPercent": 100,
-    "fadeStart": 67,
-    "fadeEnd": 90
+    "fadeStart": 65,
+    "fadeEnd": 86
   },
   "yazbel-diaz": {
     "scale": 2.16,
@@ -722,12 +826,12 @@ export const MOBILE_PROFILE_FRAMING: Record<string, ProfileAgentFraming> = {
     "fadeEnd": 80
   },
   "albin-machado-campo": {
-    "scale": 1.63,
+    "scale": 1.6,
     "offsetX": 0,
-    "offsetY": -50,
+    "offsetY": 0,
     "heightPercent": 100,
-    "fadeStart": 56,
-    "fadeEnd": 92
+    "fadeStart": 63,
+    "fadeEnd": 85
   },
   "ivonne-medina": {
     "scale": 1.74,
@@ -752,11 +856,43 @@ export const MOBILE_PROFILE_FRAMING: Record<string, ProfileAgentFraming> = {
     "heightPercent": 100,
     "fadeStart": 63,
     "fadeEnd": 84
+  },
+  "dayani-chavez": {
+    "scale": 1.6,
+    "offsetX": 0,
+    "offsetY": 0,
+    "heightPercent": 100,
+    "fadeStart": 63,
+    "fadeEnd": 85
+  },
+  "nina-gonzalez": {
+    "scale": 1.65,
+    "offsetX": 0,
+    "offsetY": 0,
+    "heightPercent": 100,
+    "fadeStart": 63,
+    "fadeEnd": 85
+  },
+  "grisel-gonzalez": {
+    "scale": 1.65,
+    "offsetX": 0,
+    "offsetY": 0,
+    "heightPercent": 100,
+    "fadeStart": 63,
+    "fadeEnd": 85
+  },
+  "rebeca-lopez-portuondo": {
+    "scale": 1.6,
+    "offsetX": 0,
+    "offsetY": 0,
+    "heightPercent": 100,
+    "fadeStart": 63,
+    "fadeEnd": 85
   }
 };
 
-const STORAGE_KEY_PROFILE_DESKTOP = 'agent_profile_framing_desktop_v2';
-const STORAGE_KEY_PROFILE_MOBILE = 'agent_profile_framing_mobile_v2';
+const STORAGE_KEY_PROFILE_DESKTOP = 'agent_profile_framing_desktop_v3';
+const STORAGE_KEY_PROFILE_MOBILE = 'agent_profile_framing_mobile_v3';
 
 export function loadSavedProfileDesktopFraming(): Record<string, ProfileAgentFraming> {
   if (typeof window === 'undefined') return { ...DESKTOP_PROFILE_FRAMING };
