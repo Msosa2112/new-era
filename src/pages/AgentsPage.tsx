@@ -62,7 +62,7 @@ export const AgentsPage: React.FC<AgentsPageProps> = ({ onSelectProperty, onSele
             {lang === 'es' ? 'DIRECTORIO DE ASESORES' : 'ADVISORY ROSTER'}
           </span>
           <h1 className="display-title" style={{ color: '#111827', marginTop: '0.5rem', marginBottom: '1.25rem' }}>
-            {lang === 'es' ? 'LAS PERSONAS DETRÁS DE LA PROPIEDAD' : 'THE PEOPLE BEHIND THE PROPERTY'}
+            {lang === 'es' ? 'LOS REALTORS DETRÁS DE LAS PROPIEDADES' : 'REALTORS BEHIND THE PROPERTIES'}
           </h1>
           <p className="editorial-lead" style={{ color: '#4B5563' }}>
             {lang === 'es'

@@ -503,7 +503,9 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                       }}
                     >
                       <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#660E1A', display: 'inline-block' }} />
-                      NEW ERA REAL ESTATE ADVISOR
+                      {agent.title.toLowerCase().includes('administrative')
+                        ? 'NEW ERA REAL ESTATE ADMINISTRATION'
+                        : 'NEW ERA REAL ESTATE ADVISOR'}
                     </span>
                   </div>
 
@@ -513,7 +515,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                     </span>
                     <span style={{ fontSize: '0.75rem', color: '#847C74' }}>•</span>
                     <span style={{ fontSize: '0.78rem', color: '#5A606D' }}>
-                      KY Licensed
+                      {agent.title.toLowerCase().includes('administrative') ? 'Louisville, KY' : 'KY Licensed'}
                     </span>
                   </div>
                 </div>
@@ -541,7 +543,11 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                     margin: '0 0 0.75rem 0'
                   }}
                 >
-                  {agent.id === 'yeilen-contreras' ? 'Principal Broker & Founder' : agent.title}
+                  {agent.id === 'yeilen-contreras'
+                    ? 'Principal Broker & Founder'
+                    : agent.title.toLowerCase().includes('administrative')
+                      ? (lang === 'es' ? 'Asistente Administrativa' : 'Administrative Assistant')
+                      : agent.title}
                 </p>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', fontSize: '0.78rem', color: '#5A606D' }}>

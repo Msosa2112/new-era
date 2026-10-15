@@ -105,7 +105,13 @@ export const AgentCard: React.FC<AgentCardProps> = ({
             }}
           >
             <NewEraIcon color={isPrincipal ? "#FFFFFF" : "#660E1A"} size={11} />
-            <span>{isPrincipal ? (lang === 'es' ? 'Broker Principal' : 'Principal Broker') : 'REALTOR®'}</span>
+            <span>
+              {isPrincipal
+                ? (lang === 'es' ? 'Broker Principal' : 'Principal Broker')
+                : agent.title.toLowerCase().includes('administrative')
+                  ? (lang === 'es' ? 'Asistente Admin.' : 'Admin. Assistant')
+                  : 'REALTOR®'}
+            </span>
           </span>
 
           {/* Index Pill */}

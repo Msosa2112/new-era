@@ -385,7 +385,7 @@ export const AGENTS_DATA: Agent[] = [
   {
     id: "rebeca-lopez-portuondo",
     name: "Rebeca Lopez",
-    title: "Licensed REALTOR®",
+    title: "Administrative Assistant",
     phone: "(502) 658-4492",
     email: "rebecalopezp1984@gmail.com",
     photoUrl: "/assets/agents/rebeca-lopez-portuondo.jpg",

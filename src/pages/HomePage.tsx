@@ -4,7 +4,6 @@ import { BlueprintHero3D } from '../components/hero/BlueprintHero3D';
 import { PropertySearchEngine } from '../components/search/PropertySearchEngine';
 import { PropertyCard } from '../components/properties/PropertyCard';
 import { AgentCard } from '../components/agents/AgentCard';
-import { PhilosophySection } from '../components/sections/PhilosophySection';
 import { BuySellSection } from '../components/sections/BuySellSection';
 import { TeamShowcaseSection } from '../components/sections/TeamShowcaseSection';
 import { TechnologySection } from '../components/sections/TechnologySection';
@@ -189,12 +188,6 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
         </div>
       </section>
-
-      {/* CHAPTER 05: THE NEW WAY (REAL ESTATE, REIMAGINED) */}
-      <PhilosophySection
-        lang={lang}
-        onExplore={() => onNavigate('buy')}
-      />
 
       {/* CHAPTER 06 & 07: BUY & SELL PATHWAYS */}
       <BuySellSection

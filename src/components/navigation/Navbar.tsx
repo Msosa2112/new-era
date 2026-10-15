@@ -89,7 +89,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             }}
             aria-label="New Era Real Estate Home"
           >
-            <BrandLogo variant="full-burgundy" height={scrolled ? 34 : 38} />
+            <BrandLogo variant="full-burgundy" height={scrolled ? 40 : 46} />
           </button>
 
           {/* Desktop Navigation Links */}

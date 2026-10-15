@@ -148,7 +148,7 @@ export const TeamShowcaseSection: React.FC<TeamShowcaseSectionProps> = ({
                 margin: 0
               }}
             >
-              {lang === 'es' ? 'Las personas detrás de cada propiedad' : 'The people behind the property'}
+              {lang === 'es' ? 'Los Realtors detrás de las propiedades' : 'Realtors behind the properties'}
             </h2>
           </div>
         </div>
@@ -395,7 +395,7 @@ export const TeamShowcaseSection: React.FC<TeamShowcaseSectionProps> = ({
               {activeAgent.name}
             </h3>
 
-            {/* 2. TITLE: STRICTLY "Licensed REALTOR®" (or Principal Broker & Founder) */}
+            {/* 2. TITLE */}
             <p
               className="team-card-title"
               style={{
@@ -407,7 +407,7 @@ export const TeamShowcaseSection: React.FC<TeamShowcaseSectionProps> = ({
                 margin: '0.35rem 0 1.25rem 0'
               }}
             >
-              {activeAgent.id === 'yeilen-contreras' ? 'Principal Broker & Founder' : 'Licensed REALTOR®'}
+              {activeAgent.id === 'yeilen-contreras' ? 'Principal Broker & Founder' : activeAgent.title}
             </p>
 
             {/* 3. DIRECT CONTACT: PHONE & EMAIL */}

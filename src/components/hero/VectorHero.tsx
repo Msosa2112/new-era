@@ -18,37 +18,6 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
   className = '',
   style = {}
 }) => {
-  const brandPillars = [
-    {
-      num: '01',
-      titleEn: 'Architectural Precision',
-      titleEs: 'Precisión Arquitectónica',
-      descEn: 'Design-led marketing & brand excellence',
-      descEs: 'Marketing de diseño y excelencia de marca'
-    },
-    {
-      num: '02',
-      titleEn: 'Curated Portfolio',
-      titleEs: 'Portafolio Exclusivo',
-      descEn: 'Residential & luxury properties',
-      descEs: 'Propiedades residenciales y de alta gama'
-    },
-    {
-      num: '03',
-      titleEn: 'Kentucky Licensed',
-      titleEs: 'Licencia en Kentucky',
-      descEn: 'Greater Louisville & Regional Markets',
-      descEs: 'Greater Louisville y Mercados Regionales'
-    },
-    {
-      num: '04',
-      titleEn: 'Private Advisory',
-      titleEs: 'Asesoría Privada',
-      descEn: 'Principal broker representation',
-      descEs: 'Representación directa de Principal Broker'
-    }
-  ];
-
   return (
     <div
       style={{
@@ -60,7 +29,7 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
         justifyContent: 'space-between',
         overflow: 'hidden',
         // LAYER 1: Rich warm luxury cream background
-        background: 'radial-gradient(ellipse at 50% 38%, #FAF7F2 0%, #F5EEE2 55%, #EBE0D0 100%)',
+        background: 'radial-gradient(ellipse at 50% 42%, #FAF7F2 0%, #F5EEE2 55%, #EBE0D0 100%)',
         color: '#121418',
         ...style
       }}
@@ -132,12 +101,14 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
         style={{
           position: 'relative',
           zIndex: 10,
-          paddingTop: '2rem',
-          paddingBottom: '2.5rem',
+          flex: 1,
           display: 'flex',
           flexDirection: 'column',
+          justifyContent: 'center',
           alignItems: 'center',
-          textAlign: 'center'
+          textAlign: 'center',
+          paddingTop: '1rem',
+          paddingBottom: '3.5rem'
         }}
       >
         {/* Semantic H1 for SEO & Accessibility (Visually hidden, zero design impact) */}
@@ -168,7 +139,7 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
             justifyContent: 'center',
             alignItems: 'center',
             width: '100%',
-            marginBottom: '2.5rem'
+            marginBottom: 'clamp(2rem, 3.5vh, 3.25rem)'
           }}
         >
           {/* Soft Warm Radial Vignette to soften pattern behind logo */}
@@ -178,12 +149,12 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
               top: '50%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
-              width: 'min(880px, 96vw)',
-              height: 'clamp(280px, 35vw, 420px)',
-              background: 'radial-gradient(ellipse at center, rgba(255, 255, 255, 0.95) 0%, rgba(250, 247, 242, 0.7) 48%, rgba(245, 238, 226, 0) 78%)',
+              width: 'min(1350px, 98vw)',
+              height: 'clamp(320px, 54vh, 620px)',
+              background: 'radial-gradient(ellipse at center, rgba(255, 255, 255, 0.96) 0%, rgba(250, 247, 242, 0.76) 50%, rgba(245, 238, 226, 0) 78%)',
               pointerEvents: 'none',
               zIndex: 1,
-              filter: 'blur(20px)'
+              filter: 'blur(24px)'
             }}
           />
 
@@ -191,17 +162,21 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
             style={{
               position: 'relative',
               zIndex: 2,
-              filter: 'drop-shadow(0 12px 36px rgba(102, 14, 26, 0.12))',
+              filter: 'drop-shadow(0 16px 44px rgba(102, 14, 26, 0.14))',
               display: 'flex',
               justifyContent: 'center',
-              alignItems: 'center'
+              alignItems: 'center',
+              width: '100%'
             }}
           >
             <BrandLogo
               variant="full-burgundy"
-              height="clamp(165px, 21vw, 245px)"
+              className="hero-main-brand-logo"
+              height="auto"
               style={{
-                maxWidth: '92vw'
+                width: 'min(1080px, 78vw)',
+                maxHeight: '52vh',
+                height: 'auto'
               }}
             />
           </div>
@@ -215,7 +190,7 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
             zIndex: 10,
             display: 'flex',
             flexWrap: 'wrap',
-            gap: '1rem',
+            gap: '1.15rem',
             justifyContent: 'center',
             alignItems: 'center'
           }}
@@ -224,8 +199,8 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
             onClick={onOpenJoinModal || onExploreProperties}
             className="btn-primary"
             style={{
-              padding: '1rem 2.2rem',
-              fontSize: '0.84rem',
+              padding: '1.05rem 2.4rem',
+              fontSize: '0.86rem',
               letterSpacing: '0.12em',
               backgroundColor: '#660E1A',
               color: '#FFFFFF',
@@ -236,7 +211,7 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
               fontWeight: 700
             }}
           >
-            <span>{lang === 'es' ? 'UNIRSE A NEW ERA' : 'JOIN TO NEW ERA'}</span>
+            <span>{lang === 'es' ? 'ÚNETE A NUESTRO EQUIPO' : 'JOIN TO OUR TEAM'}</span>
           </button>
 
           <button
@@ -245,8 +220,8 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
               searchSection?.scrollIntoView({ behavior: 'smooth' });
             }}
             style={{
-              padding: '1rem 1.9rem',
-              fontSize: '0.8rem',
+              padding: '1.05rem 2.1rem',
+              fontSize: '0.84rem',
               letterSpacing: '0.1em',
               backgroundColor: '#FFFFFF',
               color: '#660E1A',
@@ -271,62 +246,6 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
         </div>
       </div>
 
-      {/* ========================================================================= */}
-      {/* BOTTOM STRIP: High-Contrast Brand Pillars (2 Rows x 2 Columns Matrix) */}
-      {/* ========================================================================= */}
-      <div
-        style={{
-          position: 'relative',
-          zIndex: 10,
-          backgroundColor: 'transparent',
-          padding: '1rem 0 2.25rem 0'
-        }}
-      >
-        <div className="hero-pillars-container container">
-          {brandPillars.map((pillar) => (
-            <div
-              key={pillar.num}
-              className="hero-pillar-item"
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexShrink: 0 }}>
-                <span
-                  style={{
-                    fontFamily: 'monospace',
-                    fontSize: '0.78rem',
-                    fontWeight: 800,
-                    color: '#660E1A'
-                  }}
-                >
-                  {pillar.num}
-                </span>
-                <span
-                  className="hero-pillar-title"
-                  style={{
-                    fontFamily: 'var(--font-sans)',
-                    fontSize: '0.84rem',
-                    fontWeight: 700,
-                    color: '#121418',
-                    letterSpacing: '0.02em'
-                  }}
-                >
-                  {lang === 'es' ? pillar.titleEs : pillar.titleEn}
-                </span>
-              </div>
-              <span
-                className="hero-pillar-desc"
-                style={{
-                  fontSize: '0.72rem',
-                  color: '#5A606D',
-                  lineHeight: 1.35
-                }}
-              >
-                {lang === 'es' ? pillar.descEs : pillar.descEn}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-
       <style>{`
         /* Staggered Cinematic Hero Reveal Keyframes */
         .vector-hero-root {
@@ -348,24 +267,6 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
         .hero-actions-stage {
           animation: heroElementSlideUp 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.75s both;
         }
-        .hero-pillars-container {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 1.5rem;
-          align-items: start;
-        }
-        .hero-pillar-item {
-          display: flex;
-          flex-direction: column;
-          gap: 0.2rem;
-          border-left: 3px solid #660E1A;
-          padding-left: 0.85rem;
-          animation: heroElementSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
-        }
-        .hero-pillar-item:nth-child(1) { animation-delay: 0.9s; }
-        .hero-pillar-item:nth-child(2) { animation-delay: 1.0s; }
-        .hero-pillar-item:nth-child(3) { animation-delay: 1.1s; }
-        .hero-pillar-item:nth-child(4) { animation-delay: 1.2s; }
 
         @keyframes heroBackgroundFade {
           0% {
@@ -427,30 +328,14 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
           }
         }
 
-        @media (max-width: 900px) {
-          .hero-pillars-container {
-            grid-template-columns: repeat(2, 1fr) !important;
-            gap: 1rem 1.5rem !important;
-          }
-        }
         @media (max-width: 768px) {
           .hero-top-bar {
             justify-content: center !important;
             padding-top: 5rem !important;
           }
-        }
-        @media (max-width: 640px) {
-          .hero-pillars-container {
-            grid-template-columns: repeat(2, 1fr) !important;
-            gap: 0.85rem 1rem !important;
-          }
-          .hero-pillar-item {
-            padding-left: 0.65rem !important;
-            border-left: 2px solid #660E1A !important;
-          }
-          .hero-pillar-desc {
-            font-size: 0.68rem !important;
-            line-height: 1.3 !important;
+          .hero-main-brand-logo {
+            width: min(440px, 90vw) !important;
+            max-height: 36vh !important;
           }
         }
       `}</style>
