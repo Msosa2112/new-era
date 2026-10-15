@@ -1,7 +1,7 @@
 import { Agent, Property } from '../types/property';
 import { BROKERAGE_DATA } from '../data/agentsData';
 
-export const SITE_URL = 'https://newerarealestateky.com';
+export const SITE_URL = 'https://www.neweraky.com';
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/assets/hero-desktop-poster.jpg`;
 
 export interface SEOMetadata {

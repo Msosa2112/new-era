@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const SITE_URL = 'https://newerarealestateky.com';
+const SITE_URL = 'https://www.neweraky.com';
 const TODAY = new Date().toISOString().split('T')[0];
 
 // Extract agent IDs from agentsData.ts
