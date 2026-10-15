@@ -6,7 +6,6 @@ import { PropertyCard } from '../components/properties/PropertyCard';
 import { AgentCard } from '../components/agents/AgentCard';
 import { BuySellSection } from '../components/sections/BuySellSection';
 import { TeamShowcaseSection } from '../components/sections/TeamShowcaseSection';
-import { TechnologySection } from '../components/sections/TechnologySection';
 import { ContactSection } from '../components/sections/ContactSection';
 import { Property, PropertyFilter, Agent } from '../types/property';
 import { propertyService } from '../services/propertyService';
@@ -195,9 +194,6 @@ export const HomePage: React.FC<HomePageProps> = ({
         onNavigate={onNavigate}
         onOpenConsultation={onOpenConsultation}
       />
-
-      {/* CHAPTER 09: THE TECHNOLOGY & MLS INTEGRATION ARCHITECTURE */}
-      <TechnologySection lang={lang} />
 
       {/* CHAPTER 10: CONTACT / START YOUR NEXT ERA */}
       <ContactSection lang={lang} />

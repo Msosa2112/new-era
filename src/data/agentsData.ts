@@ -41,6 +41,21 @@ export const AGENTS_DATA: Agent[] = [
     mlsAccountId: "20161115204006349210000000"
   },
   {
+    id: "rebeca-lopez-portuondo",
+    name: "Rebeca Lopez",
+    title: "Administrative Assistant",
+    phone: "(502) 658-4492",
+    email: "rebecalopezp1984@gmail.com",
+    photoUrl: "/assets/agents/rebeca-lopez-portuondo.jpg",
+    photoNobgUrl: "/assets/agents/rebeca-lopez-portuondo-nobg.png",
+    bio: "",
+    specialties: [],
+    languages: ["English", "Spanish"],
+    activeListingsCount: 0,
+    yearsExperience: 0,
+    featured: true
+  },
+  {
     id: "yenny-mendoza-molina",
     name: "Yenny Mendoza",
     title: "Licensed REALTOR®",
@@ -381,21 +396,6 @@ export const AGENTS_DATA: Agent[] = [
     featured: false,
     mlsAgentId: "10080704",
     mlsAccountId: "20260604201019472702000000"
-  },
-  {
-    id: "rebeca-lopez-portuondo",
-    name: "Rebeca Lopez",
-    title: "Administrative Assistant",
-    phone: "(502) 658-4492",
-    email: "rebecalopezp1984@gmail.com",
-    photoUrl: "/assets/agents/rebeca-lopez-portuondo.jpg",
-    photoNobgUrl: "/assets/agents/rebeca-lopez-portuondo-nobg.png",
-    bio: "",
-    specialties: [],
-    languages: ["English", "Spanish"],
-    activeListingsCount: 0,
-    yearsExperience: 0,
-    featured: false
   },
   {
     id: "yordanis-alba-elias",
