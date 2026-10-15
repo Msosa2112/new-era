@@ -114,6 +114,24 @@ function mapArchitecturalStyle(style) {
   return 'Contemporary';
 }
 
+function formatMlsField(val, fallback) {
+  if (!val) return fallback;
+  if (typeof val === 'string') return val;
+  if (Array.isArray(val)) return val.join(', ') || fallback;
+  if (typeof val === 'object') {
+    const keys = Object.keys(val).filter(k => val[k]);
+    return keys.length > 0 ? keys.join(', ') : fallback;
+  }
+  return fallback;
+}
+
+const EXCLUDED_AGENT_ACCOUNT_IDS = new Set([
+  '20240930142025580959000000' // Walter Gotay (no longer with New Era)
+]);
+const EXCLUDED_AGENT_MLS_IDS = new Set([
+  '30290' // Walter Gotay
+]);
+
 async function syncMlsListings(marketLimit = 500) {
   console.log(`========================================================`);
   console.log(`🚀 Iniciando Sincronización Spark MLS (GLAR) para New Era`);
@@ -144,12 +162,20 @@ async function syncMlsListings(marketLimit = 500) {
     if (a.mlsAgentId) agentByMlsId.set(String(a.mlsAgentId), a.id);
   });
 
-  // 2. Extraer listados ACTIVOS directos de New Era Real Estate
-  console.log(`\n🏢 Consultando listados ACTIVOS de New Era Real Estate (ListOfficeId: ${NEW_ERA_OFFICE_ID})...`);
-  const newEraEndpoint = `/listings?_filter=${encodeURIComponent(`ListOfficeId Eq '${NEW_ERA_OFFICE_ID}' And StandardStatus Eq 'Active'`)}&_limit=100&_expand=Photos&_orderby=-ModificationTimestamp`;
+  // 2. Extraer listados de New Era Real Estate (Active, Active Under Contract y Pending)
+  console.log(`\n🏢 Consultando listados de New Era Real Estate (ListOfficeId: ${NEW_ERA_OFFICE_ID})...`);
+  const newEraEndpoint = `/listings?_filter=${encodeURIComponent(`ListOfficeId Eq '${NEW_ERA_OFFICE_ID}'`)}&_limit=100&_expand=Photos&_orderby=-ModificationTimestamp`;
   const newEraRes = await sparkRequest(newEraEndpoint);
-  const newEraListings = (newEraRes.D?.Results || []).filter(r => r.StandardFields?.StandardStatus === 'Active');
-  console.log(`✅ ${newEraListings.length} propiedades ACTIVAS de New Era encontradas.`);
+  const validNewEraStatuses = new Set(['Active', 'Active Under Contract', 'Pending']);
+  const newEraListings = (newEraRes.D?.Results || []).filter(r => {
+    const sf = r.StandardFields || {};
+    if (!validNewEraStatuses.has(sf.StandardStatus)) return false;
+    if (EXCLUDED_AGENT_ACCOUNT_IDS.has(sf.ListAgentId) || EXCLUDED_AGENT_MLS_IDS.has(String(sf.ListAgentMlsId))) {
+      return false;
+    }
+    return true;
+  });
+  console.log(`✅ ${newEraListings.length} propiedades vigentes (Active / Under Contract / Pending) de New Era encontradas.`);
 
   // 3. Extraer listados ACTIVOS del mercado general (GLAR) con paginación y Photos expandidas
   console.log(`\n🌐 Consultando propiedades ACTIVAS del mercado general GLAR (objetivo: ${marketLimit})...`);
@@ -164,7 +190,14 @@ async function syncMlsListings(marketLimit = 500) {
     const marketEndpoint = `/listings?_filter=${encodeURIComponent(`StandardStatus Eq 'Active'`)}&_limit=${currentLimit}&_page=${page}&_expand=Photos&_orderby=-ModificationTimestamp`;
     process.stdout.write(`\r📡 Descargando página ${page}/${maxPages} (${marketListings.length} listados acumulados)...`);
     const pageRes = await sparkRequest(marketEndpoint);
-    const results = (pageRes.D?.Results || []).filter(r => r.StandardFields?.StandardStatus === 'Active');
+    const results = (pageRes.D?.Results || []).filter(r => {
+      const sf = r.StandardFields || {};
+      if (sf.StandardStatus !== 'Active') return false;
+      if (EXCLUDED_AGENT_ACCOUNT_IDS.has(sf.ListAgentId) || EXCLUDED_AGENT_MLS_IDS.has(String(sf.ListAgentMlsId))) {
+        return false;
+      }
+      return true;
+    });
     if (results.length === 0) break;
     marketListings.push(...results);
   }
@@ -199,7 +232,8 @@ async function syncMlsListings(marketLimit = 500) {
     const sf = item.StandardFields || {};
     const id = item.Id;
 
-    const isNewEra = sf.ListOfficeId === NEW_ERA_OFFICE_ID || (sf.ListOfficeName || '').toLowerCase() === 'new era real estate';
+    const isExcludedAgent = EXCLUDED_AGENT_ACCOUNT_IDS.has(sf.ListAgentId) || EXCLUDED_AGENT_MLS_IDS.has(String(sf.ListAgentMlsId));
+    const isNewEra = !isExcludedAgent && (sf.ListOfficeId === NEW_ERA_OFFICE_ID || (sf.ListOfficeName || '').toLowerCase() === 'new era real estate');
 
     // Asignación estricta y conforme a IDX
     let assignedAgentId = null;
@@ -265,9 +299,9 @@ async function syncMlsListings(marketLimit = 500) {
         items: [
           `${bedrooms} Habitaciones y ${bathrooms + (halfBaths ? 0.5 : 0)} Baños`,
           `${sqft.toLocaleString()} Sq Ft de Espacio Habitable`,
-          sf.Basement ? `Sótano: ${sf.Basement}` : 'Distribución Abierta',
-          sf.Heating ? `Calefacción: ${Array.isArray(sf.Heating) ? sf.Heating.join(', ') : sf.Heating}` : 'Climatización Central',
-          sf.Cooling ? `Aire Acondicionado: ${Array.isArray(sf.Cooling) ? sf.Cooling.join(', ') : sf.Cooling}` : 'Aire Central'
+          `Sótano: ${formatMlsField(sf.Basement, 'Distribución Estándar')}`,
+          `Calefacción: ${formatMlsField(sf.Heating, 'Climatización Central')}`,
+          `Aire Acondicionado: ${formatMlsField(sf.Cooling, 'Aire Central')}`
         ].filter(Boolean)
       },
       {
@@ -275,18 +309,22 @@ async function syncMlsListings(marketLimit = 500) {
         items: [
           `${lotSizeAcres.toFixed(2)} Acres de Lote`,
           garageSpaces ? `${garageSpaces} Espacios de Garaje` : 'Estacionamiento Disponible',
-          sf.ConstructionMaterials ? `Construcción: ${Array.isArray(sf.ConstructionMaterials) ? sf.ConstructionMaterials.join(', ') : sf.ConstructionMaterials}` : 'Estructura Residencial',
-          sf.Roof ? `Techo: ${Array.isArray(sf.Roof) ? sf.Roof.join(', ') : sf.Roof}` : 'Techo Residencial'
+          `Construcción: ${formatMlsField(sf.ConstructionMaterials, 'Estructura Residencial')}`,
+          `Techo: ${formatMlsField(sf.Roof, 'Techo Residencial')}`
         ].filter(Boolean)
       }
     ];
+
+    const mappedStatus = (sf.StandardStatus === 'Pending' || sf.StandardStatus === 'Active Under Contract')
+      ? 'Pending'
+      : 'Active';
 
     const property = {
       id: id,
       slug: slug,
       title: `${address}, ${city}`,
       price: price,
-      status: 'For Sale',
+      status: mappedStatus,
       transactionType: 'Buy',
       propertyType: propertyType,
       location: {

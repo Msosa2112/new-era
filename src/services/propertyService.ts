@@ -509,17 +509,24 @@ export class PropertyService {
     return this.provider.getPriceBounds();
   }
 
-  // Agent retrieval helpers
+  // Agent retrieval helpers (auto-synced with live MLS properties count)
+  private enrichAgentWithLiveCount(agent: Agent): Agent {
+    if (LIVE_MLS_PROPERTIES.length === 0) return agent;
+    const liveCount = LIVE_MLS_PROPERTIES.filter(p => p.agentId === agent.id).length;
+    return { ...agent, activeListingsCount: liveCount };
+  }
+
   public getAgents(): Agent[] {
-    return AGENTS_DATA;
+    return AGENTS_DATA.map(a => this.enrichAgentWithLiveCount(a));
   }
 
   public getAgentById(id: string): Agent | null {
-    return AGENTS_DATA.find(a => a.id === id) || null;
+    const found = AGENTS_DATA.find(a => a.id === id);
+    return found ? this.enrichAgentWithLiveCount(found) : null;
   }
 
   public getFeaturedAgents(): Agent[] {
-    return AGENTS_DATA.filter(a => a.featured);
+    return AGENTS_DATA.filter(a => a.featured).map(a => this.enrichAgentWithLiveCount(a));
   }
 }
 

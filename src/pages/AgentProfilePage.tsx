@@ -566,7 +566,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
 
                 <div className="agent-stat-col">
                   <div className="agent-stat-number accent">
-                    {properties.length > 0 ? properties.length : agent.activeListingsCount}
+                    {loadingProps ? agent.activeListingsCount : properties.length}
                   </div>
                   <div className="agent-stat-label">
                     {lang === 'es' ? 'Listados Activos' : 'Active Listings'}

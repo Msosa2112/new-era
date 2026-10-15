@@ -149,27 +149,47 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
           }}
         >
           {property.isNewEra ? (
-            <span
-              className="property-card-badge-newera"
-              style={{
-                backgroundColor: 'var(--color-burgundy-primary, #660E1A)',
-                color: '#FFFFFF',
-                border: '1px solid rgba(255, 255, 255, 0.4)',
-                fontSize: '0.65rem',
-                fontWeight: 800,
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                padding: '0.24rem 0.6rem',
-                borderRadius: '4px',
-                boxShadow: '0 2px 8px rgba(102, 14, 26, 0.5)',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.35rem'
-              }}
-            >
-              <NewEraIcon color="#FFFFFF" size={13} />
-              <span>{lang === 'es' ? 'Exclusiva New Era' : 'New Era Exclusive'}</span>
-            </span>
+            <>
+              <span
+                className="property-card-badge-newera"
+                style={{
+                  backgroundColor: 'var(--color-burgundy-primary, #660E1A)',
+                  color: '#FFFFFF',
+                  border: '1px solid rgba(255, 255, 255, 0.4)',
+                  fontSize: '0.65rem',
+                  fontWeight: 800,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  padding: '0.24rem 0.6rem',
+                  borderRadius: '4px',
+                  boxShadow: '0 2px 8px rgba(102, 14, 26, 0.5)',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem'
+                }}
+              >
+                <NewEraIcon color="#FFFFFF" size={13} />
+                <span>{lang === 'es' ? 'Exclusiva New Era' : 'New Era Exclusive'}</span>
+              </span>
+              {property.status === 'Pending' && (
+                <span
+                  className="property-card-badge-status"
+                  style={{
+                    backgroundColor: 'rgba(230, 74, 42, 0.92)',
+                    color: '#FFFFFF',
+                    border: '1px solid rgba(255, 255, 255, 0.35)',
+                    fontSize: '0.62rem',
+                    fontWeight: 700,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    padding: '0.22rem 0.5rem',
+                    borderRadius: '4px'
+                  }}
+                >
+                  {lang === 'es' ? 'Bajo Contrato' : 'Under Contract'}
+                </span>
+              )}
+            </>
           ) : (
             <span
               className="property-card-badge-status"
