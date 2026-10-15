@@ -76,7 +76,7 @@ export const AgentsPage: React.FC<AgentsPageProps> = ({ onSelectProperty, onSele
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={lang === 'es' ? 'Buscar asesor por nombre, correo o especialidad...' : 'Search agent by name, email or specialty...'}
+              placeholder={lang === 'es' ? 'Buscar asesor por nombre, correo o teléfono...' : 'Search agent by name, email or phone...'}
               style={{
                 flex: '1 1 280px',
                 padding: '0.75rem 1.15rem',
@@ -242,25 +242,16 @@ export const AgentsPage: React.FC<AgentsPageProps> = ({ onSelectProperty, onSele
                     {selectedAgent.title}
                   </p>
                   <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                    {BROKERAGE_DATA.name} • {selectedAgent.yearsExperience} Years Experience
+                    {BROKERAGE_DATA.name}
                   </p>
                 </div>
 
-                <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                  {selectedAgent.bio}
-                </p>
-
-                <div>
-                  <h4 style={{ fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.5rem' }}>
-                    Specialties
-                  </h4>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
-                    {selectedAgent.specialties.map((s, i) => (
-                      <span key={i} className="tag-badge">
-                        {s}
-                      </span>
-                    ))}
-                  </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.95rem', color: 'var(--text-primary)' }}>
+                  <div><strong>Phone:</strong> {selectedAgent.phone}</div>
+                  <div><strong>Email:</strong> {selectedAgent.email}</div>
+                  {selectedAgent.licenseNumber && (
+                    <div><strong>KY License:</strong> #{selectedAgent.licenseNumber}</div>
+                  )}
                 </div>
 
                 <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>

@@ -70,7 +70,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`property-card reveal-on-scroll ${staggerClass}`}
+      className={`property-card ${staggerClass}`}
       style={{
         cursor: 'pointer',
         display: 'flex',

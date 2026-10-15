@@ -676,9 +676,11 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                     </div>
                   </div>
 
-                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '1.25rem' }}>
-                    {agent.bio}
-                  </p>
+                  {agent.bio ? (
+                    <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '1.25rem' }}>
+                      {agent.bio}
+                    </p>
+                  ) : null}
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
                     {onSelectAgent && (

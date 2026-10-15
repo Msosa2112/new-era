@@ -556,9 +556,11 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
               {/* QUICK STATS (CLEAN EDITORIAL 3-COLUMN GRID, NEVER WRAPS AWKWARDLY) */}
               <div className="agent-stats-grid">
                 <div className="agent-stat-col">
-                  <div className="agent-stat-number">{agent.yearsExperience}+</div>
+                  <div className="agent-stat-number">
+                    {agent.licenseNumber ? `#${agent.licenseNumber}` : 'KY'}
+                  </div>
                   <div className="agent-stat-label">
-                    {lang === 'es' ? 'Años Exp.' : 'Years Exp.'}
+                    {lang === 'es' ? 'Licencia KY' : 'KY License'}
                   </div>
                 </div>
 
@@ -572,9 +574,11 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                 </div>
 
                 <div className="agent-stat-col">
-                  <div className="agent-stat-number">100%</div>
+                  <div className="agent-stat-number">
+                    {agent.languages && agent.languages.length > 1 ? 'ES/EN' : 'EN'}
+                  </div>
                   <div className="agent-stat-label">
-                    {lang === 'es' ? 'Bilingüe ES/EN' : 'Bilingual ES/EN'}
+                    {lang === 'es' ? 'Idiomas' : 'Languages'}
                   </div>
                 </div>
               </div>
@@ -763,40 +767,6 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                 {properties.length}
               </span>
             </button>
-
-            <button
-              onClick={() => setActiveTab('bio')}
-              style={{
-                padding: '0.85rem 0.25rem',
-                fontSize: '0.9rem',
-                fontWeight: activeTab === 'bio' ? 700 : 500,
-                color: activeTab === 'bio' ? '#660E1A' : '#6B7280',
-                borderBottom: activeTab === 'bio' ? '3px solid #660E1A' : '3px solid transparent',
-                backgroundColor: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap'
-              }}
-            >
-              {lang === 'es' ? 'Biografía & Especialidades' : 'Biography & Specialties'}
-            </button>
-
-            <button
-              onClick={() => setActiveTab('track-record')}
-              style={{
-                padding: '0.85rem 0.25rem',
-                fontSize: '0.9rem',
-                fontWeight: activeTab === 'track-record' ? 700 : 500,
-                color: activeTab === 'track-record' ? '#660E1A' : '#6B7280',
-                borderBottom: activeTab === 'track-record' ? '3px solid #660E1A' : '3px solid transparent',
-                backgroundColor: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap'
-              }}
-            >
-              {lang === 'es' ? 'Trayectoria & Cierres' : 'Track Record & Closings'}
-            </button>
           </div>
 
           {/* TAB 1: PROPERTIES / LISTINGS */}
@@ -829,7 +799,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                   ))}
                 </div>
               ) : (
-                /* VIP Off-Market / Private Inventory Box */
+                /* Direct Contact Box when no active listings */
                 <div
                   style={{
                     backgroundColor: '#FFFFFF',
@@ -866,7 +836,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                       marginBottom: '0.75rem'
                     }}
                   >
-                    {lang === 'es' ? 'Inventario Privado & Próximos Lanzamientos' : 'Private & Off-Market Portfolio'}
+                    {lang === 'es' ? 'Contacto Directo' : 'Direct Contact'}
                   </h3>
 
                   <p
@@ -878,8 +848,8 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                     }}
                   >
                     {lang === 'es'
-                      ? `Actualmente ${agent.name} gestiona colocaciones privadas y nuevas oportunidades residenciales en Greater Louisville y Kentucky. Contáctale directamente para acceder al portafolio exclusivo antes de su publicación abierta.`
-                      : `Currently, ${agent.name} represents bespoke private listings and off-market residential opportunities across Greater Louisville and Central Kentucky. Inquire directly for exclusive access.`}
+                      ? `Comunícate directamente con ${agent.name} para consultar propiedades disponibles.`
+                      : `Contact ${agent.name} directly to inquire about available properties.`}
                   </p>
 
                   <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
@@ -889,7 +859,7 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                       style={{ fontSize: '0.82rem', padding: '0.75rem 1.5rem' }}
                     >
                       <Phone size={15} />
-                      <span>{lang === 'es' ? 'Llamar a Asesor' : 'Call Advisor'}</span>
+                      <span>{agent.phone}</span>
                     </a>
 
                     <a
@@ -921,171 +891,11 @@ export const AgentProfilePage: React.FC<AgentProfilePageProps> = ({
                       }}
                     >
                       <MessageCircle size={15} color="#25D366" />
-                      <span>{lang === 'es' ? 'Mensaje por WhatsApp' : 'WhatsApp Inquiry'}</span>
+                      <span>WhatsApp</span>
                     </a>
                   </div>
                 </div>
               )}
-            </div>
-          )}
-
-          {/* TAB 2: BIO & SPECIALTIES */}
-          {activeTab === 'bio' && (
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-                gap: 'clamp(2rem, 5vw, 4rem)',
-                padding: '1rem 0'
-              }}
-            >
-              <div>
-                <span
-                  style={{
-                    fontSize: '0.75rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    color: '#660E1A',
-                    display: 'block',
-                    marginBottom: '0.35rem'
-                  }}
-                >
-                  {lang === 'es' ? 'ENFOQUE PROFESIONAL' : 'PROFESSIONAL BACKGROUND'}
-                </span>
-                <h3 style={{ fontSize: '1.6rem', fontWeight: 600, color: '#111827', marginBottom: '1.25rem' }}>
-                  {agent.name}
-                </h3>
-                <p style={{ fontSize: '0.98rem', color: '#4B5563', lineHeight: 1.75, marginBottom: '1.5rem' }}>
-                  {agent.bio}
-                </p>
-
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.9rem', color: '#374151' }}>
-                    <CheckCircle2 size={17} color="#660E1A" />
-                    <span>{lang === 'es' ? 'Asesoría bilingüe de principio a fin' : 'Bilingual negotiation & closing advisory'}</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.9rem', color: '#374151' }}>
-                    <CheckCircle2 size={17} color="#660E1A" />
-                    <span>{lang === 'es' ? 'Cobertura integral en Greater Louisville y Kentucky' : 'Market mastery across Greater Louisville & KY'}</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.9rem', color: '#374151' }}>
-                    <CheckCircle2 size={17} color="#660E1A" />
-                    <span>{lang === 'es' ? 'Estructuración de ofertas y contratos blindados' : 'Airtight contracts and aggressive negotiation'}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h4 style={{ fontSize: '0.9rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#111827', marginBottom: '1rem' }}>
-                  {lang === 'es' ? 'Especialidades & Áreas de Dominio' : 'Specialties & Core Competencies'}
-                </h4>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '2.5rem' }}>
-                  {agent.specialties.map((spec, i) => (
-                    <span
-                      key={i}
-                      style={{
-                        padding: '0.4rem 0.85rem',
-                        borderRadius: '6px',
-                        backgroundColor: 'rgba(102, 14, 26, 0.06)',
-                        color: '#660E1A',
-                        fontSize: '0.8rem',
-                        fontWeight: 600,
-                        border: '1px solid rgba(102, 14, 26, 0.15)'
-                      }}
-                    >
-                      {spec}
-                    </span>
-                  ))}
-                </div>
-
-                <div style={{ borderTop: '1px solid #E5E7EB', paddingTop: '1.25rem' }}>
-                  <div style={{ fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', color: '#111827', marginBottom: '0.35rem' }}>
-                    {BROKERAGE_DATA.legalName}
-                  </div>
-                  <div style={{ fontSize: '0.82rem', color: '#6B7280', lineHeight: 1.5 }}>
-                    {BROKERAGE_DATA.address.fullFormatted}
-                  </div>
-                  <div style={{ fontSize: '0.75rem', color: '#9CA3AF', marginTop: '0.35rem' }}>
-                    {BROKERAGE_DATA.licenseNote}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 3: TRACK RECORD & CLOSINGS */}
-          {activeTab === 'track-record' && (
-            <div style={{ padding: '1rem 0' }}>
-              <div style={{ maxWidth: '780px', marginBottom: '2.5rem' }}>
-                <span
-                  style={{
-                    fontSize: '0.75rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    color: '#660E1A',
-                    display: 'block',
-                    marginBottom: '0.35rem'
-                  }}
-                >
-                  {lang === 'es' ? 'HISTORIAL & RESULTADOS' : 'TRACK RECORD & RECENT PERFORMANCE'}
-                </span>
-                <h3 style={{ fontSize: '1.6rem', fontWeight: 600, color: '#111827', marginBottom: '0.5rem' }}>
-                  {lang === 'es' ? `Rendimiento de Cierres con ${agent.name}` : `Closing Performance with ${agent.name}`}
-                </h3>
-                <p style={{ fontSize: '0.95rem', color: '#6B7280', lineHeight: 1.6 }}>
-                  {lang === 'es'
-                    ? 'Cada cliente representa un patrimonio familiar. Analizamos el mercado local con métricas precisas de absorción y comparables para maximizar tu plusvalía al comprar o vender.'
-                    : 'Delivering disciplined advisory, maximum value retention, and smooth transaction milestones across Jefferson, Oldham, Shelby, Clark, and Floyd counties.'}
-                </p>
-              </div>
-
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-                  gap: '2rem',
-                  borderTop: '1px solid #E5E7EB',
-                  paddingTop: '2rem'
-                }}
-              >
-                <div>
-                  <div style={{ fontSize: '2.4rem', fontWeight: 700, color: '#660E1A', lineHeight: 1, marginBottom: '0.5rem' }}>
-                    99.2%
-                  </div>
-                  <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#111827', marginBottom: '0.35rem' }}>
-                    {lang === 'es' ? 'Ratio Precio de Venta / Lista' : 'List-to-Sale Price Ratio'}
-                  </div>
-                  <div style={{ fontSize: '0.8rem', color: '#6B7280', lineHeight: 1.5 }}>
-                    {lang === 'es' ? 'Máxima retención de valor para vendedores' : 'Peak value capture for listing clients'}
-                  </div>
-                </div>
-
-                <div>
-                  <div style={{ fontSize: '2.4rem', fontWeight: 700, color: '#961729', lineHeight: 1, marginBottom: '0.5rem' }}>
-                    18 {lang === 'es' ? 'Días' : 'Days'}
-                  </div>
-                  <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#111827', marginBottom: '0.35rem' }}>
-                    {lang === 'es' ? 'Promedio en Mercado' : 'Average Days on Market'}
-                  </div>
-                  <div style={{ fontSize: '0.8rem', color: '#6B7280', lineHeight: 1.5 }}>
-                    {lang === 'es' ? 'Estrategia de posicionamiento acelerada' : 'Fast-track marketing and buyer pairing'}
-                  </div>
-                </div>
-
-                <div>
-                  <div style={{ fontSize: '2.4rem', fontWeight: 700, color: '#111827', lineHeight: 1, marginBottom: '0.5rem' }}>
-                    100%
-                  </div>
-                  <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#111827', marginBottom: '0.35rem' }}>
-                    {lang === 'es' ? 'Acompañamiento en Cierre' : 'Seamless Closing Rate'}
-                  </div>
-                  <div style={{ fontSize: '0.8rem', color: '#6B7280', lineHeight: 1.5 }}>
-                    {lang === 'es' ? 'Supervisión de títulos y financiamiento' : 'Zero friction title and lending escrow'}
-                  </div>
-                </div>
-              </div>
             </div>
           )}
         </div>

@@ -36,7 +36,7 @@ export const AgentCard: React.FC<AgentCardProps> = ({
       onClick={() => onSelectAgent(agent)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="newera-agent-card reveal-on-scroll"
+      className="newera-agent-card"
       style={{
         cursor: 'pointer',
         display: 'flex',
@@ -323,7 +323,7 @@ export const AgentCard: React.FC<AgentCardProps> = ({
         </div>
       </div>
 
-      {/* 2. ADVISOR BODY INFO */}
+      {/* 2. ADVISOR BODY INFO (CLEAN CONTACT DETAILS ONLY) */}
       <div
         style={{
           padding: '1.25rem 1.25rem 1.35rem 1.25rem',
@@ -341,7 +341,7 @@ export const AgentCard: React.FC<AgentCardProps> = ({
               fontSize: '1.25rem',
               fontWeight: 700,
               lineHeight: 1.2,
-              marginBottom: '0.2rem',
+              marginBottom: '0.25rem',
               color: '#111827',
               letterSpacing: '-0.01em'
             }}
@@ -357,7 +357,7 @@ export const AgentCard: React.FC<AgentCardProps> = ({
               letterSpacing: '0.04em',
               textTransform: 'uppercase',
               color: 'var(--color-burgundy-primary, #660E1A)',
-              marginBottom: '0.65rem',
+              marginBottom: '0.85rem',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap'
@@ -367,89 +367,67 @@ export const AgentCard: React.FC<AgentCardProps> = ({
             {agent.title}
           </p>
 
-          {/* Bio snippet */}
-          <p
-            style={{
-              fontSize: '0.82rem',
-              color: '#4B5563',
-              lineHeight: 1.45,
-              display: '-webkit-box',
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: 'vertical',
-              overflow: 'hidden',
-              margin: 0
-            }}
-          >
-            {agent.bio}
-          </p>
+          {/* Direct Contact Details: Phone & Email */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+            <a
+              href={`tel:${agent.phone.replace(/[^0-9]/g, '')}`}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.45rem',
+                fontSize: '0.84rem',
+                fontWeight: 600,
+                color: '#1F2937',
+                textDecoration: 'none',
+                transition: 'color 0.2s ease'
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-burgundy-primary, #660E1A)')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#1F2937')}
+            >
+              <Phone size={13} color="var(--color-burgundy-primary, #660E1A)" style={{ flexShrink: 0 }} />
+              <span>{agent.phone}</span>
+            </a>
+
+            <a
+              href={`mailto:${agent.email}`}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.45rem',
+                fontSize: '0.8rem',
+                fontWeight: 500,
+                color: '#4B5563',
+                textDecoration: 'none',
+                transition: 'color 0.2s ease',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-burgundy-primary, #660E1A)')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#4B5563')}
+              title={agent.email}
+            >
+              <Mail size={13} color="var(--color-burgundy-primary, #660E1A)" style={{ flexShrink: 0 }} />
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {agent.email}
+              </span>
+            </a>
+          </div>
         </div>
 
-        {/* Specialties Pills */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem' }}>
-          {agent.specialties.slice(0, 2).map((spec, i) => (
-            <span
-              key={i}
-              style={{
-                fontSize: '0.68rem',
-                fontWeight: 600,
-                padding: '0.2rem 0.5rem',
-                backgroundColor: '#F3F4F6',
-                color: '#374151',
-                borderRadius: '3px',
-                border: '1px solid rgba(0, 0, 0, 0.04)'
-              }}
-            >
-              {spec}
-            </span>
-          ))}
-          {agent.yearsExperience > 0 && (
-            <span
-              style={{
-                fontSize: '0.68rem',
-                fontWeight: 600,
-                padding: '0.2rem 0.5rem',
-                backgroundColor: 'rgba(102, 14, 26, 0.06)',
-                color: 'var(--color-burgundy-primary, #660E1A)',
-                borderRadius: '3px'
-              }}
-            >
-              {agent.yearsExperience} {lang === 'es' ? 'Años Exp.' : 'Yrs Exp.'}
-            </span>
-          )}
-        </div>
-
-        {/* Footer Contact & Action Strip */}
+        {/* Footer Action Strip */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
+            justifyContent: 'flex-end',
             paddingTop: '0.75rem',
             borderTop: '1px solid #F3F4F6',
             marginTop: '0.25rem'
           }}
         >
-          <a
-            href={`tel:${agent.phone.replace(/[^0-9]/g, '')}`}
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.35rem',
-              fontSize: '0.76rem',
-              fontFamily: 'monospace',
-              fontWeight: 600,
-              color: '#4B5563',
-              textDecoration: 'none',
-              transition: 'color 0.2s ease'
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-burgundy-primary, #660E1A)')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = '#4B5563')}
-          >
-            <Phone size={12} color="var(--color-burgundy-primary, #660E1A)" />
-            <span>{agent.phone}</span>
-          </a>
-
           <div
             style={{
               display: 'inline-flex',
