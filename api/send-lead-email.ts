@@ -6,7 +6,10 @@ type VercelResponse = any;
 const RESEND_API_KEY = process.env.RESEND_API_KEY || process.env.VITE_RESEND_API_KEY;
 const BROKERAGE_NOTIFICATION_EMAIL = process.env.NOTIFICATION_EMAIL || 'newerabroker25@gmail.com';
 const RESEND_ACCOUNT_OWNER_EMAIL = process.env.RESEND_OWNER_EMAIL || 'newerarealestateky@gmail.com';
-const FROM_EMAIL = process.env.FROM_EMAIL || 'New Era Real Estate <onboarding@resend.dev>';
+const rawFromEmail = process.env.FROM_EMAIL || '';
+const FROM_EMAIL = (!rawFromEmail || rawFromEmail.toLowerCase().includes('@resend.dev'))
+  ? 'New Era Real Estate <info@neweraky.com>'
+  : rawFromEmail;
 
 // Real map of all 24 New Era Real Estate agents' emails
 const AGENT_EMAILS: Record<string, string> = {
