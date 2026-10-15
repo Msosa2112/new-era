@@ -5,17 +5,35 @@ type VercelResponse = any;
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY || process.env.VITE_RESEND_API_KEY;
 const BROKERAGE_NOTIFICATION_EMAIL = process.env.NOTIFICATION_EMAIL || 'newerabroker25@gmail.com';
+const RESEND_ACCOUNT_OWNER_EMAIL = process.env.RESEND_OWNER_EMAIL || 'newerarealestateky@gmail.com';
 const FROM_EMAIL = process.env.FROM_EMAIL || 'New Era Real Estate <onboarding@resend.dev>';
 
-// Quick map of agents' emails
+// Real map of all 24 New Era Real Estate agents' emails
 const AGENT_EMAILS: Record<string, string> = {
   'yeilen-contreras': 'newerabroker25@gmail.com',
-  'dianelys-hernandez': 'dianelys@newerarealestateky.com',
-  'lazaro-perez': 'lazaro@newerarealestateky.com',
-  'marien-carmona': 'marien@newerarealestateky.com',
-  'yosvany-perez': 'yosvany@newerarealestateky.com',
-  'yosniel-valdes': 'yosniel@newerarealestateky.com',
-  'pedro-cabrera': 'pedro@newerarealestateky.com'
+  'yenny-mendoza-molina': 'Yennymm1997@gmail.com',
+  'dianelis-segrea-castellon': 'dianelis.realtor@gmail.com',
+  'marien-rodriguez-reyes': 'marienrodriguez7908@gmail.com',
+  'claudia-aguilera-cuenca': 'claudiaguilera1999@gmail.com',
+  'yazbel-diaz': 'Yazbelrealtor@gmail.com',
+  'javier-ferrer-rodriguez': 'Javferrer96@gmail.com',
+  'leidys-herrera': 'lhtopagent@gmail.com',
+  'dahana-aguila': 'Dahanaaguila@gmail.com',
+  'karla-fernandez-soto': 'Karlafsoto26@gmail.com',
+  'geraldine-santiago-then': 'Geraldine10realtor@gmail.com',
+  'lizandra-parra-rodriguez': 'realestate@lizandraparra.com',
+  'yisel-pupo': 'yiselatnewera@gmail.com',
+  'solanch-rodriguez-curbeira': 'Solanchrodriguez.realtor@gmail.com',
+  'albin-machado-campo': 'albinmm2005@gmail.com',
+  'ivonne-medina': 'ivon.ori@icloud.com',
+  'maria-mendez': 'mtm60bayona@gmail.com',
+  'rosa-mustelier-jimenez': 'rosamustelierrealtor@gmail.com',
+  'dayani-chavez': 'newerarealestateky@gmail.com',
+  'nina-gonzalez': 'Griselgonzalez.realtor@gmail.com',
+  'rebeca-lopez-portuondo': 'rebecalopezp1984@gmail.com',
+  'yordanis-alba-elias': 'yalbarealty@gmail.com',
+  'stephanie-preciado': 'newerarealestateky@gmail.com',
+  'alejandro-robles': 'Alex.realtorky@gmail.com'
 };
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -61,6 +79,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const resend = new Resend(RESEND_API_KEY);
+    const isSandboxSender = FROM_EMAIL.toLowerCase().includes('@resend.dev');
 
     // Format subject based on lead type
     let subjectType = 'Nuevo Contacto de Cliente';
@@ -71,10 +90,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const subject = `🏛️ New Era Lead: ${subjectType} — ${name}`;
 
-    // Target recipients
-    const toRecipients = [BROKERAGE_NOTIFICATION_EMAIL];
-    if (agentId && AGENT_EMAILS[agentId] && AGENT_EMAILS[agentId] !== BROKERAGE_NOTIFICATION_EMAIL) {
-      toRecipients.push(AGENT_EMAILS[agentId]);
+    // Target recipients when domain is verified
+    const intendedRecipients = [BROKERAGE_NOTIFICATION_EMAIL];
+    if (agentId && AGENT_EMAILS[agentId] && !intendedRecipients.includes(AGENT_EMAILS[agentId])) {
+      intendedRecipients.push(AGENT_EMAILS[agentId]);
     }
 
     const cleanPhone = phone ? phone.replace(/[^0-9]/g, '') : '';
@@ -138,6 +157,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 <span class="info-val">${address}</span>
               </div>
               ` : ''}
+              ${propertyId ? `
+              <div class="info-row">
+                <span class="info-label">ID Propiedad:</span>
+                <span class="info-val">${propertyId}</span>
+              </div>
+              ` : ''}
               ${metadata?.service ? `
               <div class="info-row">
                 <span class="info-label">Servicio Requerido:</span>
@@ -150,10 +175,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 <span class="info-val">${metadata.tourDate} a las ${metadata.tourTime || ''} (${metadata.tourType || 'Presencial'})</span>
               </div>
               ` : ''}
-              ${metadata?.agentName ? `
+              ${(metadata?.agentName || agentId) ? `
               <div class="info-row">
                 <span class="info-label">Realtor Asignado:</span>
-                <span class="info-val">${metadata.agentName}</span>
+                <span class="info-val">${metadata?.agentName || agentId}${agentId && AGENT_EMAILS[agentId] ? ` (${AGENT_EMAILS[agentId]})` : ''}</span>
               </div>
               ` : ''}
             </div>
@@ -183,64 +208,82 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       </html>
     `;
 
-    // Send email to brokerage/agent with fallback for unverified domains in test mode
+    // Note: Resend SDK v2+ returns { data, error } and does NOT throw on 403.
+    // While using onboarding@resend.dev (unverified domain), Resend only permits sending to the account owner email (newerarealestateky@gmail.com).
     let sendResult;
-    try {
+    if (isSandboxSender) {
       sendResult = await resend.emails.send({
         from: FROM_EMAIL,
-        to: toRecipients,
+        to: [RESEND_ACCOUNT_OWNER_EMAIL],
+        replyTo: email || undefined,
+        subject: agentId && AGENT_EMAILS[agentId]
+          ? `[Para: ${AGENT_EMAILS[agentId]}] ${subject}`
+          : subject,
+        html: htmlEmail
+      });
+    } else {
+      sendResult = await resend.emails.send({
+        from: FROM_EMAIL,
+        to: intendedRecipients,
         replyTo: email || undefined,
         subject,
         html: htmlEmail
       });
-    } catch (sendErr: any) {
-      if (sendErr?.statusCode === 403 || sendErr?.message?.includes('verify a domain')) {
-        console.warn('Resend test mode detected. Falling back to account email. Verify your domain at resend.com/domains to send to any recipient.');
+
+      // Fallback if custom domain is not yet verified in Resend
+      if (sendResult?.error) {
+        console.warn('Resend domain restriction or error detected, falling back to account owner email:', sendResult.error);
         sendResult = await resend.emails.send({
-          from: 'onboarding@resend.dev',
-          to: ['newerarealestateky@gmail.com'],
+          from: 'New Era Real Estate <onboarding@resend.dev>',
+          to: [RESEND_ACCOUNT_OWNER_EMAIL],
           replyTo: email || undefined,
-          subject: `[Lead Broker: ${toRecipients.join(', ')}] ${subject}`,
+          subject: `[Para: ${intendedRecipients.join(', ')}] ${subject}`,
           html: htmlEmail
         });
-      } else {
-        throw sendErr;
       }
     }
 
-    // Optional confirmation email to the client (only works when domain is verified)
-    if (email && email.includes('@')) {
-      try {
-        await resend.emails.send({
-          from: FROM_EMAIL,
-          to: [email],
-          subject: '🏛️ Hemos recibido tu solicitud — New Era Real Estate',
-          html: `
-            <div style="font-family: sans-serif; max-width: 580px; margin: 0 auto; padding: 25px; border: 1px solid #ECE7DE; border-radius: 12px; background: #FFFFFF;">
-              <div style="text-align: center; border-bottom: 2px solid #660E1A; padding-bottom: 15px; margin-bottom: 20px;">
-                <h2 style="color: #660E1A; margin: 0; font-size: 20px; letter-spacing: 0.1em;">NEW ERA REAL ESTATE</h2>
-              </div>
-              <p>Hola <strong>${name}</strong>,</p>
-              <p>Gracias por contactar a <strong>New Era Real Estate</strong>. Hemos recibido tu solicitud exitosamente y uno de nuestros asesores especializados se comunicará contigo a la brevedad posible.</p>
-              <div style="background: #F8F6F2; padding: 15px; border-radius: 8px; margin: 20px 0; font-size: 14px; border: 1px solid #E8E3DA;">
-                <strong>Resumen de tu solicitud:</strong><br>
-                • <strong>Servicio:</strong> ${subjectType}<br>
-                ${address ? `• <strong>Propiedad:</strong> ${address}<br>` : ''}
-                ${phone ? `• <strong>Teléfono de contacto:</strong> ${phone}<br>` : ''}
-              </div>
-              <p>Si deseas comunicarte de inmediato con nuestra oficina central, puedes llamarnos directamente al <strong>(502) 500-0409</strong> o escribirnos a <strong>newerabroker25@gmail.com</strong>.</p>
-              <br>
-              <p style="margin-bottom: 0;">Atentamente,<br><strong>Equipo de Asesoría Inmobiliaria</strong><br>New Era Real Estate LLC</p>
+    // Client auto-reply confirmation email:
+    // Only send if custom domain is verified (!isSandboxSender) OR if the client email matches the Resend owner email
+    if (
+      email &&
+      email.includes('@') &&
+      (!isSandboxSender || email.toLowerCase().trim() === RESEND_ACCOUNT_OWNER_EMAIL.toLowerCase())
+    ) {
+      const clientReply = await resend.emails.send({
+        from: FROM_EMAIL,
+        to: [email],
+        subject: '🏛️ Hemos recibido tu solicitud — New Era Real Estate',
+        html: `
+          <div style="font-family: sans-serif; max-width: 580px; margin: 0 auto; padding: 25px; border: 1px solid #ECE7DE; border-radius: 12px; background: #FFFFFF;">
+            <div style="text-align: center; border-bottom: 2px solid #660E1A; padding-bottom: 15px; margin-bottom: 20px;">
+              <h2 style="color: #660E1A; margin: 0; font-size: 20px; letter-spacing: 0.1em;">NEW ERA REAL ESTATE</h2>
             </div>
-          `
-        });
-      } catch (clientEmailErr) {
-        // Expected in Resend free test mode until domain is verified
-        console.info('Client auto-reply skipped (requires verified domain in resend.com/domains):', clientEmailErr);
+            <p>Hola <strong>${name}</strong>,</p>
+            <p>Gracias por contactar a <strong>New Era Real Estate</strong>. Hemos recibido tu solicitud exitosamente y uno de nuestros asesores especializados se comunicará contigo a la brevedad posible.</p>
+            <div style="background: #F8F6F2; padding: 15px; border-radius: 8px; margin: 20px 0; font-size: 14px; border: 1px solid #E8E3DA;">
+              <strong>Resumen de tu solicitud:</strong><br>
+              • <strong>Servicio:</strong> ${subjectType}<br>
+              ${address ? `• <strong>Propiedad:</strong> ${address}<br>` : ''}
+              ${phone ? `• <strong>Teléfono de contacto:</strong> ${phone}<br>` : ''}
+            </div>
+            <p>Si deseas comunicarte de inmediato con nuestra oficina central, puedes llamarnos directamente al <strong>(502) 500-0409</strong> o escribirnos a <strong>newerabroker25@gmail.com</strong>.</p>
+            <br>
+            <p style="margin-bottom: 0;">Atentamente,<br><strong>Equipo de Asesoría Inmobiliaria</strong><br>New Era Real Estate LLC</p>
+          </div>
+        `
+      });
+      if (clientReply?.error) {
+        console.info('Client auto-reply skipped:', clientReply.error.message);
       }
     }
 
-    return res.status(200).json({ success: true, data: sendResult });
+    if (sendResult?.error) {
+      console.error('Resend error:', sendResult.error);
+      return res.status(400).json({ success: false, error: sendResult.error.message });
+    }
+
+    return res.status(200).json({ success: true, data: sendResult?.data || sendResult });
   } catch (error: any) {
     console.error('Error sending email via Resend:', error);
     return res.status(500).json({ success: false, error: error?.message || 'Failed to send email' });
