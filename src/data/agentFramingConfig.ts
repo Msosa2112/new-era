@@ -11,495 +11,80 @@ export interface AgentFraming {
 export const DEFAULT_FRAMING: AgentFraming = {
   scale: 1.0,
   offsetX: 0,
-  offsetY: 0,
+  offsetY: -10,
   heightPercent: 100,
-  avatarZoom: 1.0,
+  avatarZoom: 1.45,
   avatarX: 50,
-  avatarY: 20
+  avatarY: 12
 };
+
+const AGENT_IDS = [
+  'yeilen-contreras',
+  'rebeca-lopez-portuondo',
+  'yenny-mendoza-molina',
+  'dianelis-segrea-castellon',
+  'marien-rodriguez-reyes',
+  'claudia-aguilera-cuenca',
+  'yazbel-diaz',
+  'javier-ferrer-rodriguez',
+  'leidys-herrera',
+  'dahana-aguila',
+  'walter-gotay',
+  'karla-fernandez-soto',
+  'geraldine-santiago-then',
+  'lizandra-parra-rodriguez',
+  'yisel-pupo',
+  'solanch-rodriguez-curbeira',
+  'albin-machado-campo',
+  'ivonne-medina',
+  'maria-mendez',
+  'rosa-mustelier-jimenez',
+  'dayani-chavez',
+  'nina-gonzalez',
+  'grisel-gonzalez',
+  'yordanis-alba-elias',
+  'stephanie-preciado',
+  'alejandro-robles'
+] as const;
 
 // ==========================================
 // 1. CONFIGURACIÓN EXCLUSIVA PARA DESKTOP
 // ==========================================
-export const DESKTOP_AGENT_FRAMING: Record<string, AgentFraming> = {
-  "yeilen-contreras": {
-    "scale": 1.11,
-    "offsetX": 0,
-    "offsetY": -93,
-    "heightPercent": 117,
-    "avatarZoom": 2.25,
-    "avatarX": 50,
-    "avatarY": 2
-  },
-  "yenny-mendoza-molina": {
-    "scale": 1.7,
-    "offsetX": 0,
-    "offsetY": -186,
-    "heightPercent": 107,
-    "avatarZoom": 2.5,
-    "avatarX": 19,
-    "avatarY": 6
-  },
-  "dianelis-segrea-castellon": {
-    "scale": 0.95,
-    "offsetX": 0,
-    "offsetY": 0,
-    "heightPercent": 100,
-    "avatarZoom": 1.35,
-    "avatarX": 50,
-    "avatarY": 11
-  },
-  "marien-rodriguez-reyes": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": -13,
-    "heightPercent": 100,
-    "avatarZoom": 1.65,
-    "avatarX": 50,
-    "avatarY": 7
-  },
-  "claudia-aguilera-cuenca": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": -10,
-    "heightPercent": 100,
-    "avatarZoom": 1.5,
-    "avatarX": 50,
-    "avatarY": 10
-  },
-  "yazbel-diaz": {
-    "scale": 1.55,
-    "offsetX": 0,
-    "offsetY": -208,
-    "heightPercent": 88,
-    "avatarZoom": 2.3,
-    "avatarX": 86,
-    "avatarY": 33
-  },
-  "javier-ferrer-rodriguez": {
-    "scale": 1.06,
-    "offsetX": 0,
-    "offsetY": 39,
-    "heightPercent": 87,
-    "avatarZoom": 1.4,
-    "avatarX": 30,
-    "avatarY": 0
-  },
-  "leidys-herrera": {
-    "scale": 1.42,
-    "offsetX": 0,
-    "offsetY": -143,
-    "heightPercent": 130,
-    "avatarZoom": 2.5,
-    "avatarX": 2,
-    "avatarY": 0
-  },
-  "dahana-aguila": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": -8,
-    "heightPercent": 88,
-    "avatarZoom": 1.05,
-    "avatarX": 50,
-    "avatarY": 20
-  },
-  "walter-gotay": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": -96,
-    "heightPercent": 117,
-    "avatarZoom": 1.35,
-    "avatarX": 50,
-    "avatarY": 29
-  },
-  "karla-fernandez-soto": {
-    "scale": 1.25,
-    "offsetX": 0,
-    "offsetY": 30,
-    "heightPercent": 113,
-    "avatarZoom": 1.35,
-    "avatarX": 50,
-    "avatarY": 0
-  },
-  "geraldine-santiago-then": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": -58,
-    "heightPercent": 100,
-    "avatarZoom": 1.35,
-    "avatarX": 50,
-    "avatarY": 20
-  },
-  "lizandra-parra-rodriguez": {
-    "scale": 1.37,
-    "offsetX": 0,
-    "offsetY": -80,
-    "heightPercent": 110,
-    "avatarZoom": 2.15,
-    "avatarX": 23,
-    "avatarY": 0
-  },
-  "yisel-pupo": {
-    "scale": 1.16,
-    "offsetX": 0,
-    "offsetY": -49,
-    "heightPercent": 100,
-    "avatarZoom": 1.6,
-    "avatarX": 50,
-    "avatarY": 11
-  },
-  "solanch-rodriguez-curbeira": {
-    "scale": 1.1,
-    "offsetX": 0,
-    "offsetY": -20,
-    "heightPercent": 100,
-    "avatarZoom": 1.55,
-    "avatarX": 50,
-    "avatarY": 7
-  },
-  "albin-machado-campo": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": -10,
-    "heightPercent": 100,
-    "avatarZoom": 1.5,
-    "avatarX": 50,
-    "avatarY": 10
-  },
-  "ivonne-medina": {
-    "scale": 1.33,
-    "offsetX": 0,
-    "offsetY": -150,
-    "heightPercent": 100,
-    "avatarZoom": 1.75,
-    "avatarX": 50,
-    "avatarY": 27
-  },
-  "maria-mendez": {
-    "scale": 0.7,
-    "offsetX": 0,
-    "offsetY": 59,
-    "heightPercent": 100,
-    "avatarZoom": 1,
-    "avatarX": 50,
-    "avatarY": 13
-  },
-  "rosa-mustelier-jimenez": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": -40,
-    "heightPercent": 100,
-    "avatarZoom": 1.5,
-    "avatarX": 50,
-    "avatarY": 20
-  },
-  "dayani-chavez": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": -10,
-    "heightPercent": 100,
-    "avatarZoom": 1.5,
-    "avatarX": 50,
-    "avatarY": 10
-  },
-  "nina-gonzalez": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": -12,
-    "heightPercent": 100,
-    "avatarZoom": 1.55,
-    "avatarX": 50,
-    "avatarY": 10
-  },
-  "grisel-gonzalez": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": -12,
-    "heightPercent": 100,
-    "avatarZoom": 1.55,
-    "avatarX": 50,
-    "avatarY": 10
-  },
-  "rebeca-lopez-portuondo": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": -10,
-    "heightPercent": 100,
-    "avatarZoom": 1.5,
-    "avatarX": 50,
-    "avatarY": 10
-  },
-  "yordanis-alba-elias": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": -10,
-    "heightPercent": 100,
-    "avatarZoom": 1.5,
-    "avatarX": 50,
-    "avatarY": 10
-  },
-  "stephanie-preciado": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": -10,
-    "heightPercent": 100,
-    "avatarZoom": 1.5,
-    "avatarX": 50,
-    "avatarY": 10
-  },
-  "alejandro-robles": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": -10,
-    "heightPercent": 100,
-    "avatarZoom": 1.5,
-    "avatarX": 50,
-    "avatarY": 10
-  }
-};
+export const DESKTOP_AGENT_FRAMING: Record<string, AgentFraming> = Object.fromEntries(
+  AGENT_IDS.map((id) => [
+    id,
+    {
+      scale: 1,
+      offsetX: 0,
+      offsetY: -10,
+      heightPercent: 100,
+      avatarZoom: 1.45,
+      avatarX: 50,
+      avatarY: 12
+    }
+  ])
+);
 
 // ==========================================
 // 2. CONFIGURACIÓN EXCLUSIVA PARA MOBILE
 // ==========================================
-export const MOBILE_AGENT_FRAMING: Record<string, AgentFraming> = {
-  "yeilen-contreras": {
-    "scale": 1.16,
-    "offsetX": 0,
-    "offsetY": -66,
-    "heightPercent": 121,
-    "avatarZoom": 2.25,
-    "avatarX": 50,
-    "avatarY": 2
-  },
-  "yenny-mendoza-molina": {
-    "scale": 1.7,
-    "offsetX": 0,
-    "offsetY": -80,
-    "heightPercent": 107,
-    "avatarZoom": 2.5,
-    "avatarX": 19,
-    "avatarY": 6
-  },
-  "dianelis-segrea-castellon": {
-    "scale": 0.95,
-    "offsetX": 0,
-    "offsetY": 14,
-    "heightPercent": 100,
-    "avatarZoom": 1.35,
-    "avatarX": 50,
-    "avatarY": 11
-  },
-  "marien-rodriguez-reyes": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": 7,
-    "heightPercent": 100,
-    "avatarZoom": 1.65,
-    "avatarX": 50,
-    "avatarY": 7
-  },
-  "claudia-aguilera-cuenca": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": 6,
-    "heightPercent": 100,
-    "avatarZoom": 1.5,
-    "avatarX": 50,
-    "avatarY": 10
-  },
-  "yazbel-diaz": {
-    "scale": 1.51,
-    "offsetX": 0,
-    "offsetY": -86,
-    "heightPercent": 88,
-    "avatarZoom": 2.3,
-    "avatarX": 86,
-    "avatarY": 33
-  },
-  "javier-ferrer-rodriguez": {
-    "scale": 1.06,
-    "offsetX": 0,
-    "offsetY": 31,
-    "heightPercent": 87,
-    "avatarZoom": 1.4,
-    "avatarX": 30,
-    "avatarY": 0
-  },
-  "leidys-herrera": {
-    "scale": 1.42,
-    "offsetX": 0,
-    "offsetY": -76,
-    "heightPercent": 130,
-    "avatarZoom": 2.5,
-    "avatarX": 2,
-    "avatarY": 0
-  },
-  "dahana-aguila": {
-    "scale": 0.94,
-    "offsetX": 0,
-    "offsetY": 4,
-    "heightPercent": 88,
-    "avatarZoom": 1.05,
-    "avatarX": 50,
-    "avatarY": 20
-  },
-  "walter-gotay": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": -41,
-    "heightPercent": 117,
-    "avatarZoom": 1.35,
-    "avatarX": 50,
-    "avatarY": 29
-  },
-  "karla-fernandez-soto": {
-    "scale": 1.25,
-    "offsetX": 0,
-    "offsetY": 21,
-    "heightPercent": 113,
-    "avatarZoom": 1.35,
-    "avatarX": 50,
-    "avatarY": 0
-  },
-  "geraldine-santiago-then": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": -21,
-    "heightPercent": 100,
-    "avatarZoom": 1.35,
-    "avatarX": 50,
-    "avatarY": 20
-  },
-  "lizandra-parra-rodriguez": {
-    "scale": 1.37,
-    "offsetX": 0,
-    "offsetY": -38,
-    "heightPercent": 110,
-    "avatarZoom": 2.15,
-    "avatarX": 23,
-    "avatarY": 0
-  },
-  "yisel-pupo": {
-    "scale": 1.16,
-    "offsetX": 0,
-    "offsetY": -21,
-    "heightPercent": 100,
-    "avatarZoom": 1.6,
-    "avatarX": 50,
-    "avatarY": 11
-  },
-  "solanch-rodriguez-curbeira": {
-    "scale": 0.99,
-    "offsetX": 0,
-    "offsetY": 4,
-    "heightPercent": 100,
-    "avatarZoom": 1.55,
-    "avatarX": 50,
-    "avatarY": 7
-  },
-  "albin-machado-campo": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": 6,
-    "heightPercent": 100,
-    "avatarZoom": 1.5,
-    "avatarX": 50,
-    "avatarY": 10
-  },
-  "ivonne-medina": {
-    "scale": 1.33,
-    "offsetX": 0,
-    "offsetY": -62,
-    "heightPercent": 100,
-    "avatarZoom": 1.75,
-    "avatarX": 50,
-    "avatarY": 27
-  },
-  "maria-mendez": {
-    "scale": 0.7,
-    "offsetX": 0,
-    "offsetY": 38,
-    "heightPercent": 100,
-    "avatarZoom": 1,
-    "avatarX": 50,
-    "avatarY": 13
-  },
-  "rosa-mustelier-jimenez": {
-    "scale": 1.05,
-    "offsetX": 0,
-    "offsetY": -24,
-    "heightPercent": 102,
-    "avatarZoom": 1.5,
-    "avatarX": 50,
-    "avatarY": 20
-  },
-  "dayani-chavez": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": 6,
-    "heightPercent": 100,
-    "avatarZoom": 1.5,
-    "avatarX": 50,
-    "avatarY": 10
-  },
-  "nina-gonzalez": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": 5,
-    "heightPercent": 100,
-    "avatarZoom": 1.55,
-    "avatarX": 50,
-    "avatarY": 10
-  },
-  "grisel-gonzalez": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": 5,
-    "heightPercent": 100,
-    "avatarZoom": 1.55,
-    "avatarX": 50,
-    "avatarY": 10
-  },
-  "rebeca-lopez-portuondo": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": 6,
-    "heightPercent": 100,
-    "avatarZoom": 1.5,
-    "avatarX": 50,
-    "avatarY": 10
-  },
-  "yordanis-alba-elias": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": 6,
-    "heightPercent": 100,
-    "avatarZoom": 1.5,
-    "avatarX": 50,
-    "avatarY": 10
-  },
-  "stephanie-preciado": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": 6,
-    "heightPercent": 100,
-    "avatarZoom": 1.5,
-    "avatarX": 50,
-    "avatarY": 10
-  },
-  "alejandro-robles": {
-    "scale": 1,
-    "offsetX": 0,
-    "offsetY": 6,
-    "heightPercent": 100,
-    "avatarZoom": 1.5,
-    "avatarX": 50,
-    "avatarY": 10
-  }
-};
+export const MOBILE_AGENT_FRAMING: Record<string, AgentFraming> = Object.fromEntries(
+  AGENT_IDS.map((id) => [
+    id,
+    {
+      scale: 1,
+      offsetX: 0,
+      offsetY: 6,
+      heightPercent: 100,
+      avatarZoom: 1.45,
+      avatarX: 50,
+      avatarY: 12
+    }
+  ])
+);
 
-const STORAGE_KEY_DESKTOP = 'agent_framing_desktop_v8';
-const STORAGE_KEY_MOBILE = 'agent_framing_mobile_v8';
+const STORAGE_KEY_DESKTOP = 'agent_framing_desktop_v9';
+const STORAGE_KEY_MOBILE = 'agent_framing_mobile_v9';
 
 export function loadSavedDesktopFraming(): Record<string, AgentFraming> {
   if (typeof window === 'undefined') return { ...DESKTOP_AGENT_FRAMING };
@@ -563,438 +148,44 @@ export interface ProfileAgentFraming {
 }
 
 export const DEFAULT_PROFILE_FRAMING: ProfileAgentFraming = {
-  scale: 1.0,
+  scale: 1.55,
   offsetX: 0,
   offsetY: 0,
   heightPercent: 100,
-  fadeStart: 78,
-  fadeEnd: 98
+  fadeStart: 66,
+  fadeEnd: 88
 };
 
-export const DESKTOP_PROFILE_FRAMING: Record<string, ProfileAgentFraming> = {
-  "yeilen-contreras": {
-    "scale": 2.2,
-    "offsetX": -32,
-    "offsetY": 39,
-    "heightPercent": 100,
-    "fadeStart": 56,
-    "fadeEnd": 67
-  },
-  "yenny-mendoza-molina": {
-    "scale": 2.2,
-    "offsetX": -20,
-    "offsetY": 38,
-    "heightPercent": 100,
-    "fadeStart": 53,
-    "fadeEnd": 69
-  },
-  "dianelis-segrea-castellon": {
-    "scale": 1.7,
-    "offsetX": -24,
-    "offsetY": 37,
-    "heightPercent": 100,
-    "fadeStart": 70,
-    "fadeEnd": 78
-  },
-  "marien-rodriguez-reyes": {
-    "scale": 1.49,
-    "offsetX": -16,
-    "offsetY": -32,
-    "heightPercent": 100,
-    "fadeStart": 73,
-    "fadeEnd": 88
-  },
-  "claudia-aguilera-cuenca": {
-    "scale": 1.6,
-    "offsetX": 0,
-    "offsetY": 0,
-    "heightPercent": 100,
-    "fadeStart": 65,
-    "fadeEnd": 86
-  },
-  "yazbel-diaz": {
-    "scale": 2.16,
-    "offsetX": 0,
-    "offsetY": -49,
-    "heightPercent": 100,
-    "fadeStart": 66,
-    "fadeEnd": 81
-  },
-  "javier-ferrer-rodriguez": {
-    "scale": 1.37,
-    "offsetX": -18,
-    "offsetY": 0,
-    "heightPercent": 100,
-    "fadeStart": 72,
-    "fadeEnd": 91
-  },
-  "leidys-herrera": {
-    "scale": 2.2,
-    "offsetX": 0,
-    "offsetY": 99,
-    "heightPercent": 100,
-    "fadeStart": 51,
-    "fadeEnd": 62
-  },
-  "dahana-aguila": {
-    "scale": 1.33,
-    "offsetX": 0,
-    "offsetY": -32,
-    "heightPercent": 100,
-    "fadeStart": 78,
-    "fadeEnd": 98
-  },
-  "walter-gotay": {
-    "scale": 1.53,
-    "offsetX": 0,
-    "offsetY": -60,
-    "heightPercent": 100,
-    "fadeStart": 78,
-    "fadeEnd": 98
-  },
-  "karla-fernandez-soto": {
-    "scale": 2.2,
-    "offsetX": 0,
-    "offsetY": 109,
-    "heightPercent": 100,
-    "fadeStart": 40,
-    "fadeEnd": 60
-  },
-  "geraldine-santiago-then": {
-    "scale": 1.44,
-    "offsetX": 0,
-    "offsetY": -49,
-    "heightPercent": 100,
-    "fadeStart": 78,
-    "fadeEnd": 98
-  },
-  "lizandra-parra-rodriguez": {
-    "scale": 2.2,
-    "offsetX": 0,
-    "offsetY": 102,
-    "heightPercent": 100,
-    "fadeStart": 40,
-    "fadeEnd": 60
-  },
-  "yisel-pupo": {
-    "scale": 1.63,
-    "offsetX": 0,
-    "offsetY": 0,
-    "heightPercent": 100,
-    "fadeStart": 50,
-    "fadeEnd": 81
-  },
-  "solanch-rodriguez-curbeira": {
-    "scale": 1.73,
-    "offsetX": 0,
-    "offsetY": 7,
-    "heightPercent": 100,
-    "fadeStart": 50,
-    "fadeEnd": 80
-  },
-  "albin-machado-campo": {
-    "scale": 1.6,
-    "offsetX": 0,
-    "offsetY": 0,
-    "heightPercent": 100,
-    "fadeStart": 63,
-    "fadeEnd": 85
-  },
-  "ivonne-medina": {
-    "scale": 1.74,
-    "offsetX": 0,
-    "offsetY": -29,
-    "heightPercent": 100,
-    "fadeStart": 67,
-    "fadeEnd": 87
-  },
-  "maria-mendez": {
-    "scale": 1.33,
-    "offsetX": -33,
-    "offsetY": 7,
-    "heightPercent": 100,
-    "fadeStart": 72,
-    "fadeEnd": 90
-  },
-  "rosa-mustelier-jimenez": {
-    "scale": 1.68,
-    "offsetX": 0,
-    "offsetY": 0,
-    "heightPercent": 100,
-    "fadeStart": 63,
-    "fadeEnd": 84
-  },
-  "dayani-chavez": {
-    "scale": 1.6,
-    "offsetX": 0,
-    "offsetY": 0,
-    "heightPercent": 100,
-    "fadeStart": 63,
-    "fadeEnd": 85
-  },
-  "nina-gonzalez": {
-    "scale": 1.65,
-    "offsetX": 0,
-    "offsetY": 0,
-    "heightPercent": 100,
-    "fadeStart": 63,
-    "fadeEnd": 85
-  },
-  "grisel-gonzalez": {
-    "scale": 1.65,
-    "offsetX": 0,
-    "offsetY": 0,
-    "heightPercent": 100,
-    "fadeStart": 63,
-    "fadeEnd": 85
-  },
-  "rebeca-lopez-portuondo": {
-    "scale": 1.6,
-    "offsetX": 0,
-    "offsetY": 0,
-    "heightPercent": 100,
-    "fadeStart": 63,
-    "fadeEnd": 85
-  },
-  "yordanis-alba-elias": {
-    "scale": 1.6,
-    "offsetX": 0,
-    "offsetY": 0,
-    "heightPercent": 100,
-    "fadeStart": 63,
-    "fadeEnd": 85
-  },
-  "stephanie-preciado": {
-    "scale": 1.6,
-    "offsetX": 0,
-    "offsetY": 0,
-    "heightPercent": 100,
-    "fadeStart": 63,
-    "fadeEnd": 85
-  },
-  "alejandro-robles": {
-    "scale": 1.6,
-    "offsetX": 0,
-    "offsetY": 0,
-    "heightPercent": 100,
-    "fadeStart": 63,
-    "fadeEnd": 85
-  }
-};
+export const DESKTOP_PROFILE_FRAMING: Record<string, ProfileAgentFraming> = Object.fromEntries(
+  AGENT_IDS.map((id) => [
+    id,
+    {
+      scale: 1.55,
+      offsetX: 0,
+      offsetY: 0,
+      heightPercent: 100,
+      fadeStart: 66,
+      fadeEnd: 88
+    }
+  ])
+);
 
-export const MOBILE_PROFILE_FRAMING: Record<string, ProfileAgentFraming> = {
-  "yeilen-contreras": {
-    "scale": 2.2,
-    "offsetX": -32,
-    "offsetY": 39,
-    "heightPercent": 100,
-    "fadeStart": 56,
-    "fadeEnd": 67
-  },
-  "yenny-mendoza-molina": {
-    "scale": 2.2,
-    "offsetX": -20,
-    "offsetY": 38,
-    "heightPercent": 100,
-    "fadeStart": 53,
-    "fadeEnd": 69
-  },
-  "dianelis-segrea-castellon": {
-    "scale": 1.7,
-    "offsetX": -24,
-    "offsetY": 37,
-    "heightPercent": 100,
-    "fadeStart": 70,
-    "fadeEnd": 78
-  },
-  "marien-rodriguez-reyes": {
-    "scale": 1.49,
-    "offsetX": -16,
-    "offsetY": -32,
-    "heightPercent": 100,
-    "fadeStart": 73,
-    "fadeEnd": 88
-  },
-  "claudia-aguilera-cuenca": {
-    "scale": 1.6,
-    "offsetX": 0,
-    "offsetY": 0,
-    "heightPercent": 100,
-    "fadeStart": 65,
-    "fadeEnd": 86
-  },
-  "yazbel-diaz": {
-    "scale": 2.16,
-    "offsetX": 0,
-    "offsetY": -49,
-    "heightPercent": 100,
-    "fadeStart": 66,
-    "fadeEnd": 81
-  },
-  "javier-ferrer-rodriguez": {
-    "scale": 1.37,
-    "offsetX": -18,
-    "offsetY": 0,
-    "heightPercent": 100,
-    "fadeStart": 72,
-    "fadeEnd": 91
-  },
-  "leidys-herrera": {
-    "scale": 2.2,
-    "offsetX": 0,
-    "offsetY": 99,
-    "heightPercent": 100,
-    "fadeStart": 51,
-    "fadeEnd": 62
-  },
-  "dahana-aguila": {
-    "scale": 1.33,
-    "offsetX": 0,
-    "offsetY": -32,
-    "heightPercent": 100,
-    "fadeStart": 78,
-    "fadeEnd": 98
-  },
-  "walter-gotay": {
-    "scale": 1.53,
-    "offsetX": 0,
-    "offsetY": -60,
-    "heightPercent": 100,
-    "fadeStart": 78,
-    "fadeEnd": 98
-  },
-  "karla-fernandez-soto": {
-    "scale": 2.2,
-    "offsetX": 0,
-    "offsetY": 109,
-    "heightPercent": 100,
-    "fadeStart": 40,
-    "fadeEnd": 60
-  },
-  "geraldine-santiago-then": {
-    "scale": 1.44,
-    "offsetX": 0,
-    "offsetY": -49,
-    "heightPercent": 100,
-    "fadeStart": 78,
-    "fadeEnd": 98
-  },
-  "lizandra-parra-rodriguez": {
-    "scale": 2.2,
-    "offsetX": 0,
-    "offsetY": 102,
-    "heightPercent": 100,
-    "fadeStart": 40,
-    "fadeEnd": 60
-  },
-  "yisel-pupo": {
-    "scale": 1.63,
-    "offsetX": 0,
-    "offsetY": 0,
-    "heightPercent": 100,
-    "fadeStart": 50,
-    "fadeEnd": 81
-  },
-  "solanch-rodriguez-curbeira": {
-    "scale": 1.73,
-    "offsetX": 0,
-    "offsetY": 7,
-    "heightPercent": 100,
-    "fadeStart": 50,
-    "fadeEnd": 80
-  },
-  "albin-machado-campo": {
-    "scale": 1.6,
-    "offsetX": 0,
-    "offsetY": 0,
-    "heightPercent": 100,
-    "fadeStart": 63,
-    "fadeEnd": 85
-  },
-  "ivonne-medina": {
-    "scale": 1.74,
-    "offsetX": 0,
-    "offsetY": -29,
-    "heightPercent": 100,
-    "fadeStart": 67,
-    "fadeEnd": 87
-  },
-  "maria-mendez": {
-    "scale": 1.33,
-    "offsetX": -33,
-    "offsetY": 7,
-    "heightPercent": 100,
-    "fadeStart": 72,
-    "fadeEnd": 90
-  },
-  "rosa-mustelier-jimenez": {
-    "scale": 1.68,
-    "offsetX": 0,
-    "offsetY": 0,
-    "heightPercent": 100,
-    "fadeStart": 63,
-    "fadeEnd": 84
-  },
-  "dayani-chavez": {
-    "scale": 1.6,
-    "offsetX": 0,
-    "offsetY": 0,
-    "heightPercent": 100,
-    "fadeStart": 63,
-    "fadeEnd": 85
-  },
-  "nina-gonzalez": {
-    "scale": 1.65,
-    "offsetX": 0,
-    "offsetY": 0,
-    "heightPercent": 100,
-    "fadeStart": 63,
-    "fadeEnd": 85
-  },
-  "grisel-gonzalez": {
-    "scale": 1.65,
-    "offsetX": 0,
-    "offsetY": 0,
-    "heightPercent": 100,
-    "fadeStart": 63,
-    "fadeEnd": 85
-  },
-  "rebeca-lopez-portuondo": {
-    "scale": 1.6,
-    "offsetX": 0,
-    "offsetY": 0,
-    "heightPercent": 100,
-    "fadeStart": 63,
-    "fadeEnd": 85
-  },
-  "yordanis-alba-elias": {
-    "scale": 1.6,
-    "offsetX": 0,
-    "offsetY": 0,
-    "heightPercent": 100,
-    "fadeStart": 63,
-    "fadeEnd": 85
-  },
-  "stephanie-preciado": {
-    "scale": 1.6,
-    "offsetX": 0,
-    "offsetY": 0,
-    "heightPercent": 100,
-    "fadeStart": 63,
-    "fadeEnd": 85
-  },
-  "alejandro-robles": {
-    "scale": 1.6,
-    "offsetX": 0,
-    "offsetY": 0,
-    "heightPercent": 100,
-    "fadeStart": 63,
-    "fadeEnd": 85
-  }
-};
+export const MOBILE_PROFILE_FRAMING: Record<string, ProfileAgentFraming> = Object.fromEntries(
+  AGENT_IDS.map((id) => [
+    id,
+    {
+      scale: 1.55,
+      offsetX: 0,
+      offsetY: 0,
+      heightPercent: 100,
+      fadeStart: 66,
+      fadeEnd: 88
+    }
+  ])
+);
 
-const STORAGE_KEY_PROFILE_DESKTOP = 'agent_profile_framing_desktop_v5';
-const STORAGE_KEY_PROFILE_MOBILE = 'agent_profile_framing_mobile_v5';
+const STORAGE_KEY_PROFILE_DESKTOP = 'agent_profile_framing_desktop_v6';
+const STORAGE_KEY_PROFILE_MOBILE = 'agent_profile_framing_mobile_v6';
 
 export function loadSavedProfileDesktopFraming(): Record<string, ProfileAgentFraming> {
   if (typeof window === 'undefined') return { ...DESKTOP_PROFILE_FRAMING };
@@ -1044,5 +235,3 @@ export function getProfileAgentFraming(agentId: string, isMobile: boolean): Prof
   }
   return DESKTOP_PROFILE_FRAMING[agentId] || DEFAULT_PROFILE_FRAMING;
 }
-
-

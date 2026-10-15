@@ -163,9 +163,10 @@ export const AgentCard: React.FC<AgentCardProps> = ({
                 height: '100%',
                 objectFit: agent.photoNobgUrl ? 'contain' : 'cover',
                 objectPosition: agent.photoNobgUrl ? 'bottom center' : 'center top',
+                transformOrigin: 'bottom center',
                 display: 'block',
                 transition: 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.45s ease',
-                transform: isHovered ? 'scale(1.05) translateY(-2px)' : 'scale(1)',
+                transform: isHovered ? 'scale(1.1) translateY(-2px)' : 'scale(1.06)',
                 filter: isHovered
                   ? 'drop-shadow(0 14px 28px rgba(0, 0, 0, 0.16))'
                   : 'drop-shadow(0 6px 14px rgba(0, 0, 0, 0.1))',
