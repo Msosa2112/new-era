@@ -185,24 +185,6 @@ export const AGENTS_DATA: Agent[] = [
     mlsAccountId: "20260806144504930278000000"
   },
   {
-    id: "walter-gotay",
-    name: "Walter Gotay",
-    title: "Licensed REALTOR®",
-    licenseNumber: "295377",
-    phone: "(502) 533-3999",
-    email: "compraconwalter@gmail.com",
-    photoUrl: "/assets/agents/walter-gotay.jpg",
-    photoNobgUrl: "/assets/agents/walter-gotay-nobg.png",
-    bio: "",
-    specialties: [],
-    languages: ["English", "Spanish"],
-    activeListingsCount: 4,
-    yearsExperience: 0,
-    featured: false,
-    mlsAgentId: "30290",
-    mlsAccountId: "20240930142025580959000000"
-  },
-  {
     id: "karla-fernandez-soto",
     name: "Karla Fernandez",
     title: "Licensed REALTOR®",
