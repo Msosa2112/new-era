@@ -450,5 +450,35 @@ export const AGENTS_DATA: Agent[] = [
     featured: false,
     mlsAgentId: "10079929",
     mlsAccountId: "20251125194017259076000000"
+  },
+  {
+    id: "darien-hernandez",
+    name: "Darien Hernandez",
+    title: "Licensed REALTOR®",
+    phone: "(502) 389-2234",
+    email: "newerarealestateky@gmail.com",
+    photoUrl: "/assets/agents/darien-hernandez.jpg",
+    photoNobgUrl: "/assets/agents/darien-hernandez-nobg.png",
+    bio: "",
+    specialties: [],
+    languages: ["English", "Spanish"],
+    activeListingsCount: 0,
+    yearsExperience: 0,
+    featured: false
+  },
+  {
+    id: "esneider-ochoa",
+    name: "Esneider Ochoa",
+    title: "Licensed REALTOR®",
+    phone: "(786) 899-1816",
+    email: "newerarealestateky@gmail.com",
+    photoUrl: "/assets/agents/esneider-ochoa.jpg",
+    photoNobgUrl: "/assets/agents/esneider-ochoa-nobg.png",
+    bio: "",
+    specialties: [],
+    languages: ["English", "Spanish"],
+    activeListingsCount: 0,
+    yearsExperience: 0,
+    featured: false
   }
 ];

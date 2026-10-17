@@ -44,7 +44,9 @@ const AGENT_IDS = [
   'grisel-gonzalez',
   'yordanis-alba-elias',
   'stephanie-preciado',
-  'alejandro-robles'
+  'alejandro-robles',
+  'darien-hernandez',
+  'esneider-ochoa'
 ] as const;
 
 // ==========================================
