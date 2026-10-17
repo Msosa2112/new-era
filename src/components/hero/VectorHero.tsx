@@ -211,7 +211,7 @@ export const VectorHero: React.FC<VectorHeroProps> = ({
               fontWeight: 700
             }}
           >
-            <span>{lang === 'es' ? 'ÚNETE A NUESTRO EQUIPO' : 'JOIN TO OUR TEAM'}</span>
+            <span>{lang === 'es' ? 'ÚNETE A NUESTRO EQUIPO' : 'JOIN OUR TEAM'}</span>
           </button>
 
           <button
