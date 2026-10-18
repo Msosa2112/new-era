@@ -18,7 +18,8 @@ export async function triggerLeadEmailNotification(payload: {
     const response = await fetch('/api/send-lead-email', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-NewEra-Shield': 'ne-human-verified-2026'
       },
       body: JSON.stringify(payload)
     });

@@ -120,10 +120,10 @@ function isSpamLead(payload: Record<string, any>): { spam: boolean; reason?: str
     return { spam: true, reason: 'numeric_only_message' };
   }
 
-  // 6. Valuation address validation (real addresses have spaces and street numbers, not a single random word like "Fjqakznpv")
+  // 6. Valuation address validation (real addresses have spaces and street numbers, not a single random word like "Fjqakznpv" or "Ssjljauke")
   const cleanAddr = String(address || '').trim();
   if (type === 'valuation' || cleanAddr) {
-    if (cleanAddr && (!cleanAddr.includes(' ') || !/\d/.test(cleanAddr) || isGibberishText(cleanAddr))) {
+    if (!cleanAddr || !cleanAddr.includes(' ') || !/\d/.test(cleanAddr) || isGibberishText(cleanAddr)) {
       return { spam: true, reason: 'invalid_or_gibberish_address' };
     }
   }
@@ -146,7 +146,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
   res.setHeader(
     'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization'
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization, X-NewEra-Shield'
   );
 
   if (req.method === 'OPTIONS') {
@@ -160,11 +160,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const payload = req.body || {};
+    const shieldHeader = req.headers?.['x-newera-shield'];
 
-    // Anti-spam shield: silently drop automated bot submissions before calling Resend
+    // Anti-spam shield: silently drop automated bot submissions or stale/direct requests before calling Resend
     const spamCheck = isSpamLead(payload);
-    if (spamCheck.spam) {
-      console.warn(`🛡️ [Anti-Spam] Blocked bot lead (${spamCheck.reason}):`, {
+    if (spamCheck.spam || shieldHeader !== 'ne-human-verified-2026') {
+      console.warn(`🛡️ [Anti-Spam] Blocked bot lead (${spamCheck.reason || 'missing_shield_header'}):`, {
         name: payload.name,
         email: payload.email,
         type: payload.type,
