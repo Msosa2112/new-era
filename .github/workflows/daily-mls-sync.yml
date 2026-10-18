@@ -21,7 +21,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
 
       - name: Install Dependencies
@@ -46,6 +46,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes in MLS listings or sitemap."
           else
-            git commit -m "chore(mls): automated daily MLS & sitemap sync [skip ci]"
+            git commit -m "chore(mls): automated daily MLS & sitemap sync"
+            git pull --rebase origin main || true
             git push
           fi

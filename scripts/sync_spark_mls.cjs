@@ -11,7 +11,6 @@
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
-const { createClient } = require('@supabase/supabase-js');
 
 // 1. Load environment variables
 const envPath = path.resolve(__dirname, '../.env');
@@ -30,9 +29,7 @@ const SPARK_BASE = process.env.VITE_SPARK_API_BASE_URL || 'https://replication.s
 const NEW_ERA_OFFICE_ID = '20250912140954028096000000';
 
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL || 'https://rxejkmuzhkxfezkqrjnm.supabase.co';
-const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ4ZWprbXV6aGt4ZmV6a3Fyam5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2ODc3MDksImV4cCI6MjEwNTI2MzcwOX0.-p98aKj5-g47E1_kfniokkXGCgejyj072fXSv78WW0o';
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY || '';
 
 if (!SPARK_TOKEN) {
   console.error('❌ Error: Falta el token de Spark MLS en .env (SPARK_API_TOKEN o VITE_SPARK_API_TOKEN)');
@@ -381,49 +378,54 @@ async function syncMlsListings(marketLimit = 500) {
   const outputPath = path.resolve(__dirname, '../src/data/liveMlsProperties.json');
   fs.writeFileSync(outputPath, JSON.stringify(properties, null, 2), 'utf8');
 
-  // 6. Sincronizar en Supabase en lotes de 100
-  console.log(`\n☁️ Sincronizando con la base de datos Supabase en lotes de 100...`);
-  try {
-    const supabaseRows = properties.map(p => ({
-      id: p.id,
-      slug: p.slug,
-      title: p.title,
-      price: p.price,
-      status: p.status,
-      transaction_type: p.transactionType,
-      property_type: p.propertyType,
-      location: p.location,
-      bedrooms: p.bedrooms,
-      bathrooms: p.bathrooms,
-      half_baths: p.halfBaths,
-      sqft: p.sqft,
-      lot_size_acres: p.lotSizeAcres,
-      garage_spaces: p.garageSpaces,
-      description: p.description,
-      highlight_story: p.highlightStory,
-      featured: p.featured,
-      architectural_style: p.architecturalStyle,
-      media: p.media,
-      features: p.features,
-      mls: p.mls,
-      agent_id: p.agentId,
-      listed_at: p.listedAt,
-      updated_at: p.updatedAt
-    }));
+  // 6. Sincronizar en Supabase en lotes de 100 (opcional si SUPABASE_SERVICE_ROLE_KEY está configurado)
+  if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    console.log(`\n☁️ Sincronizando con la base de datos Supabase en lotes de 100...`);
+    try {
+      const { createClient } = require('@supabase/supabase-js');
+      const supabase = createClient(SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+      const supabaseRows = properties.map(p => ({
+        id: p.id,
+        slug: p.slug,
+        title: p.title,
+        price: p.price,
+        status: p.status,
+        transaction_type: p.transactionType,
+        property_type: p.propertyType,
+        location: p.location,
+        bedrooms: p.bedrooms,
+        bathrooms: p.bathrooms,
+        half_baths: p.halfBaths,
+        sqft: p.sqft,
+        lot_size_acres: p.lotSizeAcres,
+        garage_spaces: p.garageSpaces,
+        description: p.description,
+        highlight_story: p.highlightStory,
+        featured: p.featured,
+        architectural_style: p.architecturalStyle,
+        media: p.media,
+        features: p.features,
+        mls: p.mls,
+        agent_id: p.agentId,
+        listed_at: p.listedAt,
+        updated_at: p.updatedAt
+      }));
 
-    const BATCH_SIZE = 100;
-    for (let b = 0; b < supabaseRows.length; b += BATCH_SIZE) {
-      const chunk = supabaseRows.slice(b, b + BATCH_SIZE);
-      const { error: upsertError } = await supabase.from('properties').upsert(chunk, { onConflict: 'id' });
-      if (upsertError) {
-        console.warn(`\n⚠️ Error en lote ${b / BATCH_SIZE + 1}:`, upsertError.message);
-      } else {
-        process.stdout.write(`\r☁️ Lote ${Math.floor(b / BATCH_SIZE) + 1}/${Math.ceil(supabaseRows.length / BATCH_SIZE)} guardado en Supabase.`);
+      const BATCH_SIZE = 100;
+      for (let b = 0; b < supabaseRows.length; b += BATCH_SIZE) {
+        const chunk = supabaseRows.slice(b, b + BATCH_SIZE);
+        const { error: upsertError } = await supabase.from('properties').upsert(chunk, { onConflict: 'id' });
+        if (upsertError) {
+          console.warn(`\n⚠️ Error en lote ${b / BATCH_SIZE + 1}:`, upsertError.message);
+          break;
+        } else {
+          process.stdout.write(`\r☁️ Lote ${Math.floor(b / BATCH_SIZE) + 1}/${Math.ceil(supabaseRows.length / BATCH_SIZE)} guardado en Supabase.`);
+        }
       }
+      console.log(`\n✅ ¡${supabaseRows.length} propiedades sincronizadas exitosamente en Supabase!`);
+    } catch (supaErr) {
+      console.warn('\n⚠️ Error conectando a Supabase:', supaErr.message);
     }
-    console.log(`\n✅ ¡${supabaseRows.length} propiedades sincronizadas exitosamente en Supabase!`);
-  } catch (supaErr) {
-    console.warn('\n⚠️ Error conectando a Supabase:', supaErr.message);
   }
 
   console.log(`\n✨ ¡Sincronización Completada!`);

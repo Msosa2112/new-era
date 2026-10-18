@@ -38,6 +38,41 @@ function safeIsoDate(val: any) {
   return isNaN(d.getTime()) ? new Date().toISOString() : d.toISOString();
 }
 
+const EXCLUDED_AGENT_ACCOUNT_IDS = new Set([
+  '20240930142025580959000000' // Walter Gotay (no longer with New Era)
+]);
+const EXCLUDED_AGENT_MLS_IDS = new Set([
+  '30290' // Walter Gotay
+]);
+
+const AGENT_BY_ACCOUNT_ID: Record<string, string> = {
+  '20161115204006349210000000': 'yeilen-contreras',
+  '20210212152010452444000000': 'yazbel-diaz',
+  '20230714135100643517000000': 'yenny-mendoza-molina',
+  '20240328182928783669000000': 'claudia-aguilera-cuenca',
+  '20220317195046981920000000': 'dianelis-segrea-castellon',
+  '20230417145050091844000000': 'geraldine-santiago-then',
+  '20240415172238282908000000': 'dayana-sanchez-rivero',
+  '20240711194257774903000000': 'karen-rivero',
+  '20240912191252936851000000': 'daniela-aguilera-cuenca',
+  '20250113211022106578000000': 'rosalia-garcia-rodriguez',
+  '20250213191015349812000000': 'anabel-leal-miranda'
+};
+
+const AGENT_BY_MLS_ID: Record<string, string> = {
+  '24571': 'yeilen-contreras',
+  '28485': 'yazbel-diaz',
+  '29947': 'yenny-mendoza-molina',
+  '30240': 'claudia-aguilera-cuenca',
+  '29140': 'dianelis-segrea-castellon',
+  '29785': 'geraldine-santiago-then',
+  '30280': 'dayana-sanchez-rivero',
+  '30425': 'karen-rivero',
+  '30530': 'daniela-aguilera-cuenca',
+  '30690': 'rosalia-garcia-rodriguez',
+  '30745': 'anabel-leal-miranda'
+};
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Optional security check for Vercel Cron or custom secret
   const authHeader = req.headers['authorization'];
@@ -55,11 +90,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       'Accept': 'application/json'
     };
 
-    // 1. Fetch active listings from New Era
-    const newEraUrl = `${SPARK_BASE}/listings?_filter=${encodeURIComponent(`ListOfficeId Eq '${NEW_ERA_OFFICE_ID}' And StandardStatus Eq 'Active'`)}&_limit=100&_expand=Photos&_orderby=-ModificationTimestamp`;
+    // 1. Fetch active/under-contract/pending listings from New Era
+    const newEraUrl = `${SPARK_BASE}/listings?_filter=${encodeURIComponent(`ListOfficeId Eq '${NEW_ERA_OFFICE_ID}'`)}&_limit=100&_expand=Photos&_orderby=-ModificationTimestamp`;
     const newEraResponse = await fetch(newEraUrl, { headers });
     const newEraData: any = await newEraResponse.json();
-    const newEraResults = (newEraData?.D?.Results || []).filter((r: any) => r.StandardFields?.StandardStatus === 'Active');
+    const validNewEraStatuses = new Set(['Active', 'Active Under Contract', 'Pending']);
+    const newEraResults = (newEraData?.D?.Results || []).filter((r: any) => {
+      const sf = r.StandardFields || {};
+      if (!validNewEraStatuses.has(sf.StandardStatus)) return false;
+      if (EXCLUDED_AGENT_ACCOUNT_IDS.has(sf.ListAgentId) || EXCLUDED_AGENT_MLS_IDS.has(String(sf.ListAgentMlsId))) return false;
+      return true;
+    });
 
     // 2. Fetch active market listings
     const targetLimit = req.query.limit ? Number(req.query.limit) : 500;
@@ -74,7 +115,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const marketUrl = `${SPARK_BASE}/listings?_filter=${encodeURIComponent(`StandardStatus Eq 'Active'`)}&_limit=${currentLimit}&_page=${page}&_expand=Photos&_orderby=-ModificationTimestamp`;
       const pageRes = await fetch(marketUrl, { headers });
       const pageData: any = await pageRes.json();
-      const results = (pageData?.D?.Results || []).filter((r: any) => r.StandardFields?.StandardStatus === 'Active');
+      const results = (pageData?.D?.Results || []).filter((r: any) => {
+        const sf = r.StandardFields || {};
+        if (sf.StandardStatus !== 'Active') return false;
+        if (EXCLUDED_AGENT_ACCOUNT_IDS.has(sf.ListAgentId) || EXCLUDED_AGENT_MLS_IDS.has(String(sf.ListAgentMlsId))) return false;
+        return true;
+      });
       if (results.length === 0) break;
       marketResults.push(...results);
     }
@@ -101,7 +147,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const supabaseRows = allListings.map((item: any, i: number) => {
       const sf = item.StandardFields || {};
       const id = item.Id;
-      const isNewEra = sf.ListOfficeId === NEW_ERA_OFFICE_ID || (sf.ListOfficeName || '').toLowerCase() === 'new era real estate';
+      const isExcludedAgent = EXCLUDED_AGENT_ACCOUNT_IDS.has(sf.ListAgentId) || EXCLUDED_AGENT_MLS_IDS.has(String(sf.ListAgentMlsId));
+      const isNewEra = !isExcludedAgent && (sf.ListOfficeId === NEW_ERA_OFFICE_ID || (sf.ListOfficeName || '').toLowerCase() === 'new era real estate');
+
+      let assignedAgentId: string | null = null;
+      if (isNewEra) {
+        if (sf.ListAgentId && AGENT_BY_ACCOUNT_ID[sf.ListAgentId]) {
+          assignedAgentId = AGENT_BY_ACCOUNT_ID[sf.ListAgentId];
+        } else if (sf.ListAgentMlsId && AGENT_BY_MLS_ID[String(sf.ListAgentMlsId)]) {
+          assignedAgentId = AGENT_BY_MLS_ID[String(sf.ListAgentMlsId)];
+        } else {
+          assignedAgentId = 'yeilen-contreras';
+        }
+      }
 
       const address = sf.UnparsedAddress || `${sf.StreetNumber || ''} ${sf.StreetName || ''} ${sf.StreetSuffix || ''}`.trim() || `Propiedad #${sf.ListingId || id}`;
       const city = sf.City || 'Louisville';
@@ -117,6 +175,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const garageSpaces = Math.round(Number(sf.GarageSpaces || sf.AttachedGarageSpaces) || 0);
       const propertyType = mapPropertyType(sf.PropertySubType, sf.PropertyType);
       const slug = `${slugify(address)}-${id.slice(-8)}`;
+      const mappedStatus = (sf.StandardStatus === 'Pending' || sf.StandardStatus === 'Active Under Contract') ? 'Pending' : 'Active';
 
       // Photos from expanded field
       let media: any[] = [];
@@ -145,7 +204,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         slug: slug,
         title: `${address}, ${city}`,
         price: price,
-        status: 'For Sale',
+        status: mappedStatus,
         transaction_type: 'Buy',
         property_type: propertyType,
         location: {
@@ -188,7 +247,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           listAgentId: sf.ListAgentId || null,
           isNewEra: isNewEra
         },
-        agent_id: isNewEra ? 'yeilen-contreras' : null,
+        agent_id: assignedAgentId,
         listed_at: safeIsoDate(sf.OriginalEntryTimestamp || sf.ListingContractDate),
         updated_at: safeIsoDate(sf.ModificationTimestamp)
       };
