@@ -39,6 +39,106 @@ const AGENT_EMAILS: Record<string, string> = {
   'alejandro-robles': 'Alex.realtorky@gmail.com'
 };
 
+/**
+ * Detects random bot-generated gibberish strings (e.g., "Sktvau Uhaxb", "Cdfiogi Gxaqtv", "Fjqakznpv")
+ * while allowing all legitimate Spanish and English names and addresses.
+ */
+function isGibberishText(str: string): boolean {
+  if (!str) return false;
+  const words = str
+    .trim()
+    .split(/\s+/)
+    .map((w) => w.replace(/[^a-zA-ZáéíóúüñÁÉÍÓÚÜÑ]/g, ''))
+    .filter((w) => w.length >= 3);
+  if (words.length === 0) return false;
+
+  const badPairs =
+    /(gx|xg|xz|zx|zs|sz|kq|qk|vq|qv|jq|qj|wx|xw|qz|zq|vx|xv|jx|xj|fx|xf|bx|xb|cx|xc|dx|xd|px|xp|tx|mx|xm|nx|xn|lx|rx|xr|sx|ktv|dfi|kdct|dkeb|sqlc|mfrr|begy|chnd|uodn|rnwg|cfov|khva|efny|rkad|wykn)/i;
+
+  for (const w of words) {
+    if (badPairs.test(w)) return true;
+
+    const norm = w
+      .toLowerCase()
+      .replace(/(sch|chr|str|thr|shr|spl|spr|scr|ph|th|sh|ch|wh|ck|ng|qu|ll|rr)/g, 'c');
+
+    const vowels = (norm.match(/[aeiouáéíóúüAEIOUÁÉÍÓÚÜyY]/g) || []).length;
+    if (norm.length >= 4 && vowels === 0) return true;
+    if (norm.length >= 7 && vowels / norm.length < 0.2) return true;
+    if (/[^aeiouáéíóúüAEIOUÁÉÍÓÚÜyY]{4,}/i.test(norm)) return true;
+  }
+  return false;
+}
+
+/**
+ * Comprehensive bot & spam lead detector
+ */
+function isSpamLead(payload: Record<string, any>): { spam: boolean; reason?: string } {
+  const {
+    name = '',
+    email = '',
+    message = '',
+    address = '',
+    type = '',
+    honeypot = '',
+    elapsedMs,
+    metadata = {}
+  } = payload;
+
+  // 1. Honeypot trap triggered
+  if (honeypot && String(honeypot).trim() !== '') {
+    return { spam: true, reason: 'honeypot_filled' };
+  }
+  if (metadata?.honeypot && String(metadata.honeypot).trim() !== '') {
+    return { spam: true, reason: 'metadata_honeypot_filled' };
+  }
+
+  // 2. Submission speed trap (< 1.5s after mount)
+  const elapsed = typeof elapsedMs === 'number' ? elapsedMs : metadata?.elapsedMs;
+  if (typeof elapsed === 'number' && elapsed >= 0 && elapsed < 1500) {
+    return { spam: true, reason: 'submitted_too_fast' };
+  }
+
+  // 3. Invalid or missing email
+  const cleanEmail = String(email || '').trim().toLowerCase();
+  if (!cleanEmail || !cleanEmail.includes('@')) {
+    return { spam: true, reason: 'missing_email' };
+  }
+
+  // 4. Dot-stuffed Gmail bot accounts (e.g., pa.p.a.gay.or.eserve@gmail.com)
+  const [localPart, domain] = cleanEmail.split('@');
+  if (localPart && (domain === 'gmail.com' || domain === 'googlemail.com')) {
+    const dotCount = (localPart.match(/\./g) || []).length;
+    if (dotCount >= 3) {
+      return { spam: true, reason: 'dot_stuffed_gmail' };
+    }
+  }
+
+  // 5. Numeric-only message body (bot puts 10-digit random numbers in the message textarea)
+  const cleanMsg = String(message || '').trim();
+  if (cleanMsg && /^\d{5,20}$/.test(cleanMsg)) {
+    return { spam: true, reason: 'numeric_only_message' };
+  }
+
+  // 6. Valuation address validation (real addresses have spaces and street numbers, not a single random word like "Fjqakznpv")
+  const cleanAddr = String(address || '').trim();
+  if (type === 'valuation' || cleanAddr) {
+    if (cleanAddr && (!cleanAddr.includes(' ') || !/\d/.test(cleanAddr) || isGibberishText(cleanAddr))) {
+      return { spam: true, reason: 'invalid_or_gibberish_address' };
+    }
+  }
+
+  // 7. Gibberish name check
+  const cleanName = String(name || '').trim();
+  if (cleanName && cleanName !== 'Website Visitor' && cleanName !== 'Cliente Web') {
+    if (isGibberishText(cleanName)) {
+      return { spam: true, reason: 'gibberish_name' };
+    }
+  }
+
+  return { spam: false };
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // CORS configuration
   res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -60,6 +160,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const payload = req.body || {};
+
+    // Anti-spam shield: silently drop automated bot submissions before calling Resend
+    const spamCheck = isSpamLead(payload);
+    if (spamCheck.spam) {
+      console.warn(`🛡️ [Anti-Spam] Blocked bot lead (${spamCheck.reason}):`, {
+        name: payload.name,
+        email: payload.email,
+        type: payload.type,
+        address: payload.address
+      });
+      return res.status(200).json({
+        success: true,
+        filtered: true
+      });
+    }
+
     const {
       name = 'Cliente Web',
       email = '',

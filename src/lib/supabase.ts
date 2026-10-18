@@ -6,6 +6,83 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIU
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+const recentSubmissions = new Map<string, number>();
+
+/**
+ * Detects random bot-generated gibberish strings (e.g., "Sktvau Uhaxb", "Cdfiogi Gxaqtv", "Fjqakznpv")
+ * while allowing all legitimate Spanish and English names and addresses.
+ */
+export function isGibberishText(str: string): boolean {
+  if (!str) return false;
+  const words = str
+    .trim()
+    .split(/\s+/)
+    .map((w) => w.replace(/[^a-zA-ZáéíóúüñÁÉÍÓÚÜÑ]/g, ''))
+    .filter((w) => w.length >= 3);
+  if (words.length === 0) return false;
+
+  const badPairs =
+    /(gx|xg|xz|zx|zs|sz|kq|qk|vq|qv|jq|qj|wx|xw|qz|zq|vx|xv|jx|xj|fx|xf|bx|xb|cx|xc|dx|xd|px|xp|tx|mx|xm|nx|xn|lx|rx|xr|sx|ktv|dfi|kdct|dkeb|sqlc|mfrr|begy|chnd|uodn|rnwg|cfov|khva|efny|rkad|wykn)/i;
+
+  for (const w of words) {
+    if (badPairs.test(w)) return true;
+
+    const norm = w
+      .toLowerCase()
+      .replace(/(sch|chr|str|thr|shr|spl|spr|scr|ph|th|sh|ch|wh|ck|ng|qu|ll|rr)/g, 'c');
+
+    const vowels = (norm.match(/[aeiouáéíóúüAEIOUÁÉÍÓÚÜyY]/g) || []).length;
+    if (norm.length >= 4 && vowels === 0) return true;
+    if (norm.length >= 7 && vowels / norm.length < 0.2) return true;
+    if (/[^aeiouáéíóúüAEIOUÁÉÍÓÚÜyY]{4,}/i.test(norm)) return true;
+  }
+  return false;
+}
+
+/**
+ * Comprehensive client & server bot detector
+ */
+export function isSpamLead(payload: {
+  name?: string;
+  email?: string;
+  message?: string;
+  address?: string;
+  type?: string;
+  honeypot?: string;
+  elapsedMs?: number;
+}): boolean {
+  if (payload.honeypot && payload.honeypot.trim() !== '') return true;
+  if (typeof payload.elapsedMs === 'number' && payload.elapsedMs >= 0 && payload.elapsedMs < 1500) {
+    return true;
+  }
+
+  const cleanEmail = (payload.email || '').trim().toLowerCase();
+  if (!cleanEmail || !cleanEmail.includes('@')) return true;
+
+  const [localPart, domain] = cleanEmail.split('@');
+  if (localPart && (domain === 'gmail.com' || domain === 'googlemail.com')) {
+    const dotCount = (localPart.match(/\./g) || []).length;
+    if (dotCount >= 3) return true;
+  }
+
+  const cleanMsg = (payload.message || '').trim();
+  if (cleanMsg && /^\d{5,20}$/.test(cleanMsg)) return true;
+
+  const cleanAddr = (payload.address || '').trim();
+  if (payload.type === 'valuation' || cleanAddr) {
+    if (cleanAddr && (!cleanAddr.includes(' ') || !/\d/.test(cleanAddr) || isGibberishText(cleanAddr))) {
+      return true;
+    }
+  }
+
+  const cleanName = (payload.name || '').trim();
+  if (cleanName && cleanName !== 'Website Visitor' && cleanName !== 'Cliente Web') {
+    if (isGibberishText(cleanName)) return true;
+  }
+
+  return false;
+}
+
 /**
  * Lead / Inquire submission interface
  */
@@ -18,6 +95,8 @@ export interface LeadSubmission {
   agentId?: string;
   message?: string;
   metadata?: Record<string, any>;
+  honeypot?: string;
+  elapsedMs?: number;
 }
 
 /**
@@ -25,6 +104,26 @@ export interface LeadSubmission {
  */
 export async function submitLead(lead: LeadSubmission) {
   try {
+    if (
+      isSpamLead({
+        name: lead.name,
+        email: lead.email,
+        message: lead.message,
+        type: lead.type,
+        honeypot: lead.honeypot,
+        elapsedMs: lead.elapsedMs
+      })
+    ) {
+      return { success: true, filtered: true };
+    }
+
+    const dedupeKey = `lead:${lead.email.toLowerCase().trim()}:${lead.type}`;
+    const lastSent = recentSubmissions.get(dedupeKey) || 0;
+    if (Date.now() - lastSent < 30000) {
+      return { success: true, deduplicated: true };
+    }
+    recentSubmissions.set(dedupeKey, Date.now());
+
     // Trigger email notification via Resend asynchronously in background
     import('../services/emailService').then(({ triggerLeadEmailNotification }) => {
       triggerLeadEmailNotification({
@@ -82,10 +181,33 @@ export interface HomeValuationSubmission {
   estimatedValueMin?: number;
   estimatedValueMax?: number;
   notes?: string;
+  honeypot?: string;
+  elapsedMs?: number;
 }
 
 export async function submitHomeValuation(val: HomeValuationSubmission) {
   try {
+    if (
+      isSpamLead({
+        name: val.ownerName,
+        email: val.ownerEmail,
+        address: val.address,
+        message: val.notes,
+        type: 'valuation',
+        honeypot: val.honeypot,
+        elapsedMs: val.elapsedMs
+      })
+    ) {
+      return { success: true, filtered: true };
+    }
+
+    const dedupeKey = `val:${val.ownerEmail.toLowerCase().trim()}:${val.address.toLowerCase().trim()}`;
+    const lastSent = recentSubmissions.get(dedupeKey) || 0;
+    if (Date.now() - lastSent < 30000) {
+      return { success: true, deduplicated: true };
+    }
+    recentSubmissions.set(dedupeKey, Date.now());
+
     // Trigger email notification via Resend asynchronously in background
     import('../services/emailService').then(({ triggerLeadEmailNotification }) => {
       triggerLeadEmailNotification({

@@ -14,11 +14,14 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ lang }) => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
+  const [honeypot, setHoneypot] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const mountTimeRef = React.useRef(Date.now());
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
     setIsSubmitting(true);
     await submitLead({
       name,
@@ -26,7 +29,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ lang }) => {
       phone,
       message,
       type: 'general',
-      metadata: { inquiryType }
+      metadata: { inquiryType },
+      honeypot,
+      elapsedMs: Date.now() - mountTimeRef.current
     });
     setIsSubmitting(false);
     setSubmitted(true);
@@ -238,7 +243,17 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ lang }) => {
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', position: 'relative' }}>
+                <input
+                  type="text"
+                  name="website_url"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                  style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', opacity: 0, pointerEvents: 'none' }}
+                />
                 {/* Inquiry Type Selector */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                   <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#5A606D' }}>
@@ -350,6 +365,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ lang }) => {
 
                 <button
                   type="submit"
+                  disabled={isSubmitting}
                   className="btn-primary"
                   style={{
                     width: '100%',
@@ -360,7 +376,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ lang }) => {
                     borderRadius: 'var(--radius-sm)',
                     border: '1px solid #660E1A',
                     boxShadow: '0 4px 14px rgba(102, 14, 26, 0.22)',
-                    cursor: 'pointer',
+                    cursor: isSubmitting ? 'wait' : 'pointer',
+                    opacity: isSubmitting ? 0.7 : 1,
                     fontWeight: 700
                   }}
                 >

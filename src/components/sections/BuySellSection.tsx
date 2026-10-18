@@ -17,16 +17,21 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
 }) => {
   const [valAddress, setValAddress] = useState('');
   const [valEmail, setValEmail] = useState('');
+  const [honeypot, setHoneypot] = useState('');
   const [valSubmitted, setValSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const mountTimeRef = React.useRef(Date.now());
 
   const handleValuationSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
     setIsSubmitting(true);
     await submitHomeValuation({
       address: valAddress,
       ownerEmail: valEmail,
-      ownerName: 'Website Visitor'
+      ownerName: 'Website Visitor',
+      honeypot,
+      elapsedMs: Date.now() - mountTimeRef.current
     });
     setIsSubmitting(false);
     setValSubmitted(true);
@@ -192,11 +197,21 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
                   </p>
                 </div>
               ) : (
-                <form onSubmit={handleValuationSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '2rem' }}>
+                <form onSubmit={handleValuationSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '2rem', position: 'relative' }}>
+                  <input
+                    type="text"
+                    name="website_url"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    value={honeypot}
+                    onChange={(e) => setHoneypot(e.target.value)}
+                    style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', opacity: 0, pointerEvents: 'none' }}
+                  />
                   <input
                     type="text"
                     required
-                    placeholder={lang === 'es' ? 'Dirección de tu propiedad en Louisville...' : 'Enter your property address in Louisville...'}
+                    placeholder={lang === 'es' ? 'Dirección de tu propiedad en Louisville (ej. 123 Main St)...' : 'Enter your property address in Louisville (e.g. 123 Main St)...'}
                     value={valAddress}
                     onChange={(e) => setValAddress(e.target.value)}
                     style={{
@@ -225,11 +240,13 @@ export const BuySellSection: React.FC<BuySellSectionProps> = ({
                   />
                   <button
                     type="submit"
+                    disabled={isSubmitting}
                     className="btn-primary"
                     style={{
                       width: '100%',
                       justifyContent: 'center',
-                      padding: '0.9rem'
+                      padding: '0.9rem',
+                      opacity: isSubmitting ? 0.7 : 1
                     }}
                   >
                     <span>{lang === 'es' ? 'OBTENER VALUACIÓN CMA GRATIS' : 'REQUEST INSTANT CMA VALUATION'}</span>
