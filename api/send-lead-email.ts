@@ -11,14 +11,16 @@ const FROM_EMAIL = (!rawFromEmail || rawFromEmail.toLowerCase().includes('@resen
   ? 'New Era Real Estate <info@neweraky.com>'
   : rawFromEmail;
 
-// Real map of all 24 New Era Real Estate agents' emails
+// Personal notification emails (Gmail / iCloud) for all 26 New Era Real Estate agents
 const AGENT_EMAILS: Record<string, string> = {
   'yeilen-contreras': 'newerabroker25@gmail.com',
+  'rebeca-lopez-portuondo': 'office25newera@gmail.com',
+  'yazbel-diaz': 'Yazbelrealtor@gmail.com',
+  'darien-hernandez': 'newerarealestateky@gmail.com',
   'yenny-mendoza-molina': 'Yennymm1997@gmail.com',
   'dianelis-segrea-castellon': 'dianelis.realtor@gmail.com',
   'marien-rodriguez-reyes': 'marienrodriguez7908@gmail.com',
   'claudia-aguilera-cuenca': 'claudiaguilera1999@gmail.com',
-  'yazbel-diaz': 'Yazbelrealtor@gmail.com',
   'javier-ferrer-rodriguez': 'Javferrer96@gmail.com',
   'leidys-herrera': 'lhtopagent@gmail.com',
   'dahana-aguila': 'Dahanaaguila@gmail.com',
@@ -31,18 +33,44 @@ const AGENT_EMAILS: Record<string, string> = {
   'ivonne-medina': 'ivon.ori@icloud.com',
   'maria-mendez': 'mtm60bayona@gmail.com',
   'rosa-mustelier-jimenez': 'rosamustelierrealtor@gmail.com',
-  'dayani-chavez': 'newerarealestateky@gmail.com',
+  'dayani-chavez': 'dayanichavez.realtor@gmail.com',
   'nina-gonzalez': 'Griselgonzalez.realtor@gmail.com',
-  'rebeca-lopez-portuondo': 'rebecalopezp1984@gmail.com',
   'yordanis-alba-elias': 'yalbarealty@gmail.com',
-  'stephanie-preciado': 'newerarealestateky@gmail.com',
-  'alejandro-robles': 'Alex.realtorky@gmail.com'
+  'stephanie-preciado': 'claudiakyrealtor@gmail.com',
+  'alejandro-robles': 'Alex.realtorky@gmail.com',
+  'esneider-ochoa': 'ky.realtor.ochoa@gmail.com'
 };
 
-/**
- * Detects random bot-generated gibberish strings (e.g., "Sktvau Uhaxb", "Cdfiogi Gxaqtv", "Fjqakznpv")
- * while allowing all legitimate Spanish and English names and addresses.
- */
+// Corporate @neweraky.com emails for all 26 agents
+const AGENT_CORPORATE_EMAILS: Record<string, string> = {
+  'yeilen-contreras': 'yeilen@neweraky.com',
+  'rebeca-lopez-portuondo': 'rebeca@neweraky.com',
+  'yazbel-diaz': 'yazbel@neweraky.com',
+  'darien-hernandez': 'darien@neweraky.com',
+  'yenny-mendoza-molina': 'yenny@neweraky.com',
+  'dianelis-segrea-castellon': 'dianelis@neweraky.com',
+  'marien-rodriguez-reyes': 'marien@neweraky.com',
+  'claudia-aguilera-cuenca': 'claudia@neweraky.com',
+  'javier-ferrer-rodriguez': 'javier@neweraky.com',
+  'leidys-herrera': 'leidys@neweraky.com',
+  'dahana-aguila': 'dahana@neweraky.com',
+  'karla-fernandez-soto': 'karla@neweraky.com',
+  'geraldine-santiago-then': 'geraldine@neweraky.com',
+  'lizandra-parra-rodriguez': 'lizandra@neweraky.com',
+  'yisel-pupo': 'yisel@neweraky.com',
+  'solanch-rodriguez-curbeira': 'solanch@neweraky.com',
+  'albin-machado-campo': 'albin@neweraky.com',
+  'ivonne-medina': 'ivonne@neweraky.com',
+  'maria-mendez': 'maria@neweraky.com',
+  'rosa-mustelier-jimenez': 'rosa@neweraky.com',
+  'dayani-chavez': 'dayani@neweraky.com',
+  'nina-gonzalez': 'nina@neweraky.com',
+  'yordanis-alba-elias': 'yordanis@neweraky.com',
+  'stephanie-preciado': 'stephanie@neweraky.com',
+  'alejandro-robles': 'alejandro@neweraky.com',
+  'esneider-ochoa': 'esneider@neweraky.com'
+};
+
 function isGibberishText(str: string): boolean {
   if (!str) return false;
   const words = str
@@ -70,9 +98,6 @@ function isGibberishText(str: string): boolean {
   return false;
 }
 
-/**
- * Comprehensive bot & spam lead detector
- */
 function isSpamLead(payload: Record<string, any>): { spam: boolean; reason?: string } {
   const {
     name = '',
@@ -85,7 +110,6 @@ function isSpamLead(payload: Record<string, any>): { spam: boolean; reason?: str
     metadata = {}
   } = payload;
 
-  // 1. Honeypot trap triggered
   if (honeypot && String(honeypot).trim() !== '') {
     return { spam: true, reason: 'honeypot_filled' };
   }
@@ -93,19 +117,16 @@ function isSpamLead(payload: Record<string, any>): { spam: boolean; reason?: str
     return { spam: true, reason: 'metadata_honeypot_filled' };
   }
 
-  // 2. Submission speed trap (< 1.5s after mount)
   const elapsed = typeof elapsedMs === 'number' ? elapsedMs : metadata?.elapsedMs;
   if (typeof elapsed === 'number' && elapsed >= 0 && elapsed < 1500) {
     return { spam: true, reason: 'submitted_too_fast' };
   }
 
-  // 3. Invalid or missing email
   const cleanEmail = String(email || '').trim().toLowerCase();
   if (!cleanEmail || !cleanEmail.includes('@')) {
     return { spam: true, reason: 'missing_email' };
   }
 
-  // 4. Dot-stuffed Gmail bot accounts (e.g., pa.p.a.gay.or.eserve@gmail.com)
   const [localPart, domain] = cleanEmail.split('@');
   if (localPart && (domain === 'gmail.com' || domain === 'googlemail.com')) {
     const dotCount = (localPart.match(/\./g) || []).length;
@@ -114,13 +135,11 @@ function isSpamLead(payload: Record<string, any>): { spam: boolean; reason?: str
     }
   }
 
-  // 5. Numeric-only message body (bot puts 10-digit random numbers in the message textarea)
   const cleanMsg = String(message || '').trim();
   if (cleanMsg && /^\d{5,20}$/.test(cleanMsg)) {
     return { spam: true, reason: 'numeric_only_message' };
   }
 
-  // 6. Valuation address validation (real addresses have spaces and street numbers, not a single random word like "Fjqakznpv" or "Ssjljauke")
   const cleanAddr = String(address || '').trim();
   if (type === 'valuation' || cleanAddr) {
     if (!cleanAddr || !cleanAddr.includes(' ') || !/\d/.test(cleanAddr) || isGibberishText(cleanAddr)) {
@@ -128,7 +147,6 @@ function isSpamLead(payload: Record<string, any>): { spam: boolean; reason?: str
     }
   }
 
-  // 7. Gibberish name check
   const cleanName = String(name || '').trim();
   if (cleanName && cleanName !== 'Website Visitor' && cleanName !== 'Cliente Web') {
     if (isGibberishText(cleanName)) {
@@ -140,7 +158,6 @@ function isSpamLead(payload: Record<string, any>): { spam: boolean; reason?: str
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // CORS configuration
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -162,7 +179,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const payload = req.body || {};
     const shieldHeader = req.headers?.['x-newera-shield'];
 
-    // Anti-spam shield: silently drop automated bot submissions or stale/direct requests before calling Resend
     const spamCheck = isSpamLead(payload);
     if (spamCheck.spam || shieldHeader !== 'ne-human-verified-2026') {
       console.warn(`🛡️ [Anti-Spam] Blocked bot lead (${spamCheck.reason || 'missing_shield_header'}):`, {
@@ -186,7 +202,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       propertyId = '',
       agentId = '',
       metadata = {},
-      address = '' // for valuation requests
+      address = ''
     } = payload;
 
     if (!RESEND_API_KEY) {
@@ -194,23 +210,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({
         success: true,
         mocked: true,
-        message: 'Lead registered in Supabase. Set RESEND_API_KEY in .env to enable instant live email notifications.'
+        message: 'Set RESEND_API_KEY in .env to enable instant live email notifications.'
       });
     }
 
     const resend = new Resend(RESEND_API_KEY);
     const isSandboxSender = FROM_EMAIL.toLowerCase().includes('@resend.dev');
 
-    // Format subject based on lead type
     let subjectType = 'Nuevo Contacto de Cliente';
     if (type === 'tour') subjectType = 'Solicitud de Recorrido de Propiedad';
     if (type === 'valuation') subjectType = 'Solicitud de Valuación de Vivienda';
     if (type === 'agent_inquiry') subjectType = 'Mensaje para Realtor Asignado';
     if (type === 'offer') subjectType = 'Propuesta de Compra';
 
-    const subject = `🏛️ New Era Lead: ${subjectType} — ${name}`;
+    const corpEmail = agentId && AGENT_CORPORATE_EMAILS[agentId] ? AGENT_CORPORATE_EMAILS[agentId] : '';
+    const subject = corpEmail
+      ? `🏛️ New Era Lead [${corpEmail}]: ${subjectType} — ${name}`
+      : `🏛️ New Era Lead: ${subjectType} — ${name}`;
 
-    // Target recipients when domain is verified
     const intendedRecipients = [BROKERAGE_NOTIFICATION_EMAIL];
     if (agentId && AGENT_EMAILS[agentId] && !intendedRecipients.includes(AGENT_EMAILS[agentId])) {
       intendedRecipients.push(AGENT_EMAILS[agentId]);
@@ -219,7 +236,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const cleanPhone = phone ? phone.replace(/[^0-9]/g, '') : '';
     const whatsappLink = cleanPhone ? `https://wa.me/${cleanPhone.startsWith('1') ? cleanPhone : '1' + cleanPhone}` : '';
 
-    // Luxury HTML Email Template
     const htmlEmail = `
       <!DOCTYPE html>
       <html>
@@ -298,7 +314,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               ${(metadata?.agentName || agentId) ? `
               <div class="info-row">
                 <span class="info-label">Realtor Asignado:</span>
-                <span class="info-val">${metadata?.agentName || agentId}${agentId && AGENT_EMAILS[agentId] ? ` (${AGENT_EMAILS[agentId]})` : ''}</span>
+                <span class="info-val">${metadata?.agentName || agentId}${corpEmail ? ` (${corpEmail})` : ''}</span>
               </div>
               ` : ''}
             </div>
@@ -310,17 +326,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             </div>
             ` : ''}
 
-            <!-- Direct Contact CTAs -->
             <div class="cta-wrap">
               ${phone ? `<a href="tel:${cleanPhone}" class="btn-primary">📞 Llamar al Cliente</a>` : ''}
               ${whatsappLink ? `<a href="${whatsappLink}" target="_blank" class="btn-whatsapp">💬 Enviar WhatsApp</a>` : ''}
+              <a href="https://www.neweraky.com/inbox" target="_blank" class="btn-primary" style="background:#121418;">📬 Abrir Inbox Web</a>
             </div>
           </div>
 
           <div class="footer">
             <strong>New Era Real Estate LLC</strong><br>
             6501 Shepherdsville Road, Suite 119, Louisville, KY 40219<br>
-            Teléfono: (502) 500-0409 · Email: newerabroker25@gmail.com<br>
+            Teléfono: (502) 500-0409 · Email: info@neweraky.com<br>
             <em>Sistema de Notificaciones Inmobiliarias en Tiempo Real</em>
           </div>
         </div>
@@ -328,17 +344,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       </html>
     `;
 
-    // Note: Resend SDK v2+ returns { data, error } and does NOT throw on 403.
-    // While using onboarding@resend.dev (unverified domain), Resend only permits sending to the account owner email (newerarealestateky@gmail.com).
     let sendResult;
     if (isSandboxSender) {
       sendResult = await resend.emails.send({
         from: FROM_EMAIL,
         to: [RESEND_ACCOUNT_OWNER_EMAIL],
         replyTo: email || undefined,
-        subject: agentId && AGENT_EMAILS[agentId]
-          ? `[Para: ${AGENT_EMAILS[agentId]}] ${subject}`
-          : subject,
+        subject,
         html: htmlEmail
       });
     } else {
@@ -350,7 +362,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         html: htmlEmail
       });
 
-      // Fallback if custom domain is not yet verified in Resend
       if (sendResult?.error) {
         console.warn('Resend domain restriction or error detected, falling back to account owner email:', sendResult.error);
         sendResult = await resend.emails.send({
@@ -363,15 +374,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     }
 
-    // Client auto-reply confirmation email:
-    // Only send if custom domain is verified (!isSandboxSender) OR if the client email matches the Resend owner email
     if (
       email &&
       email.includes('@') &&
       (!isSandboxSender || email.toLowerCase().trim() === RESEND_ACCOUNT_OWNER_EMAIL.toLowerCase())
     ) {
       const clientReply = await resend.emails.send({
-        from: FROM_EMAIL,
+        from: corpEmail
+          ? `${metadata?.agentName || 'New Era Real Estate'} <${corpEmail}>`
+          : FROM_EMAIL,
         to: [email],
         subject: '🏛️ Hemos recibido tu solicitud — New Era Real Estate',
         html: `
@@ -387,9 +398,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               ${address ? `• <strong>Propiedad:</strong> ${address}<br>` : ''}
               ${phone ? `• <strong>Teléfono de contacto:</strong> ${phone}<br>` : ''}
             </div>
-            <p>Si deseas comunicarte de inmediato con nuestra oficina central, puedes llamarnos directamente al <strong>(502) 500-0409</strong> o escribirnos a <strong>newerabroker25@gmail.com</strong>.</p>
+            <p>Si deseas comunicarte de inmediato con nuestra oficina central, puedes llamarnos directamente al <strong>(502) 500-0409</strong> o escribirnos a <strong>${corpEmail || 'info@neweraky.com'}</strong>.</p>
             <br>
-            <p style="margin-bottom: 0;">Atentamente,<br><strong>Equipo de Asesoría Inmobiliaria</strong><br>New Era Real Estate LLC</p>
+            <p style="margin-bottom: 0;">Atentamente,<br><strong>${metadata?.agentName || 'Equipo de Asesoría Inmobiliaria'}</strong><br>New Era Real Estate LLC</p>
           </div>
         `
       });

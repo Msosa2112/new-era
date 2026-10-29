@@ -98,6 +98,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, lang }) => {
                 { id: 'sell', labelEn: 'Sell & CMA Valuation', labelEs: 'Vender & Valuación CMA' },
                 { id: 'about', labelEn: 'About New Era', labelEs: 'Sobre Nosotros' },
                 { id: 'contact', labelEn: 'Schedule Consultation', labelEs: 'Contacto & Citas' },
+                { id: 'inbox', labelEn: 'Agent Mail (@neweraky.com)', labelEs: 'Correo de Agentes (@neweraky.com)' },
               ].map((link) => (
                 <li key={link.id}>
                   <button

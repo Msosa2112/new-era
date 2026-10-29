@@ -16,3 +16,6 @@ dist-ssr
 .env*.local
 .agents/mcp_config.json
 
+
+.vercel
+.env*

@@ -10,6 +10,7 @@ import { AboutPage } from './pages/AboutPage';
 import { AgentsPage } from './pages/AgentsPage';
 import { ContactPage } from './pages/ContactPage';
 import { MapPage } from './pages/MapPage';
+import { InboxPage } from './pages/InboxPage';
 import { PropertyDetailView } from './components/properties/PropertyDetailView';
 import { ConsultationModal } from './components/common/ConsultationModal';
 import { JoinTeamModal } from './components/common/JoinTeamModal';
@@ -65,6 +66,9 @@ export const App: React.FC = () => {
         setSelectedProperty(null);
         setActivePage('home');
         setJoinModalOpen(true);
+      } else if (route === 'inbox' || route === 'correo' || route === 'mail' || route === 'portal') {
+        setSelectedProperty(null);
+        setActivePage('inbox');
       } else {
         setSelectedProperty(null);
         setActivePage(route);
@@ -215,6 +219,10 @@ export const App: React.FC = () => {
 
         {activePage === 'contact' && (
           <ContactPage lang={lang} />
+        )}
+
+        {activePage === 'inbox' && (
+          <InboxPage lang={lang} />
         )}
       </div>
 

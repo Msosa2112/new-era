@@ -47,6 +47,7 @@ export interface Agent {
   licenseNumber?: string;
   phone: string;
   email: string;
+  personalEmail?: string;
   photoUrl: string;
   photoNobgUrl?: string;
   bio: string;
