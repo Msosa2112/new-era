@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   Mail,
   Send,
@@ -11,12 +11,15 @@ import {
   Copy,
   Check,
   ShieldCheck,
-  Sparkles,
   Search,
   ChevronLeft,
   Users,
   Lock,
   ArrowRight,
+  Paperclip,
+  Download,
+  FileText,
+  Trash2,
   X
 } from 'lucide-react';
 import { AGENTS_DATA } from '../data/agentsData';
@@ -30,15 +33,31 @@ interface InboxPageProps {
 interface EmailSummary {
   id: string;
   direction: 'inbound' | 'outbound';
-  folder: 'received' | 'leads' | 'sent';
+  folder: 'received' | 'sent';
   from: string;
   to: string[];
   subject: string;
   createdAt: string;
   lastEvent?: string;
+  hasAttachments?: boolean;
+}
+
+interface ComposeAttachmentItem {
+  id: string;
+  filename: string;
+  content: string;
+  contentType: string;
+  size: number;
 }
 
 const STORAGE_KEY = 'newera_inbox_session_v1';
+
+function formatBytes(bytes: number): string {
+  if (!bytes || bytes <= 0) return '0 KB';
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+}
 
 export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
   const [token, setToken] = useState<string>('');
@@ -74,8 +93,10 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
   const [composeCc, setComposeCc] = useState<string>('');
   const [composeSubject, setComposeSubject] = useState<string>('');
   const [composeMessage, setComposeMessage] = useState<string>('');
+  const [composeAttachments, setComposeAttachments] = useState<ComposeAttachmentItem[]>([]);
   const [sendingEmail, setSendingEmail] = useState<boolean>(false);
   const [sendStatus, setSendStatus] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [pinModalOpen, setPinModalOpen] = useState<boolean>(false);
   const [newPinValue, setNewPinValue] = useState<string>('');
@@ -301,8 +322,54 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
     setComposeCc('');
     setComposeSubject(subj.toLowerCase().startsWith('re:') ? subj : `Re: ${subj}`);
     setComposeMessage('\n\n');
+    setComposeAttachments([]);
     setSendStatus(null);
     setComposeOpen(true);
+  };
+
+  const handleFilesSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const newItems: ComposeAttachmentItem[] = [];
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (file.size > 10 * 1024 * 1024) {
+        setSendStatus({
+          type: 'err',
+          text: `El archivo "${file.name}" supera el límite de 10 MB por adjunto.`
+        });
+        continue;
+      }
+
+      const base64Content = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const result = String(reader.result || '');
+          const clean = result.includes('base64,') ? result.split('base64,')[1] : result;
+          resolve(clean);
+        };
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(file);
+      });
+
+      newItems.push({
+        id: `${file.name}-${file.size}-${Date.now()}-${i}`,
+        filename: file.name,
+        content: base64Content,
+        contentType: file.type || 'application/octet-stream',
+        size: file.size
+      });
+    }
+
+    setComposeAttachments((prev) => [...prev, ...newItems]);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleRemoveAttachment = (id: string) => {
+    setComposeAttachments((prev) => prev.filter((item) => item.id !== id));
   };
 
   const handleSendEmail = async (e: React.FormEvent) => {
@@ -322,20 +389,32 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
           to: composeTo,
           cc: composeCc,
           subject: composeSubject,
-          message: composeMessage
+          message: composeMessage,
+          attachments: composeAttachments.map((a) => ({
+            filename: a.filename,
+            content: a.content,
+            contentType: a.contentType
+          }))
         })
       });
       const data = await resp.json();
       if (!resp.ok || !data.success) {
         setSendStatus({ type: 'err', text: data.error || 'No se pudo enviar el correo.' });
       } else {
-        setSendStatus({ type: 'ok', text: '¡Correo enviado exitosamente desde ' + loggedAgent?.corporateEmail + '!' });
+        setSendStatus({
+          type: 'ok',
+          text:
+            '¡Correo enviado exitosamente desde ' +
+            loggedAgent?.corporateEmail +
+            (composeAttachments.length > 0 ? ` con ${composeAttachments.length} adjunto(s)!` : '!')
+        });
         setTimeout(() => {
           setComposeOpen(false);
           setComposeTo('');
           setComposeCc('');
           setComposeSubject('');
           setComposeMessage('');
+          setComposeAttachments([]);
           setSendStatus(null);
           fetchMailbox(token, targetAgentId, viewAllMailboxes);
         }, 1200);
@@ -389,6 +468,11 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
   });
 
   const activeList = activeFolder === 'received' ? receivedList : sentList;
+  const detailAttachments: any[] = Array.isArray(emailDetail?.signedAttachments)
+    ? emailDetail.signedAttachments
+    : Array.isArray(emailDetail?.attachments)
+    ? emailDetail.attachments
+    : [];
 
   // ==================== LOGIN SCREEN ====================
   if (!token || !loggedAgent) {
@@ -451,8 +535,8 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
               }}
             >
               {lang === 'es'
-                ? 'Selecciona tu perfil de agente e ingresa tu PIN para abrir tu bandeja de entrada, redactar desde tu cuenta @neweraky.com y ver tus leads.'
-                : 'Select your agent profile and enter your PIN to access your inbox, compose from your @neweraky.com address, and view your leads.'}
+                ? 'Selecciona tu perfil de agente e ingresa tu PIN para abrir tu bandeja de entrada y enviar correos con archivos adjuntos desde tu cuenta @neweraky.com.'
+                : 'Select your agent profile and enter your PIN to access your inbox and send emails with attachments from your @neweraky.com address.'}
             </p>
           </div>
 
@@ -1101,6 +1185,7 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
                 setComposeCc('');
                 setComposeSubject('');
                 setComposeMessage('');
+                setComposeAttachments([]);
                 setSendStatus(null);
                 setComposeOpen(true);
               }}
@@ -1255,7 +1340,6 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
               );
             })}
 
-            {/* Message List inside Left/Center or Full Panel */}
             <div
               style={{
                 marginTop: '1rem',
@@ -1270,7 +1354,8 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
                 Estado de la Cuenta
               </div>
               <div>• Dominio: <strong>neweraky.com</strong> (Verificado)</div>
-              <div>• Firma Corporativa: <strong>Activa</strong></div>
+              <div>• Archivos Adjuntos: <strong>Habilitados</strong></div>
+              <div>• Firma con Logo: <strong>Activa</strong></div>
               <div>• Reenvío a Gmail: <strong>Activo</strong></div>
             </div>
           </div>
@@ -1376,6 +1461,9 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
                           </div>
                           <div
                             style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.5rem',
                               fontSize: '0.9rem',
                               fontWeight: 700,
                               color: '#121418',
@@ -1384,7 +1472,27 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
                               textOverflow: 'ellipsis'
                             }}
                           >
-                            {item.subject}
+                            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.subject}</span>
+                            {item.hasAttachments && (
+                              <span
+                                style={{
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '0.25rem',
+                                  fontSize: '0.68rem',
+                                  fontWeight: 700,
+                                  padding: '0.1rem 0.45rem',
+                                  borderRadius: '999px',
+                                  backgroundColor: '#FAF7F2',
+                                  border: '1px solid #E2DBD0',
+                                  color: '#660E1A',
+                                  flexShrink: 0
+                                }}
+                              >
+                                <Paperclip size={11} />
+                                <span>Adjunto</span>
+                              </span>
+                            )}
                           </div>
                         </div>
                         <div style={{ fontSize: '0.72rem', color: '#847C74', whiteSpace: 'nowrap' }}>
@@ -1470,6 +1578,69 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
                       {selectedEmail.createdAt ? new Date(selectedEmail.createdAt).toLocaleString() : ''}
                     </div>
                   </div>
+
+                  {/* Attachments bar on received / sent email */}
+                  {detailAttachments.length > 0 && (
+                    <div
+                      style={{
+                        marginTop: '1rem',
+                        padding: '0.85rem 1rem',
+                        borderRadius: '12px',
+                        backgroundColor: '#FAF8F5',
+                        border: '1px solid #E5DFD5'
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontSize: '0.72rem',
+                          fontWeight: 800,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.08em',
+                          color: '#660E1A',
+                          marginBottom: '0.55rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.4rem'
+                        }}
+                      >
+                        <Paperclip size={13} />
+                        <span>Archivos Adjuntos ({detailAttachments.length})</span>
+                      </div>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                        {detailAttachments.map((att: any, idx: number) => (
+                          <a
+                            key={att.id || idx}
+                            href={att.download_url || '#'}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            download={att.filename || 'adjunto'}
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '0.5rem',
+                              padding: '0.45rem 0.75rem',
+                              borderRadius: '8px',
+                              backgroundColor: '#FFFFFF',
+                              border: '1px solid #D8D0C5',
+                              color: '#121418',
+                              textDecoration: 'none',
+                              fontSize: '0.78rem',
+                              fontWeight: 700
+                            }}
+                          >
+                            <FileText size={14} color="#660E1A" />
+                            <span>{att.filename || `Adjunto ${idx + 1}`}</span>
+                            {att.size ? (
+                              <span style={{ fontSize: '0.7rem', color: '#78736B', fontWeight: 600 }}>
+                                ({formatBytes(att.size)})
+                              </span>
+                            ) : null}
+                            <Download size={13} color="#660E1A" />
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div style={{ padding: '1.5rem', flex: 1, overflowY: 'auto' }}>
@@ -1509,7 +1680,7 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
               borderRadius: '18px',
               border: '1px solid #E5DFD5',
               width: '100%',
-              maxWidth: '640px',
+              maxWidth: '660px',
               overflow: 'hidden',
               boxShadow: '0 24px 60px rgba(0,0,0,0.25)'
             }}
@@ -1541,7 +1712,7 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
               </button>
             </div>
 
-            <form onSubmit={handleSendEmail} style={{ padding: '1.5rem', maxHeight: '80vh', overflowY: 'auto' }}>
+            <form onSubmit={handleSendEmail} style={{ padding: '1.5rem', maxHeight: '82vh', overflowY: 'auto' }}>
               {sendStatus && (
                 <div
                   style={{
@@ -1600,12 +1771,12 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
                 />
               </div>
 
-              <div style={{ marginBottom: '1rem' }}>
+              <div style={{ marginBottom: '0.9rem' }}>
                 <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.3rem' }}>
                   Mensaje
                 </label>
                 <textarea
-                  rows={6}
+                  rows={5}
                   value={composeMessage}
                   onChange={(e) => setComposeMessage(e.target.value)}
                   placeholder="Escribe tu mensaje aquí..."
@@ -1614,28 +1785,161 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
                 />
               </div>
 
-              {/* Signature Preview */}
+              {/* File Attachments Section */}
+              <div style={{ marginBottom: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.45rem' }}>
+                  <label style={{ fontSize: '0.72rem', fontWeight: 800, textTransform: 'uppercase', color: '#121418' }}>
+                    Archivos Adjuntos ({composeAttachments.length})
+                  </label>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    onChange={handleFilesSelected}
+                    style={{ display: 'none' }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                      padding: '0.45rem 0.85rem',
+                      borderRadius: '8px',
+                      border: '1px solid #660E1A',
+                      backgroundColor: '#FAF7F2',
+                      color: '#660E1A',
+                      fontSize: '0.75rem',
+                      fontWeight: 800,
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <Paperclip size={14} />
+                    <span>Adjuntar Archivos (PDF, Imágenes, Contratos...)</span>
+                  </button>
+                </div>
+
+                {composeAttachments.length > 0 && (
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.4rem',
+                      padding: '0.65rem',
+                      borderRadius: '10px',
+                      backgroundColor: '#FAF8F5',
+                      border: '1px solid #E5DFD5'
+                    }}
+                  >
+                    {composeAttachments.map((att) => (
+                      <div
+                        key={att.id}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          gap: '0.5rem',
+                          padding: '0.4rem 0.65rem',
+                          borderRadius: '8px',
+                          backgroundColor: '#FFFFFF',
+                          border: '1px solid #EAE3D8',
+                          fontSize: '0.78rem'
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', minWidth: 0, flex: 1 }}>
+                          <FileText size={14} color="#660E1A" style={{ flexShrink: 0 }} />
+                          <span
+                            style={{
+                              fontWeight: 700,
+                              color: '#121418',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis'
+                            }}
+                          >
+                            {att.filename}
+                          </span>
+                          <span style={{ fontSize: '0.7rem', color: '#78736B', flexShrink: 0 }}>
+                            ({formatBytes(att.size)})
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveAttachment(att.id)}
+                          title="Quitar archivo"
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            color: '#B91C1C',
+                            cursor: 'pointer',
+                            padding: '0.15rem',
+                            display: 'inline-flex',
+                            alignItems: 'center'
+                          }}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Official Signature & Logo Preview */}
               <div
                 style={{
                   backgroundColor: '#FAF8F5',
                   borderRadius: '12px',
-                  padding: '0.85rem',
+                  padding: '0.95rem 1rem',
                   border: '1px solid #E5DFD5',
-                  marginBottom: '1.25rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.85rem'
+                  borderTop: '2px solid #660E1A',
+                  marginBottom: '1.25rem'
                 }}
               >
-                <img
-                  src={loggedAgent.photoUrl}
-                  alt={loggedAgent.name}
-                  style={{ width: '46px', height: '58px', borderRadius: '8px', objectFit: 'cover', objectPosition: 'top center', border: '1px solid #E2DBD0' }}
-                />
-                <div style={{ fontSize: '0.76rem', lineHeight: 1.45 }}>
-                  <div style={{ fontWeight: 800, color: '#121418' }}>{loggedAgent.name}</div>
-                  <div style={{ fontWeight: 700, color: '#660E1A' }}>{loggedAgent.title} · New Era Real Estate LLC</div>
-                  <div style={{ color: '#5A606D' }}>{loggedAgent.phone} · {loggedAgent.corporateEmail}</div>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '0.85rem',
+                    flexWrap: 'wrap'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                    <img
+                      src={loggedAgent.photoUrl}
+                      alt={loggedAgent.name}
+                      style={{
+                        width: '52px',
+                        height: '66px',
+                        borderRadius: '8px',
+                        objectFit: 'cover',
+                        objectPosition: 'top center',
+                        border: '1px solid #E2DBD0'
+                      }}
+                    />
+                    <div style={{ fontSize: '0.76rem', lineHeight: 1.45 }}>
+                      <div style={{ fontWeight: 800, color: '#121418', fontSize: '0.84rem' }}>{loggedAgent.name}</div>
+                      <div style={{ fontWeight: 700, color: '#660E1A', textTransform: 'uppercase', fontSize: '0.7rem' }}>
+                        {loggedAgent.title} · New Era Real Estate LLC
+                      </div>
+                      <div style={{ color: '#5A606D', marginTop: '2px' }}>
+                        📞 {loggedAgent.phone} · ✉️ {loggedAgent.corporateEmail}
+                      </div>
+                      <div style={{ color: '#78736B', fontSize: '0.7rem' }}>
+                        📍 6501 Shepherdsville Rd, Suite 119, Louisville, KY 40219
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ paddingLeft: '0.75rem', borderLeft: '1px solid #E5DFD5' }}>
+                    <img
+                      src="/assets/logo-burgundy.png"
+                      alt="New Era Real Estate"
+                      style={{ width: '105px', height: 'auto', display: 'block' }}
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -1643,14 +1947,36 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
                 <button
                   type="button"
                   onClick={() => setComposeOpen(false)}
-                  style={{ padding: '0.65rem 1.1rem', borderRadius: '10px', border: '1px solid #D8D0C5', background: '#FFFFFF', fontSize: '0.76rem', fontWeight: 700, textTransform: 'uppercase', cursor: 'pointer' }}
+                  style={{
+                    padding: '0.65rem 1.1rem',
+                    borderRadius: '10px',
+                    border: '1px solid #D8D0C5',
+                    background: '#FFFFFF',
+                    fontSize: '0.76rem',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    cursor: 'pointer'
+                  }}
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   disabled={sendingEmail}
-                  style={{ padding: '0.65rem 1.4rem', borderRadius: '10px', border: 'none', background: '#660E1A', color: '#FFFFFF', fontSize: '0.76rem', fontWeight: 800, textTransform: 'uppercase', display: 'inline-flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}
+                  style={{
+                    padding: '0.65rem 1.4rem',
+                    borderRadius: '10px',
+                    border: 'none',
+                    background: '#660E1A',
+                    color: '#FFFFFF',
+                    fontSize: '0.76rem',
+                    fontWeight: 800,
+                    textTransform: 'uppercase',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    cursor: 'pointer'
+                  }}
                 >
                   <Send size={14} />
                   <span>{sendingEmail ? 'Enviando...' : 'Enviar Correo'}</span>
@@ -1720,13 +2046,32 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
                 <button
                   type="button"
                   onClick={() => setPinModalOpen(false)}
-                  style={{ padding: '0.6rem 1rem', borderRadius: '10px', border: '1px solid #D8D0C5', background: '#FFFFFF', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', cursor: 'pointer' }}
+                  style={{
+                    padding: '0.6rem 1rem',
+                    borderRadius: '10px',
+                    border: '1px solid #D8D0C5',
+                    background: '#FFFFFF',
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    cursor: 'pointer'
+                  }}
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  style={{ padding: '0.6rem 1.2rem', borderRadius: '10px', border: 'none', background: '#660E1A', color: '#FFFFFF', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', cursor: 'pointer' }}
+                  style={{
+                    padding: '0.6rem 1.2rem',
+                    borderRadius: '10px',
+                    border: 'none',
+                    background: '#660E1A',
+                    color: '#FFFFFF',
+                    fontSize: '0.75rem',
+                    fontWeight: 800,
+                    textTransform: 'uppercase',
+                    cursor: 'pointer'
+                  }}
                 >
                   Guardar PIN
                 </button>

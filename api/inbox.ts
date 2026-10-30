@@ -216,6 +216,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         html: `
           <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; background: #FFFFFF; border: 1px solid #E8E3DA; border-radius: 14px; overflow: hidden;">
             <div style="background: #660E1A; color: #FFFFFF; padding: 24px; text-align: center;">
+              <img src="https://www.neweraky.com/assets/logo-white.png" alt="New Era Real Estate" width="130" style="display: block; margin: 0 auto 10px auto; height: auto;" />
               <div style="font-size: 11px; letter-spacing: 0.14em; color: #F6D8A8; font-weight: 700;">NEW ERA REAL ESTATE</div>
               <h2 style="margin: 6px 0 0; font-size: 18px;">Cambio de PIN de Correo Corporativo</h2>
             </div>
@@ -310,7 +311,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    // 5. LIST EMAILS (Inbound Received + Leads + Sent)
+    // 5. LIST EMAILS (Inbound Received + Sent)
     if (action === 'list') {
       const viewAll = Boolean(session.isAdmin && body.viewAll);
       const [recResp, sentResp] = await Promise.all([
@@ -327,7 +328,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       const corpLower = activeAgent.corporateEmail.toLowerCase();
       const localPrefix = corpLower.split('@')[0];
-      const personalLower = activeAgent.personalEmail.toLowerCase();
 
       // Filter Inbound Received emails
       const received = (recJson.data || [])
@@ -384,7 +384,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             to: toArr,
             subject: subj,
             createdAt: item.created_at,
-            lastEvent: item.last_event || 'delivered'
+            lastEvent: item.last_event || 'delivered',
+            hasAttachments: Array.isArray(item.attachments) && item.attachments.length > 0
           });
         }
       }
@@ -400,7 +401,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    // 6. READ SINGLE EMAIL BODY
+    // 6. READ SINGLE EMAIL BODY + SIGNED ATTACHMENTS
     if (action === 'read') {
       const { emailId = '', direction = 'inbound' } = body;
       if (!emailId) {
@@ -412,24 +413,52 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           ? `https://api.resend.com/emails/receiving/${emailId}`
           : `https://api.resend.com/emails/${emailId}`;
 
-      const resp = await fetch(endpoint, {
-        headers: { Authorization: `Bearer ${RESEND_API_KEY}` }
-      });
+      const attEndpoint =
+        direction === 'inbound'
+          ? `https://api.resend.com/emails/receiving/${emailId}/attachments`
+          : `https://api.resend.com/emails/${emailId}/attachments`;
+
+      const [resp, attResp] = await Promise.all([
+        fetch(endpoint, {
+          headers: { Authorization: `Bearer ${RESEND_API_KEY}` }
+        }),
+        fetch(attEndpoint, {
+          headers: { Authorization: `Bearer ${RESEND_API_KEY}` }
+        }).catch(() => null)
+      ]);
 
       if (!resp.ok) {
         return res.status(404).json({ success: false, error: 'No se pudo cargar el contenido del correo.' });
       }
 
       const detail = await resp.json();
+      let signedAttachments: any[] = [];
+      if (attResp && attResp.ok) {
+        try {
+          const attJson = await attResp.json();
+          if (Array.isArray(attJson?.data)) {
+            signedAttachments = attJson.data;
+          } else if (Array.isArray(attJson)) {
+            signedAttachments = attJson;
+          }
+        } catch {
+          // ignore
+        }
+      }
+      if (signedAttachments.length === 0 && Array.isArray(detail.attachments)) {
+        signedAttachments = detail.attachments;
+      }
+      detail.signedAttachments = signedAttachments;
+
       return res.status(200).json({
         success: true,
         email: detail
       });
     }
 
-    // 7. SEND / REPLY EMAIL FROM AGENT'S @neweraky.com ADDRESS
+    // 7. SEND / REPLY EMAIL FROM AGENT'S @neweraky.com ADDRESS (WITH OPTIONAL ATTACHMENTS)
     if (action === 'send') {
-      const { to = '', cc = '', subject = '', message = '', replyToMessageId = '' } = body;
+      const { to = '', cc = '', subject = '', message = '', replyToMessageId = '', attachments = [] } = body;
       const cleanTo = String(to)
         .split(',')
         .map((s) => s.trim())
@@ -455,6 +484,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       const cleanPhone = activeAgent.phone.replace(/[^0-9]/g, '');
 
+      // Process attachments (Base64 -> Buffer)
+      const resendAttachments = Array.isArray(attachments)
+        ? attachments
+            .filter((att: any) => att && att.filename && att.content)
+            .map((att: any) => {
+              const rawContent = String(att.content);
+              const base64Clean = rawContent.includes('base64,')
+                ? rawContent.split('base64,')[1]
+                : rawContent;
+              return {
+                filename: String(att.filename),
+                content: Buffer.from(base64Clean, 'base64'),
+                ...(att.contentType ? { content_type: String(att.contentType) } : {})
+              };
+            })
+        : [];
+
       const htmlEmail = `
         <!DOCTYPE html>
         <html>
@@ -467,23 +513,35 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               ${formattedBody}
             </div>
 
-            <!-- Official New Era Real Estate Corporate Signature -->
-            <table cellpadding="0" cellspacing="0" border="0" style="border-top: 2px solid #660E1A; padding-top: 18px; margin-top: 24px; width: 100%; max-width: 540px;">
+            <!-- Official New Era Real Estate Corporate Signature & Footer -->
+            <table cellpadding="0" cellspacing="0" border="0" style="border-top: 2px solid #660E1A; padding-top: 20px; margin-top: 28px; width: 100%; max-width: 600px;">
               <tr>
-                <td width="76" valign="top" style="padding-right: 16px;">
-                  <img src="${activeAgent.photoUrl}" alt="${activeAgent.name}" width="68" height="86" style="border-radius: 10px; object-fit: cover; border: 1px solid #E5DFD5; display: block;" />
+                <td width="82" valign="top" style="padding-right: 16px;">
+                  <img src="${activeAgent.photoUrl}" alt="${activeAgent.name}" width="72" height="92" style="border-radius: 10px; object-fit: cover; border: 1px solid #E5DFD5; display: block;" />
                 </td>
-                <td valign="top" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                <td valign="top" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding-right: 14px;">
                   <div style="font-size: 16px; font-weight: 800; color: #121418; letter-spacing: 0.02em;">${activeAgent.name}</div>
                   <div style="font-size: 12px; font-weight: 700; color: #660E1A; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px;">
                     ${activeAgent.title}${activeAgent.licenseNumber ? ` · Lic. #${activeAgent.licenseNumber}` : ''}
                   </div>
                   <div style="font-size: 12px; font-weight: 700; color: #5A606D; margin-top: 2px;">New Era Real Estate LLC</div>
-                  <div style="font-size: 12px; color: #5A606D; margin-top: 8px; line-height: 1.5;">
+                  <div style="font-size: 12px; color: #5A606D; margin-top: 8px; line-height: 1.55;">
                     📞 <a href="tel:${cleanPhone}" style="color: #121418; text-decoration: none; font-weight: 600;">${activeAgent.phone}</a> &nbsp;|&nbsp;
                     ✉️ <a href="mailto:${activeAgent.corporateEmail}" style="color: #660E1A; text-decoration: none; font-weight: 600;">${activeAgent.corporateEmail}</a><br/>
                     📍 6501 Shepherdsville Road, Suite 119, Louisville, KY 40219<br/>
                     🌐 <a href="https://www.neweraky.com/agents/${activeAgent.id}" style="color: #660E1A; text-decoration: none; font-weight: 600;">www.neweraky.com</a>
+                  </div>
+                </td>
+                <td width="145" valign="middle" align="right" style="border-left: 1px solid #EAE3D8; padding-left: 16px;">
+                  <a href="https://www.neweraky.com" target="_blank" style="text-decoration: none; display: inline-block;">
+                    <img src="https://www.neweraky.com/assets/logo-burgundy.png" alt="New Era Real Estate" width="135" style="display: block; width: 135px; max-width: 135px; height: auto; border: 0;" />
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="3" style="padding-top: 14px;">
+                  <div style="background: #FAF8F5; border: 1px solid #EAE3D8; border-radius: 8px; padding: 10px 14px; font-size: 11px; color: #78736B; line-height: 1.45;">
+                    <strong style="color: #660E1A;">New Era Real Estate LLC</strong> · Licensed Brokerage in the Commonwealth of Kentucky · Equal Housing Opportunity.
                   </div>
                 </td>
               </tr>
@@ -501,6 +559,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         replyTo: activeAgent.corporateEmail,
         subject: String(subject).trim(),
         html: htmlEmail,
+        attachments: resendAttachments.length > 0 ? resendAttachments : undefined,
         headers: replyToMessageId ? { 'In-Reply-To': replyToMessageId } : undefined
       });
 
@@ -523,3 +582,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
   }
 }
+
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '15mb'
+    }
+  }
+};
