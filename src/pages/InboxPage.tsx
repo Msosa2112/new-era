@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { AGENTS_DATA } from '../data/agentsData';
 import { Agent } from '../types/property';
+import { HexPattern } from '../components/common/HexPattern';
 
 interface InboxPageProps {
   lang: 'en' | 'es';
@@ -40,12 +41,10 @@ interface EmailSummary {
 const STORAGE_KEY = 'newera_inbox_session_v1';
 
 export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
-  // Auth state
   const [token, setToken] = useState<string>('');
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [loggedAgent, setLoggedAgent] = useState<any | null>(null);
 
-  // Login screen state
   const [selectedAgentId, setSelectedAgentId] = useState<string>(AGENTS_DATA[0]?.id || 'yeilen-contreras');
   const [agentSearch, setAgentSearch] = useState<string>('');
   const [pinInput, setPinInput] = useState<string>('');
@@ -53,14 +52,12 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
   const [authError, setAuthError] = useState<string>('');
   const [authSuccess, setAuthSuccess] = useState<string>('');
 
-  // Forgot / Reset PIN flow state
-  const [resetMode, setResetMode] = useState<'none' | 'request' | 'verify'>('none');
+  const [resetMode, setResetMode] = useState<'none' | 'verify'>('none');
   const [resetToken, setResetToken] = useState<string>('');
   const [resetCode, setResetCode] = useState<string>('');
   const [resetNewPin, setResetNewPin] = useState<string>('');
   const [maskedEmailHint, setMaskedEmailHint] = useState<string>('');
 
-  // Mailbox state
   const [activeFolder, setActiveFolder] = useState<'received' | 'leads' | 'sent'>('received');
   const [targetAgentId, setTargetAgentId] = useState<string>('');
   const [viewAllMailboxes, setViewAllMailboxes] = useState<boolean>(false);
@@ -69,12 +66,10 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
   const [sentList, setSentList] = useState<EmailSummary[]>([]);
   const [loadingList, setLoadingList] = useState<boolean>(false);
 
-  // Selected email detail state
   const [selectedEmail, setSelectedEmail] = useState<EmailSummary | null>(null);
   const [emailDetail, setEmailDetail] = useState<any | null>(null);
   const [loadingDetail, setLoadingDetail] = useState<boolean>(false);
 
-  // Compose modal state
   const [composeOpen, setComposeOpen] = useState<boolean>(false);
   const [composeTo, setComposeTo] = useState<string>('');
   const [composeCc, setComposeCc] = useState<string>('');
@@ -83,15 +78,11 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
   const [sendingEmail, setSendingEmail] = useState<boolean>(false);
   const [sendStatus, setSendStatus] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
 
-  // Change PIN modal state (inside mailbox)
   const [pinModalOpen, setPinModalOpen] = useState<boolean>(false);
   const [newPinValue, setNewPinValue] = useState<string>('');
   const [pinStatusMsg, setPinStatusMsg] = useState<string>('');
-
-  // Copy email helper
   const [copiedEmail, setCopiedEmail] = useState<boolean>(false);
 
-  // Restore saved session on mount
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -107,6 +98,15 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
     } catch {
       // ignore
     }
+  }, []);
+
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem(STORAGE_KEY);
+    setToken('');
+    setIsAdmin(false);
+    setLoggedAgent(null);
+    setSelectedEmail(null);
+    setEmailDetail(null);
   }, []);
 
   const fetchMailbox = useCallback(
@@ -145,7 +145,7 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
         setLoadingList(false);
       }
     },
-    [targetAgentId, viewAllMailboxes]
+    [targetAgentId, viewAllMailboxes, handleLogout]
   );
 
   useEffect(() => {
@@ -263,15 +263,6 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
     } finally {
       setAuthLoading(false);
     }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem(STORAGE_KEY);
-    setToken('');
-    setIsAdmin(false);
-    setLoggedAgent(null);
-    setSelectedEmail(null);
-    setEmailDetail(null);
   };
 
   const handleSelectEmailItem = async (item: EmailSummary) => {
@@ -409,48 +400,148 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
   // ==================== LOGIN SCREEN ====================
   if (!token || !loggedAgent) {
     return (
-      <div className="min-h-screen bg-[#FAF7F2] pt-28 pb-20 px-4">
-        <div className="max-w-5xl mx-auto">
+      <main
+        style={{
+          paddingTop: 'calc(var(--header-height, 84px) + 2.5rem)',
+          paddingBottom: '5rem',
+          minHeight: '100vh',
+          backgroundColor: '#FAF7F2',
+          position: 'relative',
+          overflow: 'hidden'
+        }}
+      >
+        <HexPattern variant="burgundy" opacity={0.05} maskFade="radial-top-right" />
+
+        <div className="container" style={{ position: 'relative', zIndex: 1, maxWidth: '1120px' }}>
           {/* Header */}
-          <div className="text-center mb-10">
-            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-bold tracking-[0.18em] uppercase bg-[#660E1A]/10 text-[#660E1A] border border-[#660E1A]/20 mb-3">
+          <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                padding: '0.4rem 1rem',
+                borderRadius: '999px',
+                backgroundColor: 'rgba(102, 14, 26, 0.08)',
+                border: '1px solid rgba(102, 14, 26, 0.2)',
+                color: '#660E1A',
+                fontSize: '0.72rem',
+                fontWeight: 700,
+                letterSpacing: '0.16em',
+                textTransform: 'uppercase',
+                marginBottom: '0.85rem'
+              }}
+            >
               <ShieldCheck size={14} />
-              {lang === 'es' ? 'PORTAL DE CORREO CORPORATIVO' : 'CORPORATE EMAIL PORTAL'}
-            </span>
-            <h1 className="font-serif text-3xl md:text-4xl font-bold text-[#121418]">
-              New Era Mail <span className="text-[#660E1A]">@neweraky.com</span>
+              <span>{lang === 'es' ? 'PORTAL DE CORREO CORPORATIVO' : 'CORPORATE EMAIL PORTAL'}</span>
+            </div>
+
+            <h1
+              style={{
+                fontFamily: 'var(--font-serif)',
+                fontSize: 'clamp(1.9rem, 3.5vw, 2.75rem)',
+                fontWeight: 700,
+                color: '#121418',
+                margin: '0 0 0.6rem 0',
+                letterSpacing: '-0.01em'
+              }}
+            >
+              New Era Mail <span style={{ color: '#660E1A' }}>@neweraky.com</span>
             </h1>
-            <p className="text-sm text-[#5A606D] mt-2 max-w-xl mx-auto">
+            <p
+              style={{
+                fontSize: '0.95rem',
+                color: '#5A606D',
+                maxWidth: '580px',
+                margin: '0 auto',
+                lineHeight: 1.6
+              }}
+            >
               {lang === 'es'
-                ? 'Selecciona tu perfil de agente e ingresa tu PIN para acceder a tu bandeja de entrada, responder como @neweraky.com y gestionar tus leads.'
-                : 'Select your agent profile and enter your PIN to access your inbox, reply as @neweraky.com, and manage your leads.'}
+                ? 'Selecciona tu perfil de agente e ingresa tu PIN para abrir tu bandeja de entrada, redactar desde tu cuenta @neweraky.com y ver tus leads.'
+                : 'Select your agent profile and enter your PIN to access your inbox, compose from your @neweraky.com address, and view your leads.'}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Left: Agent Selector Grid */}
-            <div className="lg:col-span-7 bg-white rounded-2xl border border-[#E8E2D9] shadow-sm p-5">
-              <div className="flex items-center justify-between gap-3 mb-4">
-                <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-[#660E1A]">
+          {/* Main 2-Column Responsive Grid */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+              gap: '2rem',
+              alignItems: 'start'
+            }}
+          >
+            {/* Left Card: Agent Selector */}
+            <div
+              style={{
+                backgroundColor: '#FFFFFF',
+                borderRadius: '18px',
+                border: '1px solid #E6DFD5',
+                boxShadow: '0 10px 30px rgba(18, 20, 24, 0.05)',
+                padding: '1.5rem'
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginBottom: '1rem'
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: '0.75rem',
+                    fontWeight: 800,
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    color: '#660E1A'
+                  }}
+                >
                   1. Selecciona tu Buzón (@neweraky.com)
-                </h2>
-                <span className="text-xs text-[#6E7480] font-medium">{AGENTS_DATA.length} Cuentas Activas</span>
+                </span>
+                <span style={{ fontSize: '0.75rem', color: '#78736B', fontWeight: 600 }}>
+                  {AGENTS_DATA.length} Cuentas
+                </span>
               </div>
 
-              {/* Search bar */}
-              <div className="relative mb-4">
-                <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#847C74]" />
+              {/* Search Input */}
+              <div style={{ position: 'relative', marginBottom: '1rem' }}>
+                <Search
+                  size={16}
+                  color="#847C74"
+                  style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }}
+                />
                 <input
                   type="text"
                   value={agentSearch}
                   onChange={(e) => setAgentSearch(e.target.value)}
                   placeholder="Buscar agente por nombre o correo..."
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#E4DDD3] bg-[#FAF8F5] text-sm text-[#121418] focus:outline-none focus:border-[#660E1A]"
+                  style={{
+                    width: '100%',
+                    padding: '0.7rem 1rem 0.7rem 2.5rem',
+                    borderRadius: '12px',
+                    border: '1px solid #E2DBD0',
+                    backgroundColor: '#FAF8F5',
+                    fontSize: '0.88rem',
+                    color: '#121418',
+                    outline: 'none'
+                  }}
                 />
               </div>
 
-              {/* Scrollable Agent List */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-[420px] overflow-y-auto pr-1">
+              {/* Scrollable Grid of Agents */}
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+                  gap: '0.6rem',
+                  maxHeight: '420px',
+                  overflowY: 'auto',
+                  paddingRight: '0.25rem'
+                }}
+              >
                 {filteredAgents.map((agent) => {
                   const isSelected = agent.id === selectedAgentId;
                   return (
@@ -463,22 +554,58 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
                         setAuthError('');
                         setAuthSuccess('');
                       }}
-                      className={`flex items-center gap-3 p-2.5 rounded-xl border text-left transition-all ${
-                        isSelected
-                          ? 'bg-[#660E1A] text-white border-[#660E1A] shadow-md'
-                          : 'bg-[#FAF8F5] hover:bg-[#F3EFE8] text-[#121418] border-[#E8E2D9]'
-                      }`}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.75rem',
+                        padding: '0.65rem 0.75rem',
+                        borderRadius: '12px',
+                        border: isSelected ? '1px solid #660E1A' : '1px solid #EAE4DC',
+                        backgroundColor: isSelected ? '#660E1A' : '#FAF8F5',
+                        color: isSelected ? '#FFFFFF' : '#121418',
+                        textAlign: 'left',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease'
+                      }}
                     >
                       <img
                         src={agent.photoUrl}
                         alt={agent.name}
-                        className="w-11 h-11 rounded-lg object-cover object-top bg-[#EDEAE4] shrink-0 border border-white/20"
+                        style={{
+                          width: '44px',
+                          height: '44px',
+                          minWidth: '44px',
+                          borderRadius: '10px',
+                          objectFit: 'cover',
+                          objectPosition: 'top center',
+                          backgroundColor: '#EDEAE4',
+                          border: isSelected ? '1px solid rgba(255,255,255,0.35)' : '1px solid #E2DBD0'
+                        }}
                       />
-                      <div className="min-w-0 flex-1">
-                        <div className={`text-sm font-bold truncate ${isSelected ? 'text-white' : 'text-[#121418]'}`}>
+                      <div style={{ minWidth: 0, flex: 1, overflow: 'hidden' }}>
+                        <div
+                          style={{
+                            fontSize: '0.86rem',
+                            fontWeight: 700,
+                            color: isSelected ? '#FFFFFF' : '#121418',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                          }}
+                        >
                           {agent.name}
                         </div>
-                        <div className={`text-xs truncate font-mono ${isSelected ? 'text-[#F6D8A8]' : 'text-[#660E1A]'}`}>
+                        <div
+                          style={{
+                            fontSize: '0.74rem',
+                            fontFamily: 'monospace',
+                            color: isSelected ? '#F6D8A8' : '#660E1A',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            marginTop: '2px'
+                          }}
+                        >
                           {agent.email}
                         </div>
                       </div>
@@ -488,53 +615,161 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
               </div>
             </div>
 
-            {/* Right: PIN Login or Reset Card */}
-            <div className="lg:col-span-5 bg-white rounded-2xl border border-[#E8E2D9] shadow-md p-6">
-              <div className="flex items-center gap-4 pb-5 mb-5 border-b border-[#EFEAE2]">
+            {/* Right Card: Selected Agent Login / PIN Reset */}
+            <div
+              style={{
+                backgroundColor: '#FFFFFF',
+                borderRadius: '18px',
+                border: '1px solid #E6DFD5',
+                boxShadow: '0 14px 36px rgba(18, 20, 24, 0.07)',
+                padding: '1.75rem'
+              }}
+            >
+              {/* Selected Agent Header */}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '1rem',
+                  paddingBottom: '1.25rem',
+                  marginBottom: '1.25rem',
+                  borderBottom: '1px solid #EFEAE2'
+                }}
+              >
                 <img
                   src={currentAgentObj.photoUrl}
                   alt={currentAgentObj.name}
-                  className="w-16 h-16 rounded-xl object-cover object-top border border-[#E4DDD3]"
+                  style={{
+                    width: '68px',
+                    height: '68px',
+                    minWidth: '68px',
+                    borderRadius: '14px',
+                    objectFit: 'cover',
+                    objectPosition: 'top center',
+                    border: '1px solid #E2DBD0',
+                    backgroundColor: '#F3EFE8'
+                  }}
                 />
-                <div>
-                  <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#660E1A]">
+                <div style={{ minWidth: 0 }}>
+                  <div
+                    style={{
+                      fontSize: '0.7rem',
+                      fontWeight: 800,
+                      letterSpacing: '0.12em',
+                      textTransform: 'uppercase',
+                      color: '#660E1A'
+                    }}
+                  >
                     {currentAgentObj.title}
-                  </span>
-                  <h3 className="text-lg font-bold text-[#121418]">{currentAgentObj.name}</h3>
-                  <div className="text-xs font-mono font-semibold text-[#5A606D]">{currentAgentObj.email}</div>
+                  </div>
+                  <div
+                    style={{
+                      fontSize: '1.2rem',
+                      fontWeight: 800,
+                      color: '#121418',
+                      marginTop: '2px'
+                    }}
+                  >
+                    {currentAgentObj.name}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: '0.82rem',
+                      fontFamily: 'monospace',
+                      fontWeight: 700,
+                      color: '#5A606D',
+                      marginTop: '2px'
+                    }}
+                  >
+                    {currentAgentObj.email}
+                  </div>
                 </div>
               </div>
 
               {authError && (
-                <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 font-medium">
+                <div
+                  style={{
+                    marginBottom: '1rem',
+                    padding: '0.8rem 1rem',
+                    borderRadius: '12px',
+                    backgroundColor: '#FEF2F2',
+                    border: '1px solid #FECACA',
+                    color: '#B91C1C',
+                    fontSize: '0.82rem',
+                    fontWeight: 600,
+                    lineHeight: 1.5
+                  }}
+                >
                   {authError}
                 </div>
               )}
 
               {authSuccess && (
-                <div className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 font-medium">
+                <div
+                  style={{
+                    marginBottom: '1rem',
+                    padding: '0.8rem 1rem',
+                    borderRadius: '12px',
+                    backgroundColor: '#ECFDF5',
+                    border: '1px solid #A7F3D0',
+                    color: '#065F46',
+                    fontSize: '0.82rem',
+                    fontWeight: 600,
+                    lineHeight: 1.5
+                  }}
+                >
                   {authSuccess}
                 </div>
               )}
 
-              {resetMode === 'none' && (
-                <form onSubmit={handleLogin} className="space-y-4">
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[#121418] mb-1.5">
+              {resetMode === 'none' ? (
+                <form onSubmit={handleLogin}>
+                  <div style={{ marginBottom: '1.1rem' }}>
+                    <label
+                      style={{
+                        display: 'block',
+                        fontSize: '0.75rem',
+                        fontWeight: 800,
+                        letterSpacing: '0.1em',
+                        textTransform: 'uppercase',
+                        color: '#121418',
+                        marginBottom: '0.5rem'
+                      }}
+                    >
                       2. PIN de Acceso
                     </label>
-                    <div className="relative">
-                      <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#847C74]" />
+                    <div style={{ position: 'relative' }}>
+                      <Lock
+                        size={16}
+                        color="#847C74"
+                        style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }}
+                      />
                       <input
                         type="password"
                         value={pinInput}
                         onChange={(e) => setPinInput(e.target.value)}
                         placeholder="Ingresa tu PIN (ej. últimos 4 dígitos de tu tel)"
-                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#D8D0C5] bg-[#FAF8F5] text-sm font-semibold text-[#121418] focus:outline-none focus:border-[#660E1A]"
-                        autoFocus
+                        style={{
+                          width: '100%',
+                          padding: '0.85rem 1rem 0.85rem 2.5rem',
+                          borderRadius: '12px',
+                          border: '1px solid #D8D0C5',
+                          backgroundColor: '#FAF8F5',
+                          fontSize: '0.92rem',
+                          fontWeight: 600,
+                          color: '#121418',
+                          outline: 'none'
+                        }}
                       />
                     </div>
-                    <p className="text-[11px] text-[#6E7480] mt-1.5 leading-relaxed">
+                    <p
+                      style={{
+                        fontSize: '0.76rem',
+                        color: '#6E7480',
+                        marginTop: '0.55rem',
+                        lineHeight: 1.5
+                      }}
+                    >
                       💡 <strong>¿Primera vez entrando?</strong> Tu PIN inicial son los{' '}
                       <strong>últimos 4 dígitos de tu teléfono</strong> ({currentAgentObj.phone}).
                     </p>
@@ -543,33 +778,73 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
                   <button
                     type="submit"
                     disabled={authLoading}
-                    className="w-full py-3.5 px-5 rounded-xl bg-[#660E1A] hover:bg-[#4D0913] text-white font-bold text-xs uppercase tracking-[0.12em] transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer"
+                    style={{
+                      width: '100%',
+                      padding: '0.95rem 1.25rem',
+                      borderRadius: '12px',
+                      backgroundColor: '#660E1A',
+                      color: '#FFFFFF',
+                      border: 'none',
+                      fontSize: '0.8rem',
+                      fontWeight: 800,
+                      letterSpacing: '0.12em',
+                      textTransform: 'uppercase',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.5rem'
+                    }}
                   >
-                    {authLoading ? 'Verificando...' : 'Entrar a mi Bandeja'}
+                    <span>{authLoading ? 'Verificando...' : 'Entrar a mi Bandeja'}</span>
                     <ArrowRight size={15} />
                   </button>
 
-                  <div className="pt-3 border-t border-[#EFEAE2] text-center">
+                  <div
+                    style={{
+                      marginTop: '1.1rem',
+                      paddingTop: '1rem',
+                      borderTop: '1px solid #EFEAE2',
+                      textAlign: 'center'
+                    }}
+                  >
                     <button
                       type="button"
                       onClick={handleRequestPinReset}
                       disabled={authLoading}
-                      className="text-xs font-semibold text-[#660E1A] hover:underline inline-flex items-center gap-1.5 cursor-pointer"
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#660E1A',
+                        fontSize: '0.78rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.4rem'
+                      }}
                     >
                       <KeyRound size={13} />
-                      ¿Olvidaste o quieres cambiar tu PIN? Recibir código en mi Gmail
+                      <span>¿Olvidaste o quieres cambiar tu PIN? Recibir código en mi Gmail</span>
                     </button>
                   </div>
                 </form>
-              )}
-
-              {resetMode === 'verify' && (
-                <form onSubmit={handleConfirmPinReset} className="space-y-4">
-                  <p className="text-xs text-[#5A606D] leading-relaxed">
-                    Ingresa el código de 6 dígitos que acabamos de enviar a <strong>{maskedEmailHint}</strong> y elige tu nuevo PIN:
+              ) : (
+                <form onSubmit={handleConfirmPinReset}>
+                  <p style={{ fontSize: '0.82rem', color: '#5A606D', lineHeight: 1.5, marginBottom: '1rem' }}>
+                    Ingresa el código de 6 dígitos enviado a <strong>{maskedEmailHint}</strong> y escribe tu nuevo PIN:
                   </p>
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[#121418] mb-1">
+                  <div style={{ marginBottom: '0.9rem' }}>
+                    <label
+                      style={{
+                        display: 'block',
+                        fontSize: '0.74rem',
+                        fontWeight: 800,
+                        textTransform: 'uppercase',
+                        color: '#121418',
+                        marginBottom: '0.35rem'
+                      }}
+                    >
                       Código de 6 dígitos
                     </label>
                     <input
@@ -578,35 +853,86 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
                       onChange={(e) => setResetCode(e.target.value)}
                       placeholder="123456"
                       maxLength={6}
-                      className="w-full px-4 py-2.5 rounded-xl border border-[#D8D0C5] bg-[#FAF8F5] text-center font-mono text-lg font-bold tracking-[0.3em] text-[#660E1A]"
                       required
+                      style={{
+                        width: '100%',
+                        padding: '0.75rem',
+                        borderRadius: '12px',
+                        border: '1px solid #D8D0C5',
+                        backgroundColor: '#FAF8F5',
+                        textAlign: 'center',
+                        fontFamily: 'monospace',
+                        fontSize: '1.25rem',
+                        fontWeight: 800,
+                        letterSpacing: '0.3em',
+                        color: '#660E1A'
+                      }}
                     />
                   </div>
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[#121418] mb-1">
-                      Tu Nuevo PIN / Contraseña (mín. 4 dígitos)
+                  <div style={{ marginBottom: '1.1rem' }}>
+                    <label
+                      style={{
+                        display: 'block',
+                        fontSize: '0.74rem',
+                        fontWeight: 800,
+                        textTransform: 'uppercase',
+                        color: '#121418',
+                        marginBottom: '0.35rem'
+                      }}
+                    >
+                      Tu Nuevo PIN / Contraseña (mín. 4 caracteres)
                     </label>
                     <input
                       type="password"
                       value={resetNewPin}
                       onChange={(e) => setResetNewPin(e.target.value)}
                       placeholder="Nuevo PIN"
-                      className="w-full px-4 py-2.5 rounded-xl border border-[#D8D0C5] bg-[#FAF8F5] text-sm font-semibold"
                       required
+                      style={{
+                        width: '100%',
+                        padding: '0.75rem 1rem',
+                        borderRadius: '12px',
+                        border: '1px solid #D8D0C5',
+                        backgroundColor: '#FAF8F5',
+                        fontSize: '0.9rem',
+                        fontWeight: 600
+                      }}
                     />
                   </div>
-                  <div className="flex gap-2">
+                  <div style={{ display: 'flex', gap: '0.6rem' }}>
                     <button
                       type="button"
                       onClick={() => setResetMode('none')}
-                      className="flex-1 py-2.5 rounded-xl border border-[#D8D0C5] text-xs font-bold uppercase text-[#5A606D]"
+                      style={{
+                        flex: 1,
+                        padding: '0.75rem',
+                        borderRadius: '10px',
+                        border: '1px solid #D8D0C5',
+                        backgroundColor: '#FFFFFF',
+                        fontSize: '0.76rem',
+                        fontWeight: 700,
+                        textTransform: 'uppercase',
+                        color: '#5A606D',
+                        cursor: 'pointer'
+                      }}
                     >
                       Cancelar
                     </button>
                     <button
                       type="submit"
                       disabled={authLoading}
-                      className="flex-1 py-2.5 rounded-xl bg-[#660E1A] text-white text-xs font-bold uppercase tracking-wider"
+                      style={{
+                        flex: 1,
+                        padding: '0.75rem',
+                        borderRadius: '10px',
+                        border: 'none',
+                        backgroundColor: '#660E1A',
+                        color: '#FFFFFF',
+                        fontSize: '0.76rem',
+                        fontWeight: 800,
+                        textTransform: 'uppercase',
+                        cursor: 'pointer'
+                      }}
                     >
                       {authLoading ? 'Guardando...' : 'Guardar y Entrar'}
                     </button>
@@ -616,31 +942,74 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
             </div>
           </div>
         </div>
-      </div>
+      </main>
     );
   }
 
   // ==================== AUTHENTICATED WEBMAIL DASHBOARD ====================
   return (
-    <div className="min-h-screen bg-[#F5F2EB] pt-24 pb-12 px-3 md:px-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Top Bar */}
-        <div className="bg-white rounded-2xl border border-[#E5DFD5] shadow-sm p-4 mb-4 flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-3.5">
+    <main
+      style={{
+        paddingTop: 'calc(var(--header-height, 84px) + 1.5rem)',
+        paddingBottom: '4rem',
+        minHeight: '100vh',
+        backgroundColor: '#F4F1EA'
+      }}
+    >
+      <div className="container" style={{ maxWidth: '1280px' }}>
+        {/* Top Header Bar */}
+        <div
+          style={{
+            backgroundColor: '#FFFFFF',
+            borderRadius: '16px',
+            border: '1px solid #E5DFD5',
+            padding: '1rem 1.25rem',
+            marginBottom: '1.25rem',
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '1rem',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.03)'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.9rem' }}>
             <img
               src={loggedAgent.photoUrl}
               alt={loggedAgent.name}
-              className="w-12 h-12 rounded-xl object-cover object-top border border-[#E5DFD5]"
+              style={{
+                width: '52px',
+                height: '52px',
+                minWidth: '52px',
+                borderRadius: '12px',
+                objectFit: 'cover',
+                objectPosition: 'top center',
+                border: '1px solid #E2DBD0'
+              }}
             />
             <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-base md:text-lg font-bold text-[#121418]">{loggedAgent.name}</h1>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#660E1A]/10 text-[#660E1A]">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
+                <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#121418' }}>
+                  {loggedAgent.name}
+                </span>
+                <span
+                  style={{
+                    fontSize: '0.68rem',
+                    fontWeight: 800,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.08em',
+                    padding: '0.18rem 0.55rem',
+                    borderRadius: '999px',
+                    backgroundColor: 'rgba(102, 14, 26, 0.09)',
+                    color: '#660E1A'
+                  }}
+                >
                   {loggedAgent.title}
                 </span>
               </div>
-              <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                <span className="text-xs md:text-sm font-mono font-bold text-[#660E1A]">
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.25rem' }}>
+                <span style={{ fontSize: '0.84rem', fontFamily: 'monospace', fontWeight: 700, color: '#660E1A' }}>
                   {loggedAgent.corporateEmail}
                 </span>
                 <button
@@ -650,23 +1019,55 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
                     setCopiedEmail(true);
                     setTimeout(() => setCopiedEmail(false), 1800);
                   }}
-                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#FAF7F2] hover:bg-[#EFEAE2] border border-[#E5DFD5] text-[11px] font-semibold text-[#5A606D] cursor-pointer"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.25rem',
+                    padding: '0.15rem 0.5rem',
+                    borderRadius: '6px',
+                    border: '1px solid #E2DBD0',
+                    backgroundColor: '#FAF8F5',
+                    fontSize: '0.72rem',
+                    fontWeight: 600,
+                    color: '#5A606D',
+                    cursor: 'pointer'
+                  }}
                 >
-                  {copiedEmail ? <Check size={12} className="text-emerald-600" /> : <Copy size={12} />}
-                  {copiedEmail ? 'Copiado' : 'Copiar correo'}
+                  {copiedEmail ? <Check size={12} color="#059669" /> : <Copy size={12} />}
+                  <span>{copiedEmail ? 'Copiado' : 'Copiar'}</span>
                 </button>
-                <span className="text-[11px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md font-medium">
+                <span
+                  style={{
+                    fontSize: '0.72rem',
+                    fontWeight: 600,
+                    color: '#065F46',
+                    backgroundColor: '#ECFDF5',
+                    border: '1px solid #A7F3D0',
+                    padding: '0.12rem 0.5rem',
+                    borderRadius: '6px'
+                  }}
+                >
                   ✓ Copia activa a {loggedAgent.maskedPersonalEmail || loggedAgent.personalEmail}
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Right Controls & Admin Switcher */}
-          <div className="flex items-center gap-2.5 flex-wrap">
+          {/* Action Buttons & Admin Switcher */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
             {isAdmin && (
-              <div className="flex items-center gap-2 bg-[#FAF7F2] px-3 py-1.5 rounded-xl border border-[#E5DFD5]">
-                <Users size={14} className="text-[#660E1A]" />
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.45rem',
+                  backgroundColor: '#FAF7F2',
+                  padding: '0.45rem 0.75rem',
+                  borderRadius: '10px',
+                  border: '1px solid #E2DBD0'
+                }}
+              >
+                <Users size={14} color="#660E1A" />
                 <select
                   value={viewAllMailboxes ? '__ALL__' : targetAgentId}
                   onChange={(e) => {
@@ -680,7 +1081,15 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
                       setTargetAgentId(val);
                     }
                   }}
-                  className="bg-transparent text-xs font-bold text-[#121418] focus:outline-none cursor-pointer"
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    fontSize: '0.78rem',
+                    fontWeight: 700,
+                    color: '#121418',
+                    outline: 'none',
+                    cursor: 'pointer'
+                  }}
                 >
                   <option value="__ALL__">👑 Vista Admin: Todos los Buzones (26)</option>
                   {AGENTS_DATA.map((a) => (
@@ -702,211 +1111,368 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
                 setSendStatus(null);
                 setComposeOpen(true);
               }}
-              className="px-4 py-2.5 rounded-xl bg-[#660E1A] hover:bg-[#4D0913] text-white text-xs font-bold uppercase tracking-wider inline-flex items-center gap-1.5 shadow-sm cursor-pointer"
+              style={{
+                padding: '0.6rem 1.1rem',
+                borderRadius: '10px',
+                backgroundColor: '#660E1A',
+                color: '#FFFFFF',
+                border: 'none',
+                fontSize: '0.76rem',
+                fontWeight: 800,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                cursor: 'pointer'
+              }}
             >
               <Plus size={15} />
-              Redactar Correo
+              <span>Redactar Correo</span>
             </button>
 
             <button
               type="button"
               onClick={() => fetchMailbox(token, targetAgentId, viewAllMailboxes)}
-              className="p-2.5 rounded-xl border border-[#E5DFD5] bg-[#FAF7F2] hover:bg-[#EFEAE2] text-[#121418] cursor-pointer"
+              style={{
+                padding: '0.6rem',
+                borderRadius: '10px',
+                border: '1px solid #E2DBD0',
+                backgroundColor: '#FAF7F2',
+                color: '#121418',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center'
+              }}
               title="Actualizar bandeja"
             >
-              <RefreshCw size={15} className={loadingList ? 'animate-spin text-[#660E1A]' : ''} />
+              <RefreshCw size={15} />
             </button>
 
             <button
               type="button"
               onClick={() => setPinModalOpen(true)}
-              className="px-3 py-2.5 rounded-xl border border-[#E5DFD5] bg-[#FAF7F2] hover:bg-[#EFEAE2] text-xs font-semibold text-[#121418] inline-flex items-center gap-1.5 cursor-pointer"
+              style={{
+                padding: '0.6rem 0.85rem',
+                borderRadius: '10px',
+                border: '1px solid #E2DBD0',
+                backgroundColor: '#FAF7F2',
+                color: '#121418',
+                fontSize: '0.76rem',
+                fontWeight: 700,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                cursor: 'pointer'
+              }}
             >
-              <KeyRound size={14} className="text-[#660E1A]" />
-              Cambiar PIN
+              <KeyRound size={14} color="#660E1A" />
+              <span>Cambiar PIN</span>
             </button>
 
             <button
               type="button"
               onClick={handleLogout}
-              className="px-3 py-2.5 rounded-xl border border-[#E5DFD5] bg-white hover:bg-red-50 text-xs font-semibold text-red-700 inline-flex items-center gap-1.5 cursor-pointer"
+              style={{
+                padding: '0.6rem 0.85rem',
+                borderRadius: '10px',
+                border: '1px solid #FECACA',
+                backgroundColor: '#FEF2F2',
+                color: '#B91C1C',
+                fontSize: '0.76rem',
+                fontWeight: 700,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                cursor: 'pointer'
+              }}
             >
               <LogOut size={14} />
-              Salir
+              <span>Salir</span>
             </button>
           </div>
         </div>
 
-        {/* Main 3-Column / Split Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-          {/* Folders Sidebar */}
-          <div className="lg:col-span-3 bg-white rounded-2xl border border-[#E5DFD5] p-3.5 space-y-1.5 h-fit">
-            <button
-              type="button"
-              onClick={() => {
-                setActiveFolder('received');
-                setSelectedEmail(null);
-              }}
-              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                activeFolder === 'received'
-                  ? 'bg-[#660E1A] text-white'
-                  : 'text-[#121418] hover:bg-[#FAF7F2]'
-              }`}
-            >
-              <span className="inline-flex items-center gap-2.5">
-                <Inbox size={16} />
-                Recibidos (@neweraky.com)
-              </span>
-              <span
-                className={`px-2 py-0.5 rounded-full text-[11px] ${
-                  activeFolder === 'received' ? 'bg-white/20 text-white' : 'bg-[#FAF7F2] text-[#660E1A]'
-                }`}
-              >
-                {receivedList.length}
-              </span>
-            </button>
+        {/* Mailbox Body Grid */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+            gap: '1.25rem',
+            alignItems: 'start'
+          }}
+        >
+          {/* Left Folders Panel */}
+          <div
+            style={{
+              backgroundColor: '#FFFFFF',
+              borderRadius: '16px',
+              border: '1px solid #E5DFD5',
+              padding: '1rem',
+              maxWidth: '100%'
+            }}
+          >
+            {[
+              { id: 'received' as const, label: 'Recibidos (@neweraky.com)', icon: Inbox, count: receivedList.length },
+              { id: 'leads' as const, label: 'Leads de la Web', icon: Sparkles, count: leadsList.length },
+              { id: 'sent' as const, label: 'Enviados', icon: Send, count: sentList.length }
+            ].map((f) => {
+              const IconComp = f.icon;
+              const isAct = activeFolder === f.id;
+              return (
+                <button
+                  key={f.id}
+                  type="button"
+                  onClick={() => {
+                    setActiveFolder(f.id);
+                    setSelectedEmail(null);
+                  }}
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '0.75rem 0.9rem',
+                    marginBottom: '0.35rem',
+                    borderRadius: '10px',
+                    border: 'none',
+                    backgroundColor: isAct ? '#660E1A' : 'transparent',
+                    color: isAct ? '#FFFFFF' : '#121418',
+                    fontSize: '0.82rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    textAlign: 'left'
+                  }}
+                >
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem' }}>
+                    <IconComp size={16} />
+                    <span>{f.label}</span>
+                  </span>
+                  <span
+                    style={{
+                      padding: '0.12rem 0.55rem',
+                      borderRadius: '999px',
+                      fontSize: '0.72rem',
+                      backgroundColor: isAct ? 'rgba(255,255,255,0.2)' : '#FAF7F2',
+                      color: isAct ? '#FFFFFF' : '#660E1A'
+                    }}
+                  >
+                    {f.count}
+                  </span>
+                </button>
+              );
+            })}
 
-            <button
-              type="button"
-              onClick={() => {
-                setActiveFolder('leads');
-                setSelectedEmail(null);
+            {/* Message List inside Left/Center or Full Panel */}
+            <div
+              style={{
+                marginTop: '1rem',
+                paddingTop: '1rem',
+                borderTop: '1px solid #EFEAE2',
+                fontSize: '0.74rem',
+                color: '#6E7480',
+                lineHeight: 1.6
               }}
-              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                activeFolder === 'leads'
-                  ? 'bg-[#660E1A] text-white'
-                  : 'text-[#121418] hover:bg-[#FAF7F2]'
-              }`}
             >
-              <span className="inline-flex items-center gap-2.5">
-                <Sparkles size={16} />
-                Leads de la Web
-              </span>
-              <span
-                className={`px-2 py-0.5 rounded-full text-[11px] ${
-                  activeFolder === 'leads' ? 'bg-white/20 text-white' : 'bg-[#FAF7F2] text-[#660E1A]'
-                }`}
-              >
-                {leadsList.length}
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setActiveFolder('sent');
-                setSelectedEmail(null);
-              }}
-              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                activeFolder === 'sent'
-                  ? 'bg-[#660E1A] text-white'
-                  : 'text-[#121418] hover:bg-[#FAF7F2]'
-              }`}
-            >
-              <span className="inline-flex items-center gap-2.5">
-                <Send size={16} />
-                Enviados
-              </span>
-              <span
-                className={`px-2 py-0.5 rounded-full text-[11px] ${
-                  activeFolder === 'sent' ? 'bg-white/20 text-white' : 'bg-[#FAF7F2] text-[#660E1A]'
-                }`}
-              >
-                {sentList.length}
-              </span>
-            </button>
-
-            <div className="pt-4 mt-4 border-t border-[#EFEAE2] px-2 text-[11px] text-[#6E7480] space-y-1.5">
-              <div className="font-bold text-[#121418] uppercase tracking-wider">Estado del Buzón</div>
+              <div style={{ fontWeight: 800, color: '#121418', textTransform: 'uppercase', marginBottom: '0.25rem' }}>
+                Estado de la Cuenta
+              </div>
               <div>• Dominio: <strong>neweraky.com</strong> (Verificado)</div>
               <div>• Firma Corporativa: <strong>Activa</strong></div>
               <div>• Reenvío a Gmail: <strong>Activo</strong></div>
             </div>
           </div>
 
-          {/* Email List & Detail Reader */}
-          <div className="lg:col-span-9 bg-white rounded-2xl border border-[#E5DFD5] min-h-[540px] overflow-hidden flex flex-col">
+          {/* Right Email List / Reader Panel */}
+          <div
+            style={{
+              gridColumn: 'span 2',
+              backgroundColor: '#FFFFFF',
+              borderRadius: '16px',
+              border: '1px solid #E5DFD5',
+              minHeight: '520px',
+              overflow: 'hidden',
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+          >
             {!selectedEmail ? (
-              <div className="flex-1 divide-y divide-[#EFEAE2]">
-                <div className="px-5 py-3.5 bg-[#FAF8F5] border-b border-[#EFEAE2] flex items-center justify-between">
-                  <span className="text-xs font-bold uppercase tracking-wider text-[#660E1A]">
+              <div style={{ flex: 1 }}>
+                <div
+                  style={{
+                    padding: '0.9rem 1.25rem',
+                    backgroundColor: '#FAF8F5',
+                    borderBottom: '1px solid #EFEAE2',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: '0.76rem',
+                      fontWeight: 800,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.1em',
+                      color: '#660E1A'
+                    }}
+                  >
                     {activeFolder === 'received' && 'Bandeja de Entrada (@neweraky.com)'}
                     {activeFolder === 'leads' && 'Leads & Solicitudes de Clientes'}
                     {activeFolder === 'sent' && 'Correos Enviados'}
                   </span>
-                  <span className="text-xs text-[#6E7480]">{activeList.length} mensajes</span>
+                  <span style={{ fontSize: '0.76rem', color: '#6E7480', fontWeight: 600 }}>
+                    {activeList.length} mensajes
+                  </span>
                 </div>
 
                 {loadingList ? (
-                  <div className="p-12 text-center text-sm text-[#6E7480]">Cargando mensajes...</div>
+                  <div style={{ padding: '3.5rem 1.5rem', textAlign: 'center', color: '#6E7480', fontSize: '0.9rem' }}>
+                    Cargando mensajes...
+                  </div>
                 ) : activeList.length === 0 ? (
-                  <div className="p-14 text-center">
-                    <Mail size={36} className="mx-auto text-[#C4BCB0] mb-3" />
-                    <div className="text-sm font-bold text-[#121418]">No hay mensajes en esta carpeta todavía</div>
-                    <p className="text-xs text-[#6E7480] mt-1 max-w-md mx-auto">
-                      Cualquier correo que envíen a <strong>{loggedAgent.corporateEmail}</strong> aparecerá aquí al instante y también te llegará en copia a tu correo personal.
+                  <div style={{ padding: '4rem 1.5rem', textAlign: 'center' }}>
+                    <Mail size={38} color="#C4BCB0" style={{ margin: '0 auto 0.75rem auto' }} />
+                    <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#121418' }}>
+                      No hay mensajes en esta carpeta todavía
+                    </div>
+                    <p
+                      style={{
+                        fontSize: '0.82rem',
+                        color: '#6E7480',
+                        maxWidth: '420px',
+                        margin: '0.4rem auto 0 auto',
+                        lineHeight: 1.5
+                      }}
+                    >
+                      Cualquier correo enviado a <strong>{loggedAgent.corporateEmail}</strong> aparecerá aquí al instante y también te llegará en copia a tu correo personal.
                     </p>
                   </div>
                 ) : (
-                  activeList.map((item) => (
-                    <button
-                      key={item.id}
-                      type="button"
-                      onClick={() => handleSelectEmailItem(item)}
-                      className="w-full px-5 py-4 text-left hover:bg-[#FAF7F2] transition-colors flex items-start justify-between gap-4 cursor-pointer"
-                    >
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-xs font-bold text-[#660E1A] truncate">
+                  <div>
+                    {activeList.map((item) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => handleSelectEmailItem(item)}
+                        style={{
+                          width: '100%',
+                          padding: '1rem 1.25rem',
+                          border: 'none',
+                          borderBottom: '1px solid #EFEAE2',
+                          backgroundColor: '#FFFFFF',
+                          textAlign: 'left',
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          justifyContent: 'space-between',
+                          gap: '1rem',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <div style={{ minWidth: 0, flex: 1 }}>
+                          <div
+                            style={{
+                              fontSize: '0.76rem',
+                              fontWeight: 700,
+                              color: '#660E1A',
+                              marginBottom: '0.2rem',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis'
+                            }}
+                          >
                             {item.direction === 'inbound' ? `De: ${item.from}` : `Para: ${item.to.join(', ')}`}
-                          </span>
+                          </div>
+                          <div
+                            style={{
+                              fontSize: '0.9rem',
+                              fontWeight: 700,
+                              color: '#121418',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis'
+                            }}
+                          >
+                            {item.subject}
+                          </div>
                         </div>
-                        <div className="text-sm font-bold text-[#121418] truncate">{item.subject}</div>
-                      </div>
-                      <div className="text-[11px] text-[#847C74] whitespace-nowrap shrink-0">
-                        {item.createdAt ? new Date(item.createdAt).toLocaleString() : ''}
-                      </div>
-                    </button>
-                  ))
+                        <div style={{ fontSize: '0.72rem', color: '#847C74', whiteSpace: 'nowrap' }}>
+                          {item.createdAt ? new Date(item.createdAt).toLocaleString() : ''}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
                 )}
               </div>
             ) : (
-              /* Email Reader View */
-              <div className="flex-1 flex flex-col">
-                <div className="px-5 py-3.5 bg-[#FAF8F5] border-b border-[#EFEAE2] flex items-center justify-between gap-3">
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <div
+                  style={{
+                    padding: '0.85rem 1.25rem',
+                    backgroundColor: '#FAF8F5',
+                    borderBottom: '1px solid #EFEAE2',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '1rem'
+                  }}
+                >
                   <button
                     type="button"
                     onClick={() => {
                       setSelectedEmail(null);
                       setEmailDetail(null);
                     }}
-                    className="inline-flex items-center gap-1.5 text-xs font-bold text-[#660E1A] hover:underline cursor-pointer"
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#660E1A',
+                      fontSize: '0.8rem',
+                      fontWeight: 700,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      cursor: 'pointer'
+                    }}
                   >
                     <ChevronLeft size={16} />
-                    Volver a la lista
+                    <span>Volver a la lista</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={handleOpenReply}
-                    className="px-4 py-2 rounded-xl bg-[#660E1A] hover:bg-[#4D0913] text-white text-xs font-bold uppercase tracking-wider inline-flex items-center gap-1.5 cursor-pointer"
+                    style={{
+                      padding: '0.5rem 1rem',
+                      borderRadius: '10px',
+                      border: 'none',
+                      backgroundColor: '#660E1A',
+                      color: '#FFFFFF',
+                      fontSize: '0.75rem',
+                      fontWeight: 800,
+                      textTransform: 'uppercase',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                      cursor: 'pointer'
+                    }}
                   >
                     <Reply size={14} />
-                    Responder como {loggedAgent.corporateEmail}
+                    <span>Responder</span>
                   </button>
                 </div>
 
-                <div className="p-6 border-b border-[#EFEAE2] bg-white">
-                  <h2 className="text-lg font-bold text-[#121418] mb-2">{selectedEmail.subject}</h2>
-                  <div className="text-xs text-[#5A606D] space-y-1">
+                <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid #EFEAE2' }}>
+                  <h2 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#121418', margin: '0 0 0.5rem 0' }}>
+                    {selectedEmail.subject}
+                  </h2>
+                  <div style={{ fontSize: '0.78rem', color: '#5A606D', lineHeight: 1.6 }}>
                     <div>
                       <strong>De:</strong> {emailDetail?.from || selectedEmail.from}
                     </div>
                     <div>
                       <strong>Para:</strong>{' '}
-                      {Array.isArray(emailDetail?.to)
-                        ? emailDetail.to.join(', ')
-                        : selectedEmail.to.join(', ')}
+                      {Array.isArray(emailDetail?.to) ? emailDetail.to.join(', ') : selectedEmail.to.join(', ')}
                     </div>
                     <div>
                       <strong>Fecha:</strong>{' '}
@@ -915,16 +1481,13 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
                   </div>
                 </div>
 
-                <div className="p-6 flex-1 overflow-y-auto bg-white">
+                <div style={{ padding: '1.5rem', flex: 1, overflowY: 'auto' }}>
                   {loadingDetail ? (
-                    <div className="text-sm text-[#6E7480]">Cargando contenido del mensaje...</div>
+                    <div style={{ fontSize: '0.88rem', color: '#6E7480' }}>Cargando contenido del mensaje...</div>
                   ) : emailDetail?.html ? (
-                    <div
-                      className="prose max-w-none text-sm"
-                      dangerouslySetInnerHTML={{ __html: emailDetail.html }}
-                    />
+                    <div dangerouslySetInnerHTML={{ __html: emailDetail.html }} />
                   ) : (
-                    <pre className="whitespace-pre-wrap font-sans text-sm text-[#121418]">
+                    <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'sans-serif', fontSize: '0.9rem', color: '#121418' }}>
                       {emailDetail?.text || '(Sin contenido de texto)'}
                     </pre>
                   )}
@@ -937,123 +1500,169 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
 
       {/* ==================== COMPOSE MODAL ==================== */}
       {composeOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl border border-[#E5DFD5] shadow-2xl w-full max-w-2xl overflow-hidden">
-            <div className="bg-[#660E1A] text-white px-6 py-4 flex items-center justify-between">
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 9999,
+            backgroundColor: 'rgba(18, 20, 24, 0.65)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1rem'
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: '#FFFFFF',
+              borderRadius: '18px',
+              border: '1px solid #E5DFD5',
+              width: '100%',
+              maxWidth: '640px',
+              overflow: 'hidden',
+              boxShadow: '0 24px 60px rgba(0,0,0,0.25)'
+            }}
+          >
+            <div
+              style={{
+                backgroundColor: '#660E1A',
+                color: '#FFFFFF',
+                padding: '1rem 1.5rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}
+            >
               <div>
-                <div className="text-[10px] uppercase tracking-[0.16em] text-[#F6D8A8] font-bold">
+                <div style={{ fontSize: '0.68rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#F6D8A8', fontWeight: 700 }}>
                   NUEVO MENSAJE CORPORATIVO
                 </div>
-                <div className="text-sm font-bold">
+                <div style={{ fontSize: '0.9rem', fontWeight: 700, marginTop: '2px' }}>
                   De: {loggedAgent.name} &lt;{loggedAgent.corporateEmail}&gt;
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setComposeOpen(false)}
-                className="text-white/80 hover:text-white cursor-pointer"
+                style={{ background: 'none', border: 'none', color: '#FFFFFF', cursor: 'pointer' }}
               >
                 <X size={20} />
               </button>
             </div>
 
-            <form onSubmit={handleSendEmail} className="p-6 space-y-4 max-h-[82vh] overflow-y-auto">
+            <form onSubmit={handleSendEmail} style={{ padding: '1.5rem', maxHeight: '80vh', overflowY: 'auto' }}>
               {sendStatus && (
                 <div
-                  className={`p-3 rounded-xl text-xs font-bold ${
-                    sendStatus.type === 'ok'
-                      ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-                      : 'bg-red-50 text-red-700 border border-red-200'
-                  }`}
+                  style={{
+                    marginBottom: '1rem',
+                    padding: '0.75rem 1rem',
+                    borderRadius: '10px',
+                    backgroundColor: sendStatus.type === 'ok' ? '#ECFDF5' : '#FEF2F2',
+                    color: sendStatus.type === 'ok' ? '#065F46' : '#B91C1C',
+                    fontSize: '0.82rem',
+                    fontWeight: 700
+                  }}
                 >
                   {sendStatus.text}
                 </div>
               )}
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '0.85rem' }}>
                 <div>
-                  <label className="block text-xs font-bold uppercase text-[#121418] mb-1">Para (Destinatario)</label>
+                  <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.3rem' }}>
+                    Para (Destinatario)
+                  </label>
                   <input
                     type="text"
                     value={composeTo}
                     onChange={(e) => setComposeTo(e.target.value)}
                     placeholder="cliente@ejemplo.com"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#D8D0C5] text-sm"
                     required
+                    style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '10px', border: '1px solid #D8D0C5', fontSize: '0.86rem' }}
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase text-[#121418] mb-1">CC (Opcional)</label>
+                  <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.3rem' }}>
+                    CC (Opcional)
+                  </label>
                   <input
                     type="text"
                     value={composeCc}
                     onChange={(e) => setComposeCc(e.target.value)}
                     placeholder="copia@ejemplo.com"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#D8D0C5] text-sm"
+                    style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '10px', border: '1px solid #D8D0C5', fontSize: '0.86rem' }}
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold uppercase text-[#121418] mb-1">Asunto</label>
+              <div style={{ marginBottom: '0.85rem' }}>
+                <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.3rem' }}>
+                  Asunto
+                </label>
                 <input
                   type="text"
                   value={composeSubject}
                   onChange={(e) => setComposeSubject(e.target.value)}
                   placeholder="Asunto del correo..."
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#D8D0C5] text-sm"
                   required
+                  style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '10px', border: '1px solid #D8D0C5', fontSize: '0.86rem' }}
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-bold uppercase text-[#121418] mb-1">Mensaje</label>
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.3rem' }}>
+                  Mensaje
+                </label>
                 <textarea
                   rows={6}
                   value={composeMessage}
                   onChange={(e) => setComposeMessage(e.target.value)}
                   placeholder="Escribe tu mensaje aquí..."
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#D8D0C5] text-sm"
                   required
+                  style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '10px', border: '1px solid #D8D0C5', fontSize: '0.88rem', fontFamily: 'inherit' }}
                 />
               </div>
 
-              {/* Automatic Corporate Signature Preview */}
-              <div className="bg-[#FAF8F5] rounded-xl p-3.5 border border-[#E5DFD5]">
-                <div className="text-[10px] font-bold uppercase tracking-wider text-[#847C74] mb-2">
-                  Firma Oficial Incluida Automáticamente:
-                </div>
-                <div className="flex items-center gap-3">
-                  <img
-                    src={loggedAgent.photoUrl}
-                    alt={loggedAgent.name}
-                    className="w-11 h-14 rounded-lg object-cover object-top border border-[#E5DFD5]"
-                  />
-                  <div className="text-xs text-[#121418] leading-snug">
-                    <div className="font-bold">{loggedAgent.name}</div>
-                    <div className="text-[#660E1A] font-semibold text-[11px]">{loggedAgent.title} · New Era Real Estate LLC</div>
-                    <div className="text-[#5A606D] text-[11px]">
-                      {loggedAgent.phone} · {loggedAgent.corporateEmail}
-                    </div>
-                  </div>
+              {/* Signature Preview */}
+              <div
+                style={{
+                  backgroundColor: '#FAF8F5',
+                  borderRadius: '12px',
+                  padding: '0.85rem',
+                  border: '1px solid #E5DFD5',
+                  marginBottom: '1.25rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.85rem'
+                }}
+              >
+                <img
+                  src={loggedAgent.photoUrl}
+                  alt={loggedAgent.name}
+                  style={{ width: '46px', height: '58px', borderRadius: '8px', objectFit: 'cover', objectPosition: 'top center', border: '1px solid #E2DBD0' }}
+                />
+                <div style={{ fontSize: '0.76rem', lineHeight: 1.45 }}>
+                  <div style={{ fontWeight: 800, color: '#121418' }}>{loggedAgent.name}</div>
+                  <div style={{ fontWeight: 700, color: '#660E1A' }}>{loggedAgent.title} · New Era Real Estate LLC</div>
+                  <div style={{ color: '#5A606D' }}>{loggedAgent.phone} · {loggedAgent.corporateEmail}</div>
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2.5 pt-2">
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.6rem' }}>
                 <button
                   type="button"
                   onClick={() => setComposeOpen(false)}
-                  className="px-4 py-2.5 rounded-xl border border-[#D8D0C5] text-xs font-bold uppercase text-[#5A606D]"
+                  style={{ padding: '0.65rem 1.1rem', borderRadius: '10px', border: '1px solid #D8D0C5', background: '#FFFFFF', fontSize: '0.76rem', fontWeight: 700, textTransform: 'uppercase', cursor: 'pointer' }}
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   disabled={sendingEmail}
-                  className="px-6 py-2.5 rounded-xl bg-[#660E1A] hover:bg-[#4D0913] text-white text-xs font-bold uppercase tracking-wider inline-flex items-center gap-2 cursor-pointer"
+                  style={{ padding: '0.65rem 1.4rem', borderRadius: '10px', border: 'none', background: '#660E1A', color: '#FFFFFF', fontSize: '0.76rem', fontWeight: 800, textTransform: 'uppercase', display: 'inline-flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}
                 >
                   <Send size={14} />
-                  {sendingEmail ? 'Enviando...' : 'Enviar Correo'}
+                  <span>{sendingEmail ? 'Enviando...' : 'Enviar Correo'}</span>
                 </button>
               </div>
             </form>
@@ -1063,46 +1672,70 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
 
       {/* ==================== CHANGE PIN MODAL ==================== */}
       {pinModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl border border-[#E5DFD5] shadow-xl w-full max-w-md p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-base font-bold text-[#121418]">
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 9999,
+            backgroundColor: 'rgba(18, 20, 24, 0.65)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1rem'
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: '#FFFFFF',
+              borderRadius: '16px',
+              border: '1px solid #E5DFD5',
+              width: '100%',
+              maxWidth: '420px',
+              padding: '1.5rem'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+              <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#121418', margin: 0 }}>
                 Cambiar PIN de {loggedAgent.corporateEmail}
               </h3>
               <button
                 type="button"
                 onClick={() => setPinModalOpen(false)}
-                className="text-[#847C74] hover:text-[#121418]"
+                style={{ background: 'none', border: 'none', color: '#847C74', cursor: 'pointer' }}
               >
                 <X size={18} />
               </button>
             </div>
-            <form onSubmit={handleSaveNewPinInside} className="space-y-4">
-              <div>
-                <label className="block text-xs font-bold uppercase text-[#121418] mb-1">
-                  Nuevo PIN o Contraseña (mínimo 4 caracteres)
+            <form onSubmit={handleSaveNewPinInside}>
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', fontSize: '0.74rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.35rem' }}>
+                  Nuevo PIN o Contraseña (mín. 4 caracteres)
                 </label>
                 <input
                   type="password"
                   value={newPinValue}
                   onChange={(e) => setNewPinValue(e.target.value)}
                   placeholder="Ingresa el nuevo PIN"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#D8D0C5] text-sm"
                   required
+                  style={{ width: '100%', padding: '0.7rem 0.9rem', borderRadius: '10px', border: '1px solid #D8D0C5', fontSize: '0.88rem' }}
                 />
               </div>
-              {pinStatusMsg && <div className="text-xs font-bold text-[#660E1A]">{pinStatusMsg}</div>}
-              <div className="flex justify-end gap-2">
+              {pinStatusMsg && (
+                <div style={{ marginBottom: '0.85rem', fontSize: '0.8rem', fontWeight: 700, color: '#660E1A' }}>
+                  {pinStatusMsg}
+                </div>
+              )}
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
                 <button
                   type="button"
                   onClick={() => setPinModalOpen(false)}
-                  className="px-4 py-2 rounded-xl border border-[#D8D0C5] text-xs font-bold uppercase text-[#5A606D]"
+                  style={{ padding: '0.6rem 1rem', borderRadius: '10px', border: '1px solid #D8D0C5', background: '#FFFFFF', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', cursor: 'pointer' }}
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-[#660E1A] text-white text-xs font-bold uppercase tracking-wider"
+                  style={{ padding: '0.6rem 1.2rem', borderRadius: '10px', border: 'none', background: '#660E1A', color: '#FFFFFF', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', cursor: 'pointer' }}
                 >
                   Guardar PIN
                 </button>
@@ -1111,6 +1744,6 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
           </div>
         </div>
       )}
-    </div>
+    </main>
   );
 };
