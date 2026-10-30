@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowUpRight, Lock } from 'lucide-react';
 import { BrandLogo } from '../common/BrandLogo';
-import { HexPattern } from '../components/common/HexPattern';
+import { HexPattern } from '../common/HexPattern';
 import { BROKERAGE_DATA } from '../../data/agentsData';
 
 interface FooterProps {
