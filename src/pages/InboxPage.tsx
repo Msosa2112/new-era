@@ -58,11 +58,10 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
   const [resetNewPin, setResetNewPin] = useState<string>('');
   const [maskedEmailHint, setMaskedEmailHint] = useState<string>('');
 
-  const [activeFolder, setActiveFolder] = useState<'received' | 'leads' | 'sent'>('received');
+  const [activeFolder, setActiveFolder] = useState<'received' | 'sent'>('received');
   const [targetAgentId, setTargetAgentId] = useState<string>('');
   const [viewAllMailboxes, setViewAllMailboxes] = useState<boolean>(false);
   const [receivedList, setReceivedList] = useState<EmailSummary[]>([]);
-  const [leadsList, setLeadsList] = useState<EmailSummary[]>([]);
   const [sentList, setSentList] = useState<EmailSummary[]>([]);
   const [loadingList, setLoadingList] = useState<boolean>(false);
 
@@ -133,7 +132,6 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
         }
         if (data.success) {
           setReceivedList(data.received || []);
-          setLeadsList(data.leads || []);
           setSentList(data.sent || []);
           if (data.activeAgent) {
             setLoggedAgent(data.activeAgent);
@@ -390,12 +388,7 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
     return a.name.toLowerCase().includes(q) || a.email.toLowerCase().includes(q);
   });
 
-  const activeList =
-    activeFolder === 'received'
-      ? receivedList
-      : activeFolder === 'leads'
-      ? leadsList
-      : sentList;
+  const activeList = activeFolder === 'received' ? receivedList : sentList;
 
   // ==================== LOGIN SCREEN ====================
   if (!token || !loggedAgent) {
@@ -1214,7 +1207,6 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
           >
             {[
               { id: 'received' as const, label: 'Recibidos (@neweraky.com)', icon: Inbox, count: receivedList.length },
-              { id: 'leads' as const, label: 'Leads de la Web', icon: Sparkles, count: leadsList.length },
               { id: 'sent' as const, label: 'Enviados', icon: Send, count: sentList.length }
             ].map((f) => {
               const IconComp = f.icon;
@@ -1318,7 +1310,6 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
                     }}
                   >
                     {activeFolder === 'received' && 'Bandeja de Entrada (@neweraky.com)'}
-                    {activeFolder === 'leads' && 'Leads & Solicitudes de Clientes'}
                     {activeFolder === 'sent' && 'Correos Enviados'}
                   </span>
                   <span style={{ fontSize: '0.76rem', color: '#6E7480', fontWeight: 600 }}>

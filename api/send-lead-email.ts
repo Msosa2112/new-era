@@ -229,9 +229,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       : `🏛️ New Era Lead: ${subjectType} — ${name}`;
 
     const intendedRecipients = [BROKERAGE_NOTIFICATION_EMAIL];
-    if (agentId && AGENT_EMAILS[agentId] && !intendedRecipients.includes(AGENT_EMAILS[agentId])) {
-      intendedRecipients.push(AGENT_EMAILS[agentId]);
-    }
 
     const cleanPhone = phone ? phone.replace(/[^0-9]/g, '') : '';
     const whatsappLink = cleanPhone ? `https://wa.me/${cleanPhone.startsWith('1') ? cleanPhone : '1' + cleanPhone}` : '';

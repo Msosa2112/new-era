@@ -354,48 +354,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           hasAttachments: Array.isArray(item.attachments) && item.attachments.length > 0
         }));
 
-      // Filter Outbound Sent & Website Lead notifications
-      const leads: any[] = [];
+      // Filter Outbound Sent emails strictly sent from this agent's corporate address
       const sent: any[] = [];
 
       for (const item of sentJson.data || []) {
         const fromStr = String(item.from || '').toLowerCase();
         const toArr = Array.isArray(item.to) ? item.to : [String(item.to || '')];
-        const toStr = toArr.join(' ').toLowerCase();
         const subj = String(item.subject || '');
 
-        // Skip internal security code emails and inbound forwarding copies
-        if (subj.startsWith('🔐') || subj.startsWith('📩 [')) {
+        if (
+          subj.startsWith('🔐') ||
+          subj.startsWith('📩 [') ||
+          subj.includes('New Era Lead') ||
+          subj.includes('Hemos recibido tu solicitud')
+        ) {
           continue;
         }
 
-        // Website Lead notification
-        if (subj.includes('New Era Lead')) {
-          const matchesLead =
-            viewAll ||
-            subj.toLowerCase().includes(corpLower) ||
-            toStr.includes(personalLower) ||
-            (activeAgent.isOfficeAdmin && toStr.includes('newerabroker25@gmail.com'));
-          if (matchesLead) {
-            leads.push({
-              id: item.id,
-              direction: 'outbound',
-              folder: 'leads',
-              from: item.from,
-              to: toArr,
-              subject: subj,
-              createdAt: item.created_at,
-              lastEvent: item.last_event || 'delivered'
-            });
-          }
-          continue;
-        }
-
-        // Sent directly by agent from @neweraky.com
-        const matchesSent =
-          viewAll ||
-          fromStr.includes(corpLower) ||
-          (activeAgent.isOfficeAdmin && fromStr.includes('info@neweraky.com') && !subj.includes('Hemos recibido tu solicitud'));
+        const matchesSent = viewAll
+          ? fromStr.includes('@neweraky.com') && !fromStr.includes('info@neweraky.com')
+          : fromStr.includes(`<${corpLower}>`) || fromStr === corpLower;
 
         if (matchesSent) {
           sent.push({
@@ -418,7 +396,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           maskedPersonalEmail: maskEmail(activeAgent.personalEmail)
         },
         received,
-        leads,
         sent
       });
     }
