@@ -1,7 +1,7 @@
 import React from 'react';
-import { ArrowUpRight, Phone, Mail, MapPin, Globe } from 'lucide-react';
+import { ArrowUpRight, Lock } from 'lucide-react';
 import { BrandLogo } from '../common/BrandLogo';
-import { HexPattern } from '../common/HexPattern';
+import { HexPattern } from '../components/common/HexPattern';
 import { BROKERAGE_DATA } from '../../data/agentsData';
 
 interface FooterProps {
@@ -98,6 +98,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, lang }) => {
                 { id: 'sell', labelEn: 'Sell & CMA Valuation', labelEs: 'Vender & Valuación CMA' },
                 { id: 'about', labelEn: 'About New Era', labelEs: 'Sobre Nosotros' },
                 { id: 'contact', labelEn: 'Schedule Consultation', labelEs: 'Contacto & Citas' },
+                { id: 'inbox', labelEn: 'Agent Webmail (@neweraky.com)', labelEs: 'Correo de Agentes (@neweraky.com)' },
               ].map((link) => (
                 <li key={link.id}>
                   <button
@@ -106,9 +107,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, lang }) => {
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
                     style={{
-                      color: '#121418',
+                      color: link.id === 'inbox' ? '#660E1A' : '#121418',
                       fontSize: '0.85rem',
-                      fontWeight: 600,
+                      fontWeight: link.id === 'inbox' ? 700 : 600,
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '0.35rem',
@@ -119,7 +120,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, lang }) => {
                       transition: 'color var(--transition-fast)'
                     }}
                     onMouseEnter={(e) => (e.currentTarget.style.color = '#660E1A')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = '#121418')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = link.id === 'inbox' ? '#660E1A' : '#121418')}
                   >
                     <span>{lang === 'es' ? link.labelEs : link.labelEn}</span>
                     <ArrowUpRight size={12} color="#660E1A" />
@@ -205,11 +206,34 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, lang }) => {
             © {currentYear} {BROKERAGE_DATA.legalName}. All rights reserved. | {BROKERAGE_DATA.licenseNote}
           </div>
 
-          <div style={{ display: 'flex', gap: '1.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
             <span>Privacy Policy</span>
             <span>Terms of Service</span>
             <span>Fair Housing Notice</span>
             <span>MLS Consumer Disclaimer</span>
+            <button
+              type="button"
+              onClick={() => {
+                onNavigate('inbox');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                padding: '0.35rem 0.75rem',
+                borderRadius: '8px',
+                border: '1px solid rgba(102, 14, 26, 0.25)',
+                backgroundColor: 'rgba(102, 14, 26, 0.06)',
+                color: '#660E1A',
+                fontSize: '0.74rem',
+                fontWeight: 700,
+                cursor: 'pointer'
+              }}
+            >
+              <Lock size={12} />
+              <span>{lang === 'es' ? 'Portal Correo (@neweraky.com)' : 'Agent Mail (@neweraky.com)'}</span>
+            </button>
           </div>
         </div>
       </div>

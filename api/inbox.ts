@@ -61,6 +61,27 @@ function findAgent(emailOrId: string): AgentDirectoryEntry | undefined {
   );
 }
 
+function inferMimeType(filename: string, provided?: string): string {
+  if (provided && provided !== 'application/octet-stream') return provided;
+  const ext = (filename || '').split('.').pop()?.toLowerCase() || '';
+  const map: Record<string, string> = {
+    pdf: 'application/pdf',
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    png: 'image/png',
+    gif: 'image/gif',
+    webp: 'image/webp',
+    doc: 'application/msword',
+    docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    xls: 'application/vnd.ms-excel',
+    xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    csv: 'text/csv',
+    txt: 'text/plain',
+    zip: 'application/zip'
+  };
+  return map[ext] || provided || 'application/octet-stream';
+}
+
 function signPayload(data: Record<string, any>): string {
   const json = JSON.stringify(data);
   const b64 = Buffer.from(json).toString('base64url');
@@ -484,7 +505,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       const cleanPhone = activeAgent.phone.replace(/[^0-9]/g, '');
 
-      // Process attachments (Base64 -> Buffer)
+      // Process attachments (Base64 string + camelCase contentType for Resend SDK)
       const resendAttachments = Array.isArray(attachments)
         ? attachments
             .filter((att: any) => att && att.filename && att.content)
@@ -493,13 +514,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               const base64Clean = rawContent.includes('base64,')
                 ? rawContent.split('base64,')[1]
                 : rawContent;
+              const fname = String(att.filename);
               return {
-                filename: String(att.filename),
-                content: Buffer.from(base64Clean, 'base64'),
-                ...(att.contentType ? { content_type: String(att.contentType) } : {})
+                filename: fname,
+                content: base64Clean,
+                contentType: inferMimeType(fname, att.contentType)
               };
             })
         : [];
+
+      const plainTextEmail = `${String(message || '').trim()}\n\n--\n${activeAgent.name}\n${activeAgent.title}${activeAgent.licenseNumber ? ` · Lic. #${activeAgent.licenseNumber}` : ''}\nNew Era Real Estate LLC\nTel: ${activeAgent.phone} | Email: ${activeAgent.corporateEmail}\n6501 Shepherdsville Road, Suite 119, Louisville, KY 40219\nhttps://www.neweraky.com/agents/${activeAgent.id}`;
 
       const htmlEmail = `
         <!DOCTYPE html>
@@ -553,11 +577,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       const resend = new Resend(RESEND_API_KEY);
       const sendRes = await resend.emails.send({
-        from: `${activeAgent.name} — New Era Real Estate <${activeAgent.corporateEmail}>`,
+        from: `${activeAgent.name} (New Era Real Estate) <${activeAgent.corporateEmail}>`,
         to: cleanTo,
         cc: cleanCc.length > 0 ? cleanCc : undefined,
         replyTo: activeAgent.corporateEmail,
         subject: String(subject).trim(),
+        text: plainTextEmail,
         html: htmlEmail,
         attachments: resendAttachments.length > 0 ? resendAttachments : undefined,
         headers: replyToMessageId ? { 'In-Reply-To': replyToMessageId } : undefined
