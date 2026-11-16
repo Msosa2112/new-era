@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, Menu, X, Globe, ArrowUpRight } from 'lucide-react';
+import { Phone, Menu, X, Globe, ArrowUpRight, Lock } from 'lucide-react';
 import { BrandLogo } from '../common/BrandLogo';
 import { HexPattern } from '../common/HexPattern';
 import { BROKERAGE_DATA } from '../../data/agentsData';
@@ -209,6 +209,29 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>(502) 500-0409</span>
             </a>
 
+            {/* Office Portal Entry Button */}
+            <button
+              type="button"
+              onClick={() => handleLinkClick('portal')}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                padding: '0.52rem 0.85rem',
+                fontSize: '0.73rem',
+                fontWeight: 800,
+                letterSpacing: '0.06em',
+                color: '#660E1A',
+                backgroundColor: 'rgba(102, 14, 26, 0.08)',
+                border: '1px solid rgba(102, 14, 26, 0.25)',
+                borderRadius: 'var(--radius-sm)',
+                cursor: 'pointer'
+              }}
+            >
+              <Lock size={13} color="#660E1A" />
+              <span>{lang === 'es' ? 'Portal Oficina' : 'Office Portal'}</span>
+            </button>
+
             {/* Advisory CTA */}
             <button
               onClick={onOpenConsultation}
@@ -236,10 +259,31 @@ export const Navbar: React.FC<NavbarProps> = ({
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '0.65rem'
+              gap: '0.5rem'
             }}
             className="mobile-actions"
           >
+            <button
+              type="button"
+              onClick={() => handleLinkClick('portal')}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.3rem',
+                fontSize: '0.72rem',
+                fontWeight: 800,
+                color: '#FFFFFF',
+                backgroundColor: '#660E1A',
+                border: '1px solid #660E1A',
+                padding: '0.38rem 0.7rem',
+                borderRadius: 'var(--radius-sm)',
+                cursor: 'pointer'
+              }}
+            >
+              <Lock size={12} color="#FFFFFF" />
+              <span>Portal</span>
+            </button>
+
             <button
               onClick={onToggleLang}
               style={{
@@ -352,6 +396,29 @@ export const Navbar: React.FC<NavbarProps> = ({
               <Phone size={18} color="#660E1A" />
               (502) 500-0409
             </a>
+
+            <button
+              type="button"
+              onClick={() => handleLinkClick('portal')}
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.45rem',
+                padding: '0.75rem 1rem',
+                borderRadius: 'var(--radius-sm)',
+                border: '1px solid rgba(102, 14, 26, 0.28)',
+                backgroundColor: 'rgba(102, 14, 26, 0.08)',
+                color: '#660E1A',
+                fontSize: '0.86rem',
+                fontWeight: 800,
+                cursor: 'pointer'
+              }}
+            >
+              <Lock size={16} color="#660E1A" />
+              <span>{lang === 'es' ? 'Abrir Portal de Oficina' : 'Open Office Portal'}</span>
+            </button>
 
             <button
               onClick={() => {

@@ -292,6 +292,35 @@ export const getPageSEOMetadata = (
 
   // 3. STATIC AND CORE PAGES
   switch (activePage) {
+    case 'portal':
+    case 'arm':
+    case 'suite': {
+      const canonical = `${SITE_URL}/portal`;
+      const title = isEs
+        ? 'Portal de Oficina | New Era Real Estate'
+        : 'Office Portal | New Era Real Estate';
+      const description = isEs
+        ? 'Portal de oficina de New Era Real Estate para gestión de propiedades, pagos, contratos y mensajería.'
+        : 'New Era Real Estate office portal for properties, payments, contracts, and client messaging.';
+      return {
+        title,
+        description,
+        canonicalUrl: canonical,
+        robots: 'noindex, nofollow',
+        ogType: 'website',
+        ogTitle: title,
+        ogDescription: description,
+        ogImage: DEFAULT_OG_IMAGE,
+        ogUrl: canonical,
+        twitterCard: 'summary_large_image',
+        twitterTitle: title,
+        twitterDescription: description,
+        twitterImage: DEFAULT_OG_IMAGE,
+        jsonLd: [getBrokerageSchema()],
+        lang
+      };
+    }
+
     case 'properties': {
       const canonical = `${SITE_URL}/properties`;
       const title = isEs

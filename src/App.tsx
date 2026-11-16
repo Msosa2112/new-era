@@ -11,6 +11,8 @@ import { AgentsPage } from './pages/AgentsPage';
 import { ContactPage } from './pages/ContactPage';
 import { MapPage } from './pages/MapPage';
 import { InboxPage } from './pages/InboxPage';
+import { MasterclassPage } from './pages/MasterclassPage';
+import { ArmSuitePage } from './pages/ArmSuitePage';
 import { PropertyDetailView } from './components/properties/PropertyDetailView';
 import { ConsultationModal } from './components/common/ConsultationModal';
 import { JoinTeamModal } from './components/common/JoinTeamModal';
@@ -66,9 +68,30 @@ export const App: React.FC = () => {
         setSelectedProperty(null);
         setActivePage('home');
         setJoinModalOpen(true);
-      } else if (route === 'inbox' || route === 'correo' || route === 'mail' || route === 'portal') {
+      } else if (route === 'inbox' || route === 'correo' || route === 'mail') {
         setSelectedProperty(null);
         setActivePage('inbox');
+      } else if (
+        route === 'portal' ||
+        route === 'oficina' ||
+        route === 'yeilen' ||
+        route === 'broker' ||
+        route === 'acceso' ||
+        route === 'suite' ||
+        route === 'arm' ||
+        route === 'sistema' ||
+        route === 'crm'
+      ) {
+        setSelectedProperty(null);
+        setActivePage('arm');
+      } else if (
+        route === 'clase' ||
+        route === 'masterclass' ||
+        route === 'presentacion' ||
+        route === 'taller'
+      ) {
+        setSelectedProperty(null);
+        setActivePage('masterclass');
       } else {
         setSelectedProperty(null);
         setActivePage(route);
@@ -93,6 +116,11 @@ export const App: React.FC = () => {
       targetPath = `/properties/${param}`;
     } else if (param && (page === 'agents' || page === 'agent-profile')) {
       targetPath = `/agents/${param}`;
+    } else if (page === 'masterclass') {
+      targetPath = '/clase';
+    } else if (page === 'portal' || page === 'arm' || page === 'suite') {
+      targetPath = '/portal';
+      setActivePage('arm');
     } else if (page && page !== 'home') {
       targetPath = `/${page}`;
     }
@@ -138,14 +166,16 @@ export const App: React.FC = () => {
         selectedProperty={selectedProperty}
       />
 
-      {/* Global Navbar */}
-      <Navbar
-        activePage={activePage === 'agent-profile' ? 'home' : activePage}
-        onNavigate={handleNavigate}
-        lang={lang}
-        onToggleLang={toggleLanguage}
-        onOpenConsultation={() => setConsultationOpen(true)}
-      />
+      {/* Global Navbar (hidden during full-bleed Masterclass presentation & ARM Suite) */}
+      {activePage !== 'masterclass' && activePage !== 'arm' && (
+        <Navbar
+          activePage={activePage === 'agent-profile' ? 'home' : activePage}
+          onNavigate={handleNavigate}
+          lang={lang}
+          onToggleLang={toggleLanguage}
+          onOpenConsultation={() => setConsultationOpen(true)}
+        />
+      )}
 
       {/* Main Page Rendering */}
       <div style={{ flex: 1 }}>
@@ -224,10 +254,24 @@ export const App: React.FC = () => {
         {activePage === 'inbox' && (
           <InboxPage lang={lang} />
         )}
+
+        {activePage === 'masterclass' && (
+          <MasterclassPage onExit={() => handleNavigate('home')} />
+        )}
+
+        {activePage === 'arm' && (
+          <ArmSuitePage
+            lang={lang}
+            onToggleLang={toggleLanguage}
+            onExit={() => handleNavigate('home')}
+          />
+        )}
       </div>
 
-      {/* Global Footer (hidden on interactive map page to allow full viewport layout) */}
-      {activePage !== 'map' && <Footer onNavigate={handleNavigate} lang={lang} />}
+      {/* Global Footer (hidden on interactive map page, masterclass & ARM Suite) */}
+      {activePage !== 'map' && activePage !== 'masterclass' && activePage !== 'arm' && (
+        <Footer onNavigate={handleNavigate} lang={lang} />
+      )}
 
       {/* Standalone Cinematic Property Detail View Modal */}
       {selectedProperty && (

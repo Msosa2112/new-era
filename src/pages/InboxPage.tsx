@@ -25,6 +25,7 @@ import {
 import { AGENTS_DATA } from '../data/agentsData';
 import { Agent } from '../types/property';
 import { HexPattern } from '../components/common/HexPattern';
+import { BrandLogo } from '../components/common/BrandLogo';
 
 interface InboxPageProps {
   lang: 'en' | 'es';
@@ -525,6 +526,30 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
             >
               New Era Mail <span style={{ color: '#660E1A' }}>@neweraky.com</span>
             </h1>
+            <div style={{ marginBottom: '0.85rem' }}>
+              <a
+                href="/portal"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.history.pushState(null, '', '/portal');
+                  window.dispatchEvent(new PopStateEvent('popstate'));
+                }}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.45rem',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '10px',
+                  backgroundColor: '#660E1A',
+                  color: '#FFFFFF',
+                  fontSize: '0.82rem',
+                  fontWeight: 700,
+                  textDecoration: 'none'
+                }}
+              >
+                Abrir el Portal de Oficina (Propiedades, Pagos, Contratos y Mensajes) →
+              </a>
+            </div>
             <p
               style={{
                 fontSize: '0.95rem',
@@ -1934,9 +1959,9 @@ export const InboxPage: React.FC<InboxPageProps> = ({ lang }) => {
                   </div>
 
                   <div style={{ paddingLeft: '0.75rem', borderLeft: '1px solid #E5DFD5' }}>
-                    <img
-                      src="/assets/logo-burgundy.png"
-                      alt="New Era Real Estate"
+                    <BrandLogo
+                      variant="full-burgundy"
+                      height={50}
                       style={{ width: '105px', height: 'auto', display: 'block' }}
                     />
                   </div>

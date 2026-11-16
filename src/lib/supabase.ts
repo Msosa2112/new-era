@@ -124,6 +124,25 @@ export async function submitLead(lead: LeadSubmission) {
     }
     recentSubmissions.set(dedupeKey, Date.now());
 
+    // Record immediately in ARM Suite live local/cross-tab store
+    import('../services/armStore')
+      .then(({ recordWebsiteLead }) => {
+        recordWebsiteLead({
+          name: lead.name,
+          email: lead.email,
+          phone: lead.phone,
+          type: lead.type,
+          subjectOrAddress: lead.propertyId
+            ? `Propiedad ${lead.propertyId}`
+            : lead.type === 'tour'
+            ? 'Solicitud de Tour Privado'
+            : 'Consulta Web neweraky.com',
+          message: lead.message,
+          assignedAgentId: lead.agentId || 'yeilen-contreras',
+        });
+      })
+      .catch(() => {});
+
     // Trigger email notification via Resend asynchronously in background
     import('../services/emailService').then(({ triggerLeadEmailNotification }) => {
       triggerLeadEmailNotification({
@@ -207,6 +226,21 @@ export async function submitHomeValuation(val: HomeValuationSubmission) {
       return { success: true, deduplicated: true };
     }
     recentSubmissions.set(dedupeKey, Date.now());
+
+    // Record immediately in ARM Suite live local/cross-tab store
+    import('../services/armStore')
+      .then(({ recordWebsiteLead }) => {
+        recordWebsiteLead({
+          name: val.ownerName,
+          email: val.ownerEmail,
+          phone: val.ownerPhone,
+          type: 'valuation',
+          subjectOrAddress: `Valuación CMA: ${val.address}`,
+          message: val.notes || `Habitaciones: ${val.bedrooms || '-'}, Condición: ${val.condition || 'N/A'}`,
+          assignedAgentId: 'yeilen-contreras',
+        });
+      })
+      .catch(() => {});
 
     // Trigger email notification via Resend asynchronously in background
     import('../services/emailService').then(({ triggerLeadEmailNotification }) => {
